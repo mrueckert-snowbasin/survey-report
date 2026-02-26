@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snowbasin Survey Results — 2.25.2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--blue:#2D5B9D;--blue-d:#1a3d6e;--blue-l:#E8F0FA;--yel:#FFD400;--yel-d:#B89B00;--grey:#4A4A4A;--grn:#16a34a;--red:#dc2626;--bg:#f0f2f5;--card:#fff;--radius:14px;--shadow:0 1px 3px rgba(0,0,0,.06),0 4px 12px rgba(0,0,0,.04)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;color:#1e293b;background:var(--bg);-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace}
+.app{max-width:1060px;margin:0 auto;padding-bottom:40px}
+
+/* ═══ HEADER ═══ */
+.hero{background:linear-gradient(145deg,#0d2240 0%,var(--blue-d) 40%,var(--blue) 100%);color:#fff;padding:40px 48px 0;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='1060' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='0,300 180,180 320,220 480,140 600,190 750,100 900,160 1060,80 1060,300' fill='rgba(255,255,255,0.02)'/%3E%3Cpolygon points='0,300 100,240 250,260 400,200 550,240 700,170 850,210 1060,130 1060,300' fill='rgba(255,255,255,0.015)'/%3E%3C/svg%3E") no-repeat bottom;opacity:.8}
+.hero-inner{position:relative;z-index:1}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start}
+.hero-tag{font-size:10px;text-transform:uppercase;letter-spacing:4px;opacity:.4;font-weight:500}
+.hero h1{font-size:30px;font-weight:800;letter-spacing:-.8px;margin:6px 0 2px;line-height:1.1}
+.hero-sub{font-size:13px;opacity:.45;font-weight:400}
+.hero-nps{text-align:right}
+.hero-nps .num{font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:700;line-height:1;letter-spacing:-3px;background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-nps .lbl{font-size:10px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-top:4px}
+.pill{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.pill-up{background:rgba(22,163,74,.15);color:#86efac}
+.pill-dn{background:rgba(220,38,38,.15);color:#fca5a5}
+.pill-dk-up{background:#dcfce7;color:#166534}
+.pill-dk-dn{background:#fee2e2;color:#991b1b}
+
+/* KPI strip */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);border-radius:12px;overflow:hidden;margin-top:28px;position:relative;z-index:1}
+.kpi{padding:16px 20px;text-align:center;background:rgba(255,255,255,.04);backdrop-filter:blur(4px)}
+.kpi-v{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700}
+.kpi-l{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;opacity:.35;margin-top:2px}
+.kpi-s{font-size:10px;opacity:.5;margin-top:3px}
+
+/* ═══ TABS ═══ */
+.nav{display:flex;background:var(--card);border-bottom:1px solid #e2e8f0;padding:0 32px;position:sticky;top:0;z-index:200;box-shadow:var(--shadow)}
+.nav-btn{padding:16px 22px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;margin-bottom:-1px;transition:all .25s;font-family:inherit;white-space:nowrap;position:relative}
+.nav-btn:hover{color:var(--blue)}
+.nav-btn.on{color:var(--blue);border-bottom-color:var(--blue)}
+.nav-btn.on::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:3px;background:var(--blue);border-radius:3px 3px 0 0;filter:blur(4px);opacity:.4}
+
+/* ═══ PANELS ═══ */
+.pane{display:none;padding:32px 40px;background:var(--card);min-height:400px;animation:fadeSlide .35s ease}
+.pane.on{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ SECTION HEADERS ═══ */
+.sec{display:flex;align-items:center;gap:10px;margin:32px 0 18px;padding-bottom:8px;border-bottom:2px solid var(--blue)}
+.sec:first-child{margin-top:0}
+.sec h3{font-size:17px;font-weight:700;color:var(--blue)}
+.sec-icon{font-size:20px}
+
+/* ═══ SUMMARY BOX ═══ */
+.brief{background:linear-gradient(135deg,#eef4fc,#f5f8ff);border-left:4px solid var(--blue);padding:22px 28px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:28px;font-size:14px;line-height:1.75}
+.brief strong{color:var(--blue)}
+
+/* ═══ SCORE TRENDS (Signature Visual) ═══ */
+.trends-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid #e2e8f0;border-radius:var(--radius);overflow:hidden}
+.trends-col{padding:24px 28px}
+.trends-col+.trends-col{border-left:1px solid #e2e8f0}
+.trends-hdr{font-size:14px;font-weight:700;color:var(--blue);border-bottom:3px solid var(--blue);padding-bottom:6px;margin-bottom:6px}
+.trends-legend{display:flex;gap:16px;font-size:10px;color:#94a3b8;margin-bottom:16px}
+.trends-legend i{display:inline-block;width:12px;height:5px;border-radius:2px;vertical-align:middle;margin-right:3px}
+.t-row{margin-bottom:16px}
+.t-meta{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.t-v{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;min-width:40px;text-align:right}
+.t-v.a{color:var(--blue)}
+.t-v.b{color:var(--yel-d)}
+.t-lbl{flex:1;font-size:12.5px;font-weight:600;color:#475569;padding:0 4px}
+.t-d{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;min-width:48px;text-align:right}
+.t-d.pos{color:var(--grn)}
+.t-d.neg{color:var(--red)}
+.t-d.flat{color:#94a3b8}
+.t-bars{position:relative;height:18px;background:#f1f5f9;border-radius:4px;overflow:hidden}
+.t-bar{position:absolute;height:8px;border-radius:3px;width:0;transition:width 1s cubic-bezier(.23,1,.32,1)}
+.t-bar.a{top:1px;background:linear-gradient(90deg,var(--blue),#4a7ec4)}
+.t-bar.b{bottom:1px;background:linear-gradient(90deg,var(--yel),#ffe066)}
+
+/* ═══ CHARTS ═══ */
+.chart-box{position:relative;border:1px solid #e2e8f0;border-radius:var(--radius);padding:20px;margin:16px 0;background:#fafbfc}
+
+/* ═══ TABLES ═══ */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;border:1px solid #e2e8f0;border-radius:var(--radius);overflow:hidden}
+thead th{background:var(--blue);color:#fff;padding:12px;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.7px}
+thead th:first-child{text-align:left}
+tbody td{padding:11px 12px;border-bottom:1px solid #f1f5f9;text-align:center}
+tbody td:first-child{text-align:left;font-weight:600;color:#334155}
+tbody tr{transition:background .15s}
+tbody tr:hover{background:#f8fafc}
+tbody tr:last-child td{border-bottom:none}
+
+/* ═══ COMMENTS ═══ */
+.cmt{padding:16px 20px;border-radius:var(--radius);margin-bottom:10px;font-size:13px;font-style:italic;color:#475569;border-left:4px solid;position:relative;transition:transform .15s,box-shadow .15s;line-height:1.65}
+.cmt:hover{transform:translateX(2px);box-shadow:var(--shadow)}
+.cmt.p{background:#f0fdf4;border-color:var(--grn)}
+.cmt.n{background:#fef2f2;border-color:var(--red)}
+.cmt.c{background:#fffbeb;border-color:var(--yel)}
+.cmt-tag{position:absolute;top:6px;right:10px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;font-style:normal;padding:2px 8px;border-radius:6px}
+.cmt.p .cmt-tag{background:#dcfce7;color:#166534}
+.cmt.n .cmt-tag{background:#fee2e2;color:#991b1b}
+
+/* ═══ TWO COL ═══ */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{border-radius:var(--radius);padding:20px;border:1px solid}
+.box.g{border-color:#bbf7d0;background:linear-gradient(180deg,#f0fdf4,#fafffe)}
+.box.r{border-color:#fecaca;background:linear-gradient(180deg,#fef2f2,#fffafa)}
+.box h4{font-size:14px;font-weight:700;margin-bottom:12px}
+.box.g h4{color:#166534}
+.box.r h4{color:#991b1b}
+.box ol{padding-left:16px;font-size:12.5px}
+.box li{margin-bottom:9px;line-height:1.55}
+
+/* ═══ ALERTS ═══ */
+.alt{padding:18px 22px;border-radius:var(--radius);margin:14px 0;font-size:13px;border:1px solid;line-height:1.6;transition:transform .15s}
+.alt:hover{transform:translateY(-1px)}
+.alt h4{font-size:13px;font-weight:700;margin-bottom:6px}
+.alt.re{background:#fef2f2;border-color:#fca5a5}.alt.re h4{color:#991b1b}
+.alt.ye{background:#fffbeb;border-color:#fde68a}.alt.ye h4{color:#854d0e}
+.alt.gr{background:#f0fdf4;border-color:#86efac}.alt.gr h4{color:#166534}
+.alt.bl{background:var(--blue-l);border-color:#93c5fd}.alt.bl h4{color:var(--blue)}
+
+/* ═══ EMPLOYEE CARDS ═══ */
+.emp{display:flex;gap:16px;padding:16px;border:1px solid #e2e8f0;border-radius:var(--radius);margin-bottom:10px;transition:all .2s;background:var(--card)}
+.emp:hover{box-shadow:0 4px 16px rgba(45,91,157,.08);border-color:#bfdbfe;transform:translateY(-1px)}
+.emp-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--blue),#0d2240);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;box-shadow:0 2px 8px rgba(45,91,157,.2)}
+.emp-n{font-weight:700;color:var(--blue);font-size:14px}
+.emp-d{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;margin-top:1px}
+.emp-q{font-size:12.5px;color:#64748b;margin-top:4px;line-height:1.5;font-style:italic}
+
+.foot{text-align:center;padding:24px;font-size:10px;color:#94a3b8;letter-spacing:1px}
+
+@media(max-width:740px){.hero{padding:24px}.hero h1{font-size:22px}.hero-nps .num{font-size:42px}.kpis{grid-template-columns:1fr 1fr}.nav{overflow-x:auto;padding:0 16px}.nav-btn{padding:14px 16px;font-size:12px}.pane{padding:24px 20px}.two,.trends-grid{grid-template-columns:1fr}.trends-col+.trends-col{border-left:none;border-top:1px solid #e2e8f0}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ════════════════════ HEADER ════════════════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div>
+        <div class="hero-tag">Snowbasin Resort</div>
+        <h1>Weekly Survey Report</h1>
+        <div class="hero-sub">Week Ending February 25, 2026 &bull; 321 Responses &bull; 2,710 Season</div>
+      </div>
+      <div class="hero-nps">
+        <div class="num" id="heroNum">0.00</div>
+        <div class="lbl">Weekly NPS</div>
+        <div style="margin-top:8px"><span class="pill pill-dn">&darr; 1.77 vs prior week</span></div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-v"><span id="kpi1">0.00</span> <span class="pill pill-up" style="font-size:9px">&uarr;0.8</span></div><div class="kpi-l">Season Average</div><div class="kpi-s">up from 62.98</div></div>
+      <div class="kpi"><div class="kpi-v" style="color:var(--yel)" id="kpi2">0.00</div><div class="kpi-l">Last Year at This Date</div><div class="kpi-s">2/26/2025 dashboard</div></div>
+      <div class="kpi"><div class="kpi-v mono" id="kpi3">0.00</div><div class="kpi-l">YoY Season Gap</div><div class="kpi-s">narrowed from -6.0 in Jan</div></div>
+      <div class="kpi"><div class="kpi-v">7<sup style="font-size:12px">th</sup></div><div class="kpi-l">Consecutive Week 65+</div><div class="kpi-s">longest streak of the season</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ TABS ════════════════════ -->
+<div class="nav" id="nav">
+  <button class="nav-btn on" data-tab="overview">Overview</button>
+  <button class="nav-btn" data-tab="trends">Score Trends</button>
+  <button class="nav-btn" data-tab="mtn">Mountain Ops</button>
+  <button class="nav-btn" data-tab="fb">Food &amp; Beverage</button>
+  <button class="nav-btn" data-tab="comments">Comments &amp; Themes</button>
+  <button class="nav-btn" data-tab="team">Recognition</button>
+  <button class="nav-btn" data-tab="outlook">Outlook</button>
+</div>
+
+<!-- ════════════════════ OVERVIEW ════════════════════ -->
+<div class="pane on" id="p-overview">
+  <div class="brief">
+    <strong>Executive Summary:</strong> Fresh snowfall delivered a dramatic <strong>+43 point</strong> surge in snow quality NPS, powering Mountain to its best weekly score of the season (60.25). But big crowds on 2/21&ndash;22 hammered crowding (-16.6), parking (-17.6), and F&amp;B seating (-15.2). Our season average climbed to <strong>63.76</strong>&mdash;now just <strong>0.67 points</strong> behind last year at this date. Every controllable category leads year-over-year: Service (+4.41), Parking (+11.58), Safety (+4.94), F&amp;B (+6.21).
+  </div>
+
+  <div class="sec"><span class="sec-icon">📈</span><h3>Weekly NPS Trend</h3></div>
+  <div class="chart-box" style="height:320px"><canvas id="c1"></canvas></div>
+
+  <div class="sec"><span class="sec-icon">🎯</span><h3>Season Average Convergence</h3></div>
+  <div class="chart-box" style="height:270px"><canvas id="c2"></canvas></div>
+  <p style="font-size:11px;color:#94a3b8;margin-top:6px;font-style:italic">From a 6+ point deficit in early January to less than 1 point — the result of seven consecutive weeks above 65.</p>
+
+  <div class="sec"><span class="sec-icon">📊</span><h3>Category NPS: This Week vs Last Week vs Last Year</h3></div>
+  <div class="chart-box" style="height:360px"><canvas id="c3"></canvas></div>
+</div>
+
+<!-- ════════════════════ SCORE TRENDS ════════════════════ -->
+<div class="pane" id="p-trends">
+  <div class="sec" style="margin-top:0"><span class="sec-icon">📊</span><h3>Season-to-Date NPS: Year-over-Year Comparison</h3></div>
+  <p style="font-size:12.5px;color:#64748b;margin-bottom:20px">
+    <i style="background:var(--blue)" class="trends-legend"></i>
+    <span style="font-weight:600">2025-26</span> (thru 2/25) vs
+    <i style="background:var(--yel)" class="trends-legend"></i>
+    <span style="font-weight:600">2024-25</span> (thru 2/26)
+    &mdash; <span class="mono" style="font-size:11px;color:#94a3b8">25-26 &nbsp; 24-25 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &Delta;</span>
+  </p>
+  <div class="trends-grid" id="trendsGrid"></div>
+
+  <div class="sec"><span class="sec-icon">🎫</span><h3>NPS by Pass Type — This Week</h3></div>
+  <div class="chart-box" style="height:270px"><canvas id="c4"></canvas></div>
+  <p style="font-size:11px;color:#94a3b8;margin-top:4px"><strong>Takeaway:</strong> Ikon (78.50) and Mtn Collective (92.86) loved the fresh snow. Premier (60.00) and Value (58.33) felt weekend crowding hardest — they're the locals.</p>
+</div>
+
+<!-- ════════════════════ MOUNTAIN OPS ════════════════════ -->
+<div class="pane" id="p-mtn">
+  <div class="brief">Snow quality surged from <strong>-33.48 to +10.16</strong> — the first positive reading in weeks, a <strong>+43.6 point</strong> week-over-week swing. Mountain overall hit <strong>60.25</strong>, the season&rsquo;s best weekly score. But big crowds drove trail crowding to just 3.18 and lift lines down to 45.69.</div>
+
+  <div class="sec"><span class="sec-icon">⛷️</span><h3>Mountain Operations Detail</h3></div>
+  <table>
+    <thead><tr><th>Metric</th><th>This Week</th><th>Last Week</th><th>WoW &Delta;</th><th>LY Week (2/26/25)</th><th>YoY &Delta;</th></tr></thead>
+    <tbody>
+      <tr><td>Lift Lines</td><td class="mono">45.69</td><td>63.68</td><td><span class="pill-dk-dn">&darr;18.0</span></td><td>43.47</td><td><span class="pill-dk-up">&uarr;2.2</span></td></tr>
+      <tr><td>Grooming</td><td class="mono">38.54</td><td>29.20</td><td><span class="pill-dk-up">&uarr;9.3</span></td><td>52.53</td><td><span class="pill-dk-dn">&darr;14.0</span></td></tr>
+      <tr><td>Pass/Ticket Value</td><td class="mono">27.21</td><td>30.91</td><td><span class="pill-dk-dn">&darr;3.7</span></td><td>39.81</td><td><span class="pill-dk-dn">&darr;12.6</span></td></tr>
+      <tr><td style="color:var(--grn);font-weight:800">Snow Quality ★</td><td class="mono" style="color:var(--grn);font-weight:800">10.16</td><td style="color:var(--red)">-33.48</td><td><span class="pill-dk-up">&uarr;43.6</span></td><td>53.46</td><td><span class="pill-dk-dn">&darr;43.3</span></td></tr>
+      <tr><td>Trail Crowding</td><td class="mono">3.18</td><td>19.73</td><td><span class="pill-dk-dn">&darr;16.6</span></td><td>13.03</td><td><span class="pill-dk-dn">&darr;9.9</span></td></tr>
+    </tbody>
+  </table>
+  <div class="alt re" style="margin-top:20px">
+    <h4>🚨 Crowding &amp; Safety — Weekend of 2/21–22</h4>
+    <p>Dominant negative theme in comments this week. Multiple reports of near-collisions, straight-lining on blue runs, beginners frozen in narrow sections. One long-term Ikon expert (15–25 days/year) left the mountain for the first time ever due to safety. Needles run described as &ldquo;irresponsibly crowded&rdquo; with everything funneling to it. Several guests requested reservation systems or capacity caps.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ F&B ════════════════════ -->
+<div class="pane" id="p-fb">
+  <div class="brief">F&amp;B NPS improved to <strong>37.25</strong> (from 34.24). Season average of <strong>30.11</strong> is +6.21 ahead of last year&rsquo;s 23.90. But the big weekend exposed supply chain and seating strain — seating NPS plunged to 14.75 and multiple outlets ran out of food items.</div>
+
+  <div class="sec"><span class="sec-icon">🍽️</span><h3>F&amp;B by Outlet</h3></div>
+  <table>
+    <thead><tr><th>Outlet</th><th>This Week</th><th>Last Week</th><th>WoW &Delta;</th><th>LY Week</th><th>YoY &Delta;</th></tr></thead>
+    <tbody>
+      <tr><td>John Paul Lodge</td><td class="mono">52.11</td><td>50.00</td><td><span class="pill-dk-up">&uarr;2.1</span></td><td>28.57</td><td><span class="pill-dk-up">&uarr;23.5</span></td></tr>
+      <tr><td>Needles Lodge</td><td class="mono">40.40</td><td>39.73</td><td><span class="pill-dk-up">&uarr;0.7</span></td><td>28.45</td><td><span class="pill-dk-up">&uarr;12.0</span></td></tr>
+      <tr><td>Earl&rsquo;s Lodge</td><td class="mono">36.50</td><td>38.89</td><td><span class="pill-dk-dn">&darr;2.4</span></td><td>25.16</td><td><span class="pill-dk-up">&uarr;11.3</span></td></tr>
+      <tr><td>Strawberry Patio</td><td class="mono">35.29</td><td>36.84</td><td><span class="pill-dk-dn">&darr;1.6</span></td><td>32.43</td><td><span class="pill-dk-up">&uarr;2.9</span></td></tr>
+      <tr><td>Cinnabar</td><td class="mono">34.48</td><td>43.75</td><td><span class="pill-dk-dn">&darr;9.3</span></td><td>23.53</td><td><span class="pill-dk-up">&uarr;11.0</span></td></tr>
+      <tr><td style="color:var(--red);font-weight:700">The Overlook</td><td class="mono" style="color:var(--red)">25.00</td><td>44.44</td><td><span class="pill-dk-dn">&darr;19.4</span></td><td>66.67</td><td><span class="pill-dk-dn">&darr;41.7</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec"><span class="sec-icon">📋</span><h3>F&amp;B Sub-Categories</h3></div>
+  <table>
+    <thead><tr><th>Metric</th><th>This Week</th><th>Last Week</th><th>WoW &Delta;</th><th>Season Avg</th></tr></thead>
+    <tbody>
+      <tr><td>Lodge Cleanliness</td><td class="mono">77.42</td><td>85.06</td><td><span class="pill-dk-dn">&darr;7.6</span></td><td>82.21</td></tr>
+      <tr><td>Menu Offerings</td><td class="mono">34.32</td><td>36.05</td><td><span class="pill-dk-dn">&darr;1.7</span></td><td>31.79</td></tr>
+      <tr><td>Speed of Service</td><td class="mono">30.33</td><td>39.66</td><td><span class="pill-dk-dn">&darr;9.3</span></td><td>41.43</td></tr>
+      <tr><td>Ease of Seating</td><td class="mono" style="color:var(--red)">14.75</td><td>29.94</td><td><span class="pill-dk-dn">&darr;15.2</span></td><td>33.26</td></tr>
+      <tr><td>F&amp;B Value</td><td class="mono">7.85</td><td>16.48</td><td><span class="pill-dk-dn">&darr;8.6</span></td><td>5.85</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alt ye" style="margin-top:20px">
+    <h4>⚡ Food Supply Failures — February 22</h4>
+    <p>Needles: out of fries. John Paul: out of buns. Strawberry: out of bell peppers &amp; fries. Strawberry Patio: not serving hot food despite full parking lots. Needles also had ordering signage confusion. JP described as having only 4 FOH during lunch rush. Additionally, 4+ separate comments about gluten-free buns being out across outlets.</p>
+  </div>
+</div>
+
+<!-- ════════════════════ COMMENTS ════════════════════ -->
+<div class="pane" id="p-comments">
+  <div class="sec" style="margin-top:0"><span class="sec-icon">💬</span><h3>Comment Theme Analysis — 237 Total Comments</h3></div>
+  <div class="two" style="margin-bottom:24px">
+    <div class="box g">
+      <h4>✅ Themes of Praise</h4>
+      <ol>
+        <li><strong>Employee/Staff Service</strong> — #1 positive again. &ldquo;The strongest I&rsquo;ve ever seen.&rdquo; Staff repeatedly cited as what sets Snowbasin apart.</li>
+        <li><strong>Fresh Snow Impact</strong> — Guests loved it and acknowledged conditions aren&rsquo;t the resort&rsquo;s fault.</li>
+        <li><strong>Cat Crew &amp; Snowmaking</strong> — &ldquo;Tremendous work with what little snow we&rsquo;ve had!&rdquo;</li>
+        <li><strong>Lodge Facilities</strong> — &ldquo;Best restrooms ever!&rdquo; Real plates/flatware praised.</li>
+        <li><strong>Parking &amp; Shuttle</strong> — &ldquo;Smoothest traffic flow of any resort in the area.&rdquo;</li>
+        <li><strong>Learn &amp; Earn Program</strong> — Building lifetime skiers and brand loyalty.</li>
+        <li><strong>Free Parking &amp; Military</strong> — Grateful mentions from veterans and families.</li>
+      </ol>
+    </div>
+    <div class="box r">
+      <h4>⚠️ Areas of Concern</h4>
+      <ol>
+        <li><strong>Overcrowding &amp; Safety</strong> — Dominant. Near-collisions, capacity limit requests. Weekend 2/21–22 focal.</li>
+        <li><strong>Food Outages &amp; Slow Service</strong> — Multi-outlet failures. Strawberry not serving.</li>
+        <li><strong>F&amp;B Pricing</strong> — $12 fries, $17 salad. Known, recurring trend.</li>
+        <li><strong>Carpool Parking Policy</strong> — Solo/couple guests frustrated by distant lots.</li>
+        <li><strong>Ikon / Crowding</strong> — Multiple requests to limit or remove Ikon.</li>
+        <li><strong>Lesson Placement</strong> — Blue students held on green terrain too long.</li>
+        <li><strong>Gluten-Free Options</strong> — 4+ comments this week. GF buns out.</li>
+        <li><strong>Needles Run Funneling</strong> — Everything funnels to one narrow run. Safety issue.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="sec"><span class="sec-icon">⭐</span><h3>Top Guest Comments</h3></div>
+  <div class="cmt p"><span class="cmt-tag">STAFF</span>&ldquo;Your employee&rsquo;s attitudes and willingness to help was one of the strongest I&rsquo;ve ever seen. &lsquo;ALL&rsquo; were genuinely interested solely on wanting to help in &lsquo;any&rsquo; way.&rdquo;</div>
+  <div class="cmt p"><span class="cmt-tag">OPS</span>&ldquo;I&rsquo;ve been uber impressed with the Cat drivers and snow makers this season for what they have been able to do with what little snow we have had! And getting all lifts open. Tremendous!&rdquo;</div>
+  <div class="cmt p"><span class="cmt-tag">LOYALTY</span>&ldquo;I gave snow quality a 10. What it actually was wasn&rsquo;t your fault. But I feel you were heroic with what you had to work with. This is my 2nd season in UT and at Snowbasin. I will absolutely continue to make it my &lsquo;home&rsquo;.&rdquo;</div>
+  <div class="cmt p"><span class="cmt-tag">LESSONS</span>&ldquo;I took a private half day lesson with Jinger&hellip; she is absolutely phenomenal! In just 3 hours she helped progress my confidence and ability by leaps and bounds.&rdquo;</div>
+  <div class="cmt p"><span class="cmt-tag">FIRST VISIT</span>&ldquo;This was SO impressive. Staff so friendly, lodges are next level beautiful, food was great. My kids loved it. We will be back!&rdquo;</div>
+  <div class="cmt n"><span class="cmt-tag">SAFETY</span>&ldquo;We skied on Saturday 2/21. Long term IKON (15-25 days a year). Expert skiers. Grew up skiing crowded east coast. First time we have ever walked off a hill due to safety.&rdquo;</div>
+  <div class="cmt n"><span class="cmt-tag">F&amp;B</span>&ldquo;On Feb 22, Needles were out of fries, John Paul was out of buns, the philly steak place at Strawberry was out of bell peppers, and the chicken place at Strawberry was out of fries.&rdquo;</div>
+  <div class="cmt c">&ldquo;Staffing at JP Lodge has seemed inadequate on multiple occasions this season. Quality of food did not suffer, and the employees were doing a great job given the rush; huge shout out to them!&rdquo;</div>
+  <div class="cmt p"><span class="cmt-tag">F&amp;B</span>&ldquo;The pork/chevre sandwich at the carvery was the best on mountain food I&rsquo;ve ever had.&rdquo;</div>
+  <div class="cmt p"><span class="cmt-tag">VIBE</span>&ldquo;The music and vibe at the plaza was great this year. The live DJ on Presidents Day kept it fresh and fun.&rdquo;</div>
+</div>
+
+<!-- ════════════════════ RECOGNITION ════════════════════ -->
+<div class="pane" id="p-team">
+  <div class="sec" style="margin-top:0"><span class="sec-icon">🏆</span><h3>Employee Recognition — Named in Guest Comments</h3></div>
+  <div class="emp"><div class="emp-av">J</div><div><div class="emp-n">Jinger</div><div class="emp-d">Ski &amp; Snowboard Lessons</div><div class="emp-q">Two separate mentions. &ldquo;Absolutely phenomenal!&rdquo; Helped a first-year Learn &amp; Earn skier progress dramatically in 3 hours. Also promoted the Women&rsquo;s Workshop, generating interest.</div></div></div>
+  <div class="emp"><div class="emp-av">R</div><div><div class="emp-n">Reid Parish</div><div class="emp-d">Ski &amp; Snowboard Lessons</div><div class="emp-q">&ldquo;Incredibly helpful and motivating. I felt like I was a new skier by the end of the day.&rdquo;</div></div></div>
+  <div class="emp"><div class="emp-av">R</div><div><div class="emp-n">Ryan</div><div class="emp-d">Learn &amp; Earn — Year 3</div><div class="emp-q">&ldquo;I learned new skills and explored parts of the mountain I had never been to. Awesome instructor! Make sure you keep Ryan!&rdquo;</div></div></div>
+  <div class="emp"><div class="emp-av">S</div><div><div class="emp-n">Shauna Timothy</div><div class="emp-d">Private Lessons</div><div class="emp-q">Guest praised the private lesson alongside Jeff Bruggeman. Both called &ldquo;awesome.&rdquo;</div></div></div>
+  <div class="emp"><div class="emp-av">J</div><div><div class="emp-n">Jeff Bruggeman</div><div class="emp-d">Private Lessons</div><div class="emp-q">Named alongside Shauna Timothy for outstanding delivery.</div></div></div>
+  <div class="emp"><div class="emp-av">G</div><div><div class="emp-n">Garrett</div><div class="emp-d">Ski Rental Shop</div><div class="emp-q">&ldquo;Wonderful. Helped convince me of my correct boot size and helped me adjust them. Loved his service.&rdquo;</div></div></div>
+  <div class="emp"><div class="emp-av">H</div><div><div class="emp-n">Howard</div><div class="emp-d">Food &amp; Beverage</div><div class="emp-q">&ldquo;ALWAYS PROFESSIONAL, FRIENDLY, picks up after people that don&rsquo;t know where trays, dishes, recyclables go.&rdquo; Consistent performer.</div></div></div>
+  <div class="alt gr" style="margin-top:20px">
+    <h4>General Staff Recognition</h4>
+    <p>Beyond named individuals, comments overwhelmingly praised staff across every department — parking shuttle drivers, lifties, safety patrol, lodge staff. Multiple guests said Snowbasin&rsquo;s employee service &ldquo;sets it apart from other resorts.&rdquo;</p>
+  </div>
+</div>
+
+<!-- ════════════════════ OUTLOOK ════════════════════ -->
+<div class="pane" id="p-outlook">
+  <div class="sec" style="margin-top:0"><span class="sec-icon">🔭</span><h3>Forward-Looking Recommendations</h3></div>
+  <div class="alt re"><h4>⚠️ Brace for Challenging Snow Returning</h4><p>With difficult conditions ahead, expect snow quality NPS to revert toward negative territory. The playbook remains: double down on controllable operations. Grooming quality will be especially critical. Consider full-width grooming on narrow blue runs before anticipated high-traffic days to reduce funneling.</p></div>
+  <div class="alt ye"><h4>🍽️ F&amp;B: High-Volume Readiness</h4><p>This weekend&rsquo;s multi-outlet food outages are correctable. Improve demand forecasting for big weekends. Ensure Strawberry Patio is fully operational when overflow parking is in use. Stock adequate GF buns across all outlets — this is the 4th+ week of GF-specific complaints. Investigate The Overlook&rsquo;s 19-point NPS drop.</p></div>
+  <div class="alt bl"><h4>🚨 Safety &amp; Crowding Interventions</h4><p>Comments suggest specific actionable steps: wider grooming before big weekends to reduce bottlenecking, more visible speed enforcement at Needles/Main Street/City Hill, clear gondola messaging on 8-person vs 6-person loading, green-coat presence at bottom funnels during peak afternoon hours, and enforce singles line policy.</p></div>
+  <div class="alt ye"><h4>🎫 Pass Holder Attention for Renewal Season</h4><p>Premier Pass at 60.06 on the season remains the lowest pass type. Multiple comments request Premier-specific benefits (F&amp;B discounts, premium parking priority, Ikon day limits). With renewals active, tangible value differentiators matter. Value Pass also dipped this week.</p></div>
+  <div class="alt gr"><h4>✅ Celebrate the Team</h4><p>The controllable operations story continues to be remarkable: Service +4.41 YoY, Parking +11.58, Safety +4.94, F&amp;B +6.21, Rentals +5.15. Closing the season gap from 6+ points to 0.67 points during the most challenging snow year in recent memory is a direct result of this team&rsquo;s daily execution. Make sure everyone knows.</p></div>
+</div>
+
+<div class="foot">Snowbasin Resort &bull; Guest Experience Insights &bull; Qualtrics Survey Data &bull; Week Ending 2/25/2026</div>
+</div>
+
+<script>
+/* ═══ TAB LOGIC ═══ */
+document.getElementById('nav').addEventListener('click', function(e) {
+  var btn = e.target.closest('.nav-btn');
+  if (!btn) return;
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('on')});
+  document.querySelectorAll('.pane').forEach(function(p){p.classList.remove('on')});
+  btn.classList.add('on');
+  var pane = document.getElementById('p-' + btn.dataset.tab);
+  pane.classList.add('on');
+  if (btn.dataset.tab === 'trends') setTimeout(animateBars, 60);
+});
+
+/* ═══ ANIMATED NUMBER COUNTERS ═══ */
+function countUp(el, target, duration, decimals, prefix) {
+  var start = 0, startTime = null;
+  prefix = prefix || '';
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    var progress = Math.min((ts - startTime) / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3);
+    var current = start + (target - start) * eased;
+    el.textContent = prefix + current.toFixed(decimals || 2);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+setTimeout(function() {
+  countUp(document.getElementById('heroNum'), 68.54, 1200, 2);
+  countUp(document.getElementById('kpi1'), 63.76, 1000, 2);
+  countUp(document.getElementById('kpi2'), 64.43, 1000, 2);
+  countUp(document.getElementById('kpi3'), -0.67, 800, 2);
+}, 200);
+
+/* ═══ SCORE TRENDS (Signature Visual) ═══ */
+var tLeft = [
+  ['Resort Overall',63.76,64.43],['Mountain',37.72,56.88],['F&B',30.11,23.90],
+  ['Lessons',50.25,55.64],['Rentals',53.30,48.15],['Tune Shop',65.65,64.73],
+  ['Retail',54.63,56.44],['Parking',64.99,53.41],['Service',72.33,67.92],
+  ['Safety',64.29,59.35],['Likely Return',60.25,61.33]
+];
+var tMtn = [
+  ['Snow Quality',-29.95,16.41],['Trail Crowding',1.97,6.88],
+  ['Pass/Ticket Value',14.09,31.35],['Grooming',33.81,38.87],['Lift Lines',47.86,42.05]
+];
+var tFB = [
+  ['F&B Value',5.85,-2.73],['Menu Offerings',31.79,22.66],
+  ['Finding Seat/Table',33.26,5.35],['Speed of Food',41.43,38.45],['Lodge Cleanliness',82.21,73.54]
+];
+
+function pct(v){return Math.max(0,Math.min(100,((v+40)/130)*100))}
+function renderRows(items){
+  var h='';
+  items.forEach(function(r){
+    var d=(r[1]-r[2]).toFixed(1);
+    var cls=parseFloat(d)>0.5?'pos':parseFloat(d)<-0.5?'neg':'flat';
+    var sign=parseFloat(d)>0?'+':'';
+    h+='<div class="t-row"><div class="t-meta">';
+    h+='<span class="t-v a mono">'+r[1].toFixed(1)+'</span>';
+    h+='<span class="t-v b mono">'+r[2].toFixed(1)+'</span>';
+    h+='<span class="t-lbl">'+r[0]+'</span>';
+    h+='<span class="t-d '+cls+' mono">'+sign+d+'</span>';
+    h+='</div><div class="t-bars">';
+    h+='<div class="t-bar a" data-w="'+pct(r[1])+'%"></div>';
+    h+='<div class="t-bar b" data-w="'+pct(r[2])+'%"></div>';
+    h+='</div></div>';
+  });
+  return h;
+}
+
+var grid=document.getElementById('trendsGrid');
+grid.innerHTML='<div class="trends-col"><div class="trends-hdr">Overall Categories</div>'
+  +'<div class="trends-legend"><span><i style="background:var(--blue)"></i> 25-26</span><span><i style="background:var(--yel)"></i> 24-25</span></div>'
+  +renderRows(tLeft)+'</div>'
+  +'<div class="trends-col"><div class="trends-hdr">Mountain Operations</div>'
+  +'<div class="trends-legend"><span><i style="background:var(--blue)"></i> 25-26</span><span><i style="background:var(--yel)"></i> 24-25</span></div>'
+  +renderRows(tMtn)
+  +'<div class="trends-hdr" style="margin-top:24px">Food &amp; Beverage</div>'
+  +renderRows(tFB)+'</div>';
+
+function animateBars(){
+  document.querySelectorAll('.t-bar').forEach(function(b){b.style.width=b.dataset.w});
+}
+setTimeout(animateBars, 400);
+
+/* ═══ CHARTS ═══ */
+var chartFont = {family:"'DM Sans',system-ui,sans-serif"};
+var gridColor = '#f1f5f9';
+
+/* Weekly Trend */
+new Chart(document.getElementById('c1'),{type:'line',data:{labels:['12/30','1/7','1/15','1/22','1/28','2/4','2/12','2/18','2/25'],datasets:[
+  {label:'2025-26',data:[69.20,57.48,54.10,63.79,68.62,69.86,67.13,70.31,68.54],borderColor:'#2D5B9D',backgroundColor:'rgba(45,91,157,.05)',fill:true,tension:.35,borderWidth:3,pointRadius:6,pointBackgroundColor:'#2D5B9D',pointBorderColor:'#fff',pointBorderWidth:2.5,pointHoverRadius:8},
+  {label:'2024-25',data:[68.33,71.38,null,62.47,71.04,65.18,55.32,64.77,69.77],borderColor:'#FFD400',backgroundColor:'rgba(255,212,0,.03)',fill:true,tension:.35,borderWidth:2.5,borderDash:[6,3],pointRadius:5,pointBackgroundColor:'#FFD400',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:true}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11,family:chartFont.family},usePointStyle:true,pointStyle:'circle',padding:20}}},interaction:{mode:'index',intersect:false},scales:{y:{min:45,max:80,grid:{color:gridColor},ticks:{font:{size:10,family:chartFont.family}}},x:{grid:{display:false},ticks:{font:{size:10,family:chartFont.family}}}}}});
+
+/* Season Avg */
+new Chart(document.getElementById('c2'),{type:'line',data:{labels:['12/30','1/7','1/15','1/22','1/28','2/4','2/12','2/18','2/25'],datasets:[
+  {label:'2025-26 Season Avg',data:[57.70,57.48,56.20,58.95,59.95,61.32,62.01,62.98,63.76],borderColor:'#2D5B9D',backgroundColor:'rgba(45,91,157,.07)',fill:true,tension:.3,borderWidth:3,pointRadius:6,pointBackgroundColor:'#2D5B9D',pointBorderColor:'#fff',pointBorderWidth:2.5},
+  {label:'2024-25 Season Avg',data:[62.19,63.20,63.58,63.58,64.53,64.64,63.88,63.88,64.43],borderColor:'#FFD400',backgroundColor:'rgba(255,212,0,.03)',fill:true,tension:.3,borderWidth:2.5,borderDash:[6,3],pointRadius:5,pointBackgroundColor:'#FFD400',pointBorderColor:'#fff',pointBorderWidth:2}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11,family:chartFont.family},usePointStyle:true,pointStyle:'circle',padding:20}}},interaction:{mode:'index',intersect:false},scales:{y:{min:55,max:67,grid:{color:gridColor},ticks:{font:{size:10,family:chartFont.family}}},x:{grid:{display:false},ticks:{font:{size:10,family:chartFont.family}}}}}});
+
+/* Category WoW */
+new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Service','Safety','Lessons','Mountain','Parking','Return','Rentals','Retail','Tune Shop','F&B'],datasets:[
+  {label:'This Week',data:[74.76,66.88,66.67,60.25,58.65,58.62,58.00,55.67,53.85,37.25],backgroundColor:'#2D5B9D',borderRadius:4,barPercentage:.75},
+  {label:'Last Week',data:[80.54,68.61,50.00,42.29,76.21,55.02,45.24,50.77,76.92,34.24],backgroundColor:'#FFD400',borderRadius:4,barPercentage:.75},
+  {label:'LY Week (2/26/25)',data:[70.85,63.66,45.45,69.98,46.82,58.97,66.67,53.51,58.82,33.84],backgroundColor:'#4A4A4A',borderRadius:4,barPercentage:.75}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11,family:chartFont.family},usePointStyle:true,pointStyle:'rectRounded',padding:20}}},interaction:{mode:'index'},scales:{y:{beginAtZero:true,max:95,grid:{color:gridColor},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+
+/* Pass Type */
+new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['Mtn Collective','Ikon','Basin Flex','Lift Ticket','Learn & Earn','Premier','Value'],datasets:[{label:'Weekly NPS',data:[92.86,78.50,77.27,64.62,60.00,60.00,58.33],backgroundColor:function(c){return c.raw>=70?'#16a34a':c.raw>=55?'#2D5B9D':'#dc2626'},borderRadius:5,barPercentage:.65}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' NPS: '+c.raw}}}},scales:{x:{beginAtZero:true,max:100,grid:{color:gridColor},ticks:{font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:11,family:chartFont.family,weight:600}}}}}});
+</script>
+</body>
+</html>
