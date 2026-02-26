@@ -379,12 +379,7 @@ function countUp(el, target, duration, decimals, prefix) {
   }
   requestAnimationFrame(step);
 }
-setTimeout(function() {
-  countUp(document.getElementById('heroNum'), 68.54, 1200, 2);
-  countUp(document.getElementById('kpi1'), 63.76, 1000, 2);
-  countUp(document.getElementById('kpi2'), 64.43, 1000, 2);
-  countUp(document.getElementById('kpi3'), -0.67, 800, 2);
-}, 200);
+/* countUp animations deferred until PIN entry */
 
 /* ═══ SCORE TRENDS (Signature Visual) ═══ */
 var tLeft = [
@@ -435,7 +430,7 @@ grid.innerHTML='<div class="trends-col"><div class="trends-hdr">Overall Categori
 function animateBars(){
   document.querySelectorAll('.t-bar').forEach(function(b){b.style.width=b.dataset.w});
 }
-setTimeout(animateBars, 400);
+/* bar animations deferred until PIN entry */
 
 /* ═══ CHARTS ═══ */
 var chartFont = {family:"'DM Sans',system-ui,sans-serif"};
@@ -491,7 +486,14 @@ function checkPin(){
     if(entered===PIN){
       document.getElementById('lock').classList.add('gone');
       document.getElementById('mainApp').style.display='';
-      setTimeout(function(){document.getElementById('lock').remove()},500);
+      setTimeout(function(){
+        document.getElementById('lock').remove();
+        countUp(document.getElementById('heroNum'), 68.54, 1200, 2);
+        countUp(document.getElementById('kpi1'), 63.76, 1000, 2);
+        countUp(document.getElementById('kpi2'), 64.43, 1000, 2);
+        countUp(document.getElementById('kpi3'), -0.67, 800, 2);
+        animateBars();
+      },300);
     } else {
       document.getElementById('lockErr').textContent='Incorrect PIN';
       dots.forEach(function(d){d.value='';d.classList.remove('filled');d.style.borderColor='#fca5a5'});
