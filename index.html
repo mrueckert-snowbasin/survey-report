@@ -134,11 +134,25 @@ tbody tr:last-child td{border-bottom:none}
 
 .foot{text-align:center;padding:24px;font-size:10px;color:#94a3b8;letter-spacing:1px}
 
+/* ═══ PIN LOCK ═══ */
+#lock{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(145deg,#0d2240 0%,var(--blue-d) 40%,var(--blue) 100%);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .4s,visibility .4s}
+#lock.gone{opacity:0;visibility:hidden;pointer-events:none}
+.lock-box{text-align:center;color:#fff}
+.lock-box h2{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.lock-box p{font-size:12px;opacity:.4;margin-bottom:28px}
+.pin-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+.pin-dot{width:48px;height:56px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.15);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#fff;text-align:center;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none}
+.pin-dot:focus{border-color:var(--yel);background:rgba(255,212,0,.08)}
+.pin-dot.filled{border-color:rgba(255,255,255,.3)}
+.lock-err{font-size:12px;color:#fca5a5;height:18px;transition:opacity .2s}
+.lock-hint{font-size:11px;opacity:.25;margin-top:16px}
+
 @media(max-width:740px){.hero{padding:24px}.hero h1{font-size:22px}.hero-nps .num{font-size:42px}.kpis{grid-template-columns:1fr 1fr}.nav{overflow-x:auto;padding:0 16px}.nav-btn{padding:14px 16px;font-size:12px}.pane{padding:24px 20px}.two,.trends-grid{grid-template-columns:1fr}.trends-col+.trends-col{border-left:none;border-top:1px solid #e2e8f0}}
 </style>
 </head>
 <body>
-<div class="app">
+<div id="lock"><div class="lock-box"><h2>Snowbasin Survey Report</h2><p>Enter PIN to access</p><div class="pin-row"><input class="pin-dot" type="password" maxlength="1" inputmode="numeric" autofocus><input class="pin-dot" type="password" maxlength="1" inputmode="numeric"><input class="pin-dot" type="password" maxlength="1" inputmode="numeric"><input class="pin-dot" type="password" maxlength="1" inputmode="numeric"></div><div class="lock-err" id="lockErr"></div></div></div>
+<div class="app" id="mainApp" style="display:none">
 
 <!-- ════════════════════ HEADER ════════════════════ -->
 <div class="hero">
@@ -448,6 +462,44 @@ new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Service','Saf
 
 /* Pass Type */
 new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['Mtn Collective','Ikon','Basin Flex','Lift Ticket','Learn & Earn','Premier','Value'],datasets:[{label:'Weekly NPS',data:[92.86,78.50,77.27,64.62,60.00,60.00,58.33],backgroundColor:function(c){return c.raw>=70?'#16a34a':c.raw>=55?'#2D5B9D':'#dc2626'},borderRadius:5,barPercentage:.65}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' NPS: '+c.raw}}}},scales:{x:{beginAtZero:true,max:100,grid:{color:gridColor},ticks:{font:{size:10}}},y:{grid:{display:false},ticks:{font:{size:11,family:chartFont.family,weight:600}}}}}});
+
+/* ═══ PIN LOCK ═══ */
+var dots=document.querySelectorAll('.pin-dot');
+var PIN='1940';
+dots.forEach(function(dot,i){
+  dot.addEventListener('input',function(){
+    if(dot.value.length===1){
+      dot.classList.add('filled');
+      if(i<3)dots[i+1].focus();
+      checkPin();
+    }
+  });
+  dot.addEventListener('keydown',function(e){
+    if(e.key==='Backspace'&&dot.value===''&&i>0){dots[i-1].focus();dots[i-1].value='';dots[i-1].classList.remove('filled')}
+  });
+  dot.addEventListener('paste',function(e){
+    e.preventDefault();
+    var paste=(e.clipboardData||window.clipboardData).getData('text').trim();
+    for(var j=0;j<Math.min(paste.length,4);j++){dots[j].value=paste[j];dots[j].classList.add('filled')}
+    checkPin();
+  });
+});
+function checkPin(){
+  var entered='';
+  dots.forEach(function(d){entered+=d.value});
+  if(entered.length===4){
+    if(entered===PIN){
+      document.getElementById('lock').classList.add('gone');
+      document.getElementById('mainApp').style.display='';
+      setTimeout(function(){document.getElementById('lock').remove()},500);
+    } else {
+      document.getElementById('lockErr').textContent='Incorrect PIN';
+      dots.forEach(function(d){d.value='';d.classList.remove('filled');d.style.borderColor='#fca5a5'});
+      dots[0].focus();
+      setTimeout(function(){dots.forEach(function(d){d.style.borderColor=''});document.getElementById('lockErr').textContent=''},1500);
+    }
+  }
+}
 </script>
 </body>
 </html>
