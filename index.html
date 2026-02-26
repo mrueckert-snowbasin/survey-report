@@ -54,6 +54,35 @@ body{font-family:'DM Sans',system-ui,sans-serif;color:#1e293b;background:var(--b
 .sec:first-child{margin-top:0}
 .sec h3{font-size:17px;font-weight:700;color:var(--blue)}
 .sec-icon{font-size:20px}
+/* Recovery tab */
+.rc{border:1px solid #dde3ed;border-radius:10px;padding:0;margin-bottom:16px;overflow:hidden;transition:box-shadow .2s}
+.rc:hover{box-shadow:0 2px 12px rgba(45,91,157,.12)}
+.rc-head{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;background:#f8f9fb}
+.rc-head:hover{background:#f0f4f8}
+.rc-pri{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.rc-pri.high{background:#fee2e2;color:#991b1b}
+.rc-pri.med{background:#fef3c7;color:#92400e}
+.rc-pri.low{background:#e0f2fe;color:#075985}
+.rc-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:12px;background:#ede9fe;color:#5b21b6;white-space:nowrap}
+.rc-title{font-weight:700;font-size:13px;color:#1e293b;flex:1}
+.rc-arrow{font-size:14px;color:#94a3b8;transition:transform .25s}
+.rc.open .rc-arrow{transform:rotate(90deg)}
+.rc-body{display:none;padding:0 18px 18px 18px}
+.rc.open .rc-body{display:block;animation:fadeSlide .3s ease}
+.rc-quote{background:#fef9ee;border-left:3px solid #FFD400;padding:10px 14px;border-radius:0 6px 6px 0;font-style:italic;font-size:12.5px;color:#555;margin-bottom:14px;line-height:1.5}
+.rc-ai{position:relative;background:linear-gradient(135deg,#f0f4ff,#e8f0fa);border:1px solid #c7d6ec;border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.rc-ai::before{content:'🤖 AI-DRAFTED REPLY';position:absolute;top:-9px;left:14px;font-size:9px;font-weight:700;letter-spacing:1px;color:#2D5B9D;background:#f0f4ff;padding:0 6px;border-radius:4px}
+.rc-ai p{font-size:12.5px;line-height:1.6;color:#334155;margin:4px 0 0}
+.rc-ai .sig{color:#64748b;font-size:11.5px;margin-top:8px}
+.rc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rc-meta span{font-size:10px;padding:3px 8px;border-radius:12px;background:#f1f5f9;color:#475569;font-weight:500}
+.rc-intro{background:linear-gradient(135deg,#f0f4ff,#e8f0fa);border:1px solid #c7d6ec;border-radius:10px;padding:18px 20px;margin-bottom:20px}
+.rc-intro h4{font-size:14px;font-weight:700;color:#2D5B9D;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.rc-intro p{font-size:12.5px;color:#475569;line-height:1.55;margin:0}
+.rc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.rc-stat{text-align:center;padding:12px;border-radius:8px;border:1px solid #e2e8f0}
+.rc-stat .num{font-size:22px;font-weight:800;color:#2D5B9D}
+.rc-stat .lbl{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 
 /* ═══ SUMMARY BOX ═══ */
 .brief{background:linear-gradient(135deg,#eef4fc,#f5f8ff);border-left:4px solid var(--blue);padding:22px 28px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:28px;font-size:14px;line-height:1.75}
@@ -187,6 +216,7 @@ tbody tr:last-child td{border-bottom:none}
   <button class="nav-btn" data-tab="comments">Comments &amp; Themes</button>
   <button class="nav-btn" data-tab="team">Recognition</button>
   <button class="nav-btn" data-tab="outlook">Outlook</button>
+  <button class="nav-btn" data-tab="recovery" style="background:linear-gradient(135deg,#2D5B9D,#1a3d6e);color:#fff;border:none">🤖 Guest Recovery</button>
 </div>
 
 <!-- ════════════════════ OVERVIEW ════════════════════ -->
@@ -347,6 +377,266 @@ tbody tr:last-child td{border-bottom:none}
   <div class="alt bl"><h4>🚨 Safety &amp; Crowding Interventions</h4><p>Comments suggest specific actionable steps: wider grooming before big weekends to reduce bottlenecking, more visible speed enforcement at Needles/Main Street/City Hill, clear gondola messaging on 8-person vs 6-person loading, green-coat presence at bottom funnels during peak afternoon hours, and enforce singles line policy.</p></div>
   <div class="alt ye"><h4>🎫 Pass Holder Attention for Renewal Season</h4><p>Premier Pass at 60.06 on the season remains the lowest pass type. Multiple comments request Premier-specific benefits (F&amp;B discounts, premium parking priority, Ikon day limits). With renewals active, tangible value differentiators matter. Value Pass also dipped this week.</p></div>
   <div class="alt gr"><h4>✅ Celebrate the Team</h4><p>The controllable operations story continues to be remarkable: Service +4.41 YoY, Parking +11.58, Safety +4.94, F&amp;B +6.21, Rentals +5.15. Closing the season gap from 6+ points to 0.67 points during the most challenging snow year in recent memory is a direct result of this team&rsquo;s daily execution. Make sure everyone knows.</p></div>
+</div>
+
+</div>
+
+<div class="pane" id="p-recovery">
+  <div class="rc-intro">
+    <h4>🤖 AI-Powered Guest Recovery — Week of 2/25/2026</h4>
+    <p>Claude identified <strong>10 guest comments</strong> this week with recovery potential — situations where a proactive response could save a relationship, resolve a specific issue, or turn a detractor into an advocate. Each includes an AI-drafted reply for your team to review, personalize, and send. Drafts are intentionally measured — they acknowledge without over-promising.</p>
+  </div>
+
+  <div class="rc-stats">
+    <div class="rc-stat" style="border-color:#fee2e2"><div class="num" style="color:#dc2626">3</div><div class="lbl">High Priority</div></div>
+    <div class="rc-stat" style="border-color:#fef3c7"><div class="num" style="color:#d97706">5</div><div class="lbl">Medium Priority</div></div>
+    <div class="rc-stat" style="border-color:#e0f2fe"><div class="num" style="color:#0284c7">2</div><div class="lbl">Lower Priority</div></div>
+  </div>
+
+  <!-- CASE 1 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri high">High</span>
+      <span class="rc-tag">📞 Contact Info Left</span>
+      <span class="rc-title">Expert Ikon Skier Walked Off Mountain — Left Phone Number</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"We skied on Saturday 2/21. Long term IKON (15-25 days a year). Snowbasin 2-4/yr. Expert skiers. Grew up skiing crowded east coast. First time we have ever walked off a hill due to safety. Talked to Katelyn and expressed our safety concerns. Too much straight lining in narrow sections on blue runs… If you want to talk more 8478678536."</div>
+      <div class="rc-ai">
+        <p>Hi — thank you for taking the time to share this, and for speaking with Katelyn on the mountain. A guest with your experience walking off the hill is something we take very seriously.</p>
+        <p>You're right that the weekend of 2/21 brought the first significant snowfall of the season, which combined with weekend timing to create visitation levels well above a normal Saturday. We know the funneling effect on lower blue runs is a real pain point, and your feedback reinforces work we're doing around speed enforcement positioning and grooming width on high-traffic days.</p>
+        <p>I'd welcome the chance to connect by phone if you're open to it — I'd like to hear more about what you experienced and share some of the operational steps we're taking. We value guests like you who visit year after year, and we want to earn your next trip back.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🎫 Ikon Pass — 15-25 days/yr</span>
+        <span>📞 847-867-8536</span>
+        <span>🎯 Action: Phone call from Guest Services or Safety Manager</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 2 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri high">High</span>
+      <span class="rc-tag">💰 Refund Request</span>
+      <span class="rc-title">Leighton Chan — Rained Out, Requesting Credit (Order #SB212485)</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"I purchased two days at snow basin, but we got rained out on one day last week. Can I get a raincheck and use that day next year? Leighton Chan. The day I missed was 2/13/26, Order Number: SB212485. Thanks for considering this...I love the place, but early Feb was a snow disaster.....LC"</div>
+      <div class="rc-ai">
+        <p>Hi Leighton — thank you for reaching out, and we appreciate your loyalty to Snowbasin. We completely understand that a rain day in February is not the experience anyone plans for.</p>
+        <p>I've flagged your order (SB212485) for our ticketing team to review. Someone will be in touch directly regarding options for your unused day. We want to make sure we take care of you.</p>
+        <p>We hope this winter's conditions haven't dampened your enthusiasm too much — we'd love to see you back on the mountain.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🧾 Order #SB212485</span>
+        <span>📅 Missed Day: 2/13/26</span>
+        <span>🎯 Action: Forward to Ticketing for credit review per existing policy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 3 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri high">High</span>
+      <span class="rc-tag">⚠️ At-Risk Loyalty</span>
+      <span class="rc-title">20-Year Visitor from Puerto Rico — "Worst Impression Ever"</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"After 20 years coming every season from Puerto Rico, I'm very disappointed with the attitude of actual staff at Snowbasin.. I got the worst impression of Snowbasin ever. Thinking in NOT coming more to your resort"</div>
+      <div class="rc-ai">
+        <p>We were sorry to read this — and after 20 years of visiting from Puerto Rico, that kind of loyalty means a great deal to us. The last thing we want is for a staff interaction to overshadow two decades of memories here.</p>
+        <p>If you're willing, we'd appreciate learning more about what happened so we can address it directly. You can reach our Guest Experience team at [email/phone]. We take feedback from our long-time guests especially seriously, because your perspective helps us see things we might otherwise miss.</p>
+        <p>We hope this doesn't define your relationship with Snowbasin — and we'd like the chance to make your next visit better.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🏝️ Travels from Puerto Rico annually</span>
+        <span>📆 20-year guest</span>
+        <span>🎯 Action: If identifiable via survey data, personal outreach from GM or senior leader</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 4 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri med">Medium</span>
+      <span class="rc-tag">💰 Refund Request</span>
+      <span class="rc-title">Wife Injured Day 1 of 3-Day Flex — Asking About Credit</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"My wife did get hurt the first day and could not ski the last two of our 3-day flex cards, can that get refunded or credit for next year?"</div>
+      <div class="rc-ai">
+        <p>We're sorry to hear about your wife's injury — we hope she's recovering well. We understand how frustrating it is to lose ski days due to something unexpected.</p>
+        <p>Please reach out to our Guest Services team at [phone/email] with your order details, and we'll review what options are available. We want to make sure you feel taken care of.</p>
+        <p>Wishing your wife a speedy recovery, and we hope to see you both back on the mountain.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🎫 3-Day Flex Card</span>
+        <span>🎯 Action: Route to Ticketing — review injury credit policy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 5 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri med">Medium</span>
+      <span class="rc-tag">⚠️ Service Failure</span>
+      <span class="rc-title">Family Accused of Stealing — Screaming Match with Employee</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"Your employees are trash… every time I go there they treat us like criminals… I was walking from the lodge to the gift shop with my board and my wife's and daughter and one sons board and got into a screaming match with one of your workers because he accused me of stealing… this time one of your coworkers stopped me in front of the lodge thinking I was bringing in outside alcohol… both said something along the lines of these hoodlum teenage snowboarders."</div>
+      <div class="rc-ai">
+        <p>Thank you for sharing this, and we sincerely apologize for those interactions. Being profiled or treated with suspicion — especially when you're with your family — is not the experience we want anyone to have at Snowbasin.</p>
+        <p>Equipment security and policy enforcement are part of our operations, but they should never come at the expense of treating guests with dignity and respect. We'd like to learn more about these incidents so we can address them with the specific teams involved. If you're willing, please reach out to our Guest Experience team at [email/phone].</p>
+        <p>We appreciate you speaking up. This kind of feedback helps us get better.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🏂 Snowboard family — multiple visits</span>
+        <span>⚠️ Repeat negative interactions</span>
+        <span>🎯 Action: Internal review with lodge/security staff; follow up if identifiable</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 6 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri med">Medium</span>
+      <span class="rc-tag">🎿 Lesson Issue</span>
+      <span class="rc-title">"Lesson Jail" — 3 Bad Lessons, Blue Group Stuck on Green Terrain</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"We participated in 3 lessons and they were all terrible. Despite being in blue groups, the vast majority of time was spent on the little green hill… We freed our daughter from 'lesson jail' at lunch time and she was able to go right up the gondola and make it down on blues fine."</div>
+      <div class="rc-ai">
+        <p>Thank you for this feedback — three lessons that didn't match your daughter's ability is not the experience our Ski &amp; Snowboard School is aiming for, and we understand the frustration.</p>
+        <p>Our group lessons use assessment-based placement, but your daughter's experience suggests we may need to look at how mid-lesson progression is handled, especially for students who are ready to advance beyond the initial group level. We've shared this with our Ski School Director.</p>
+        <p>If you're planning another visit, we'd encourage you to mention this experience when checking in for lessons — our team can work to ensure a better match from the start.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🎫 3 paid lessons</span>
+        <span>🎯 Action: Flag for Ski School Director — review group placement process</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 7 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri med">Medium</span>
+      <span class="rc-tag">♿ Accessibility</span>
+      <span class="rc-title">Adaptive Skier Waited 30+ Minutes — Order Never Placed</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"When I ordered my burger the tall guy with kinda long brown hair &amp; mustache did not put my order on the grill so I did not receive my lunch for over a half hour &amp; I am an adaptive skier below the knee amputee which really took a toll on standing there waiting… the latino guy asked if I had been helped &amp; I explained to him what happened &amp; he took care of me right away"</div>
+      <div class="rc-ai">
+        <p>We're sorry about this experience — waiting 30+ minutes for an order that was never placed is unacceptable, and we especially understand the physical impact for you as an adaptive skier. That shouldn't happen to anyone.</p>
+        <p>We're glad one of our team members stepped in to help get you taken care of, and we'll be sharing that positive recognition with him. On the other side, we're using this feedback as a coaching opportunity with the staff involved.</p>
+        <p>Thank you for your patience that day, and for continuing to enjoy the mountain. We admire what you do out there.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>♿ Adaptive skier — below-knee amputee</span>
+        <span>👏 Second employee rescued the situation</span>
+        <span>🎯 Action: Share with F&amp;B Manager for coaching; recognize helpful employee</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 8 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri med">Medium</span>
+      <span class="rc-tag">🎿 Lesson Cancelled</span>
+      <span class="rc-title">Kid's Christmas Gift Lesson Cancelled Last Minute</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"My ski lesson was cancelled a day before it was scheduled. This lesson was made for a kiddo visiting for the first time and we had to scramble to find somewhere else that had openings last minute for his Christmas gift."</div>
+      <div class="rc-ai">
+        <p>We're sorry about this — a cancelled lesson is disappointing in any circumstance, but we understand how much worse it feels when it's a child's first experience and a Christmas gift. Having to scramble for a last-minute alternative isn't the Snowbasin experience we strive for.</p>
+        <p>If you haven't been able to reschedule with us, we'd like to help make this right. Please reach out to our Ski School team at [phone/email] and reference this feedback — we'll do our best to get your kiddo on the mountain with us.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🎁 Christmas gift — child's first time</span>
+        <span>🎯 Action: Ski School follow-up — offer to rebook with priority</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 9 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri low">Lower</span>
+      <span class="rc-tag">🍽️ Recurring Issue</span>
+      <span class="rc-title">Repeat GF Visitor — Out of Gluten-Free Buns on Both Visits</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"Please, please, please make sure to have one gluten free option at each eating establishment. I was there on the 14th and 21st. Earl's lodge was out of gluten free buns, and then John Paul was out today them on my last visit. That forced me to eat burgers and a pair sandwich open face."</div>
+      <div class="rc-ai">
+        <p>Thank you for this feedback — and we hear the frustration of two visits in a row without GF buns available. That's not the consistency you should expect from us.</p>
+        <p>We've shared this with our F&amp;B management team and are reviewing stocking levels for gluten-free items across all outlets. Our goal is to ensure at least one reliable GF option is always available at each location. We appreciate your patience while we improve here.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>📅 Visited 2/14 and 2/21</span>
+        <span>🍞 GF buns out at Earl's AND John Paul</span>
+        <span>🎯 Action: F&amp;B ops — audit GF inventory levels weekly</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 10 -->
+  <div class="rc" onclick="this.classList.toggle('open')">
+    <div class="rc-head">
+      <span class="rc-pri low">Lower</span>
+      <span class="rc-tag">🍽️ Operations Gap</span>
+      <span class="rc-title">Needles Closed at 3:50 + Filthy Tables — "Feel Unwelcome"</span>
+      <span class="rc-arrow">▶</span>
+    </div>
+    <div class="rc-body">
+      <div class="rc-quote">"Tried to grab some food and drinks at Needles lodge at 3:50 and was told they were closing so we would need to ski down to Earls if we wanted to eat. We sat down at a table anyway to enjoy the view and have some water. The tables were filthy like they had not been wiped down at all that day. Snowbasin is and will be my primary ski destination, but the lack of Apres ski options and post 4:30 (3:50 at Needles) push to leave makes us feel unwelcome."</div>
+      <div class="rc-ai">
+        <p>Thank you for sharing this — "feeling unwelcome" is the opposite of what we want, especially from a guest who calls Snowbasin their primary destination.</p>
+        <p>We understand the frustration of arriving at a lodge expecting to wind down and being told it's closing. We'll review the table maintenance schedule at Needles to ensure it stays up to standard throughout the day, not just at open. As for après options, it's something we hear from guests and we're always evaluating how to extend the end-of-day experience.</p>
+        <p>We appreciate you sticking with us and speaking up — it helps.</p>
+        <p class="sig">— Snowbasin Guest Experience Team</p>
+      </div>
+      <div class="rc-meta">
+        <span>🏠 Primary ski destination</span>
+        <span>🎯 Action: F&amp;B/Facilities — review Needles closing procedure &amp; table wipe schedule</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rc-intro" style="margin-top:20px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:#86efac">
+    <h4 style="color:#166534">💡 How This Could Work as an Automated Agent</h4>
+    <p style="margin-bottom:8px">In a fully automated workflow, Claude could process incoming Qualtrics survey data weekly and:</p>
+    <p><strong>1. Identify</strong> — Scan every comment for recovery signals: contact info left, refund requests, at-risk loyalty language, specific service failures, accessibility concerns, and repeat issues.<br>
+    <strong>2. Prioritize</strong> — Score each case by guest value (pass type, visit frequency, travel distance), severity, and recoverability.<br>
+    <strong>3. Draft</strong> — Generate tailored responses that match your brand voice, acknowledge specifics, and suggest next steps without over-committing.<br>
+    <strong>4. Route</strong> — Tag each case to the right department (Ticketing, Ski School, F&amp;B, Safety, GM) with action items.<br>
+    <strong>5. Track</strong> — Log outcomes week over week to measure recovery success rate and guest retention impact.</p>
+    <p style="margin-top:8px"><em>This tab is a proof of concept. Every draft above was generated from this week's raw survey comments with no manual input.</em></p>
+  </div>
 </div>
 
 <div class="foot">Snowbasin Resort &bull; Guest Experience Insights &bull; Qualtrics Survey Data &bull; Week Ending 2/25/2026</div>
