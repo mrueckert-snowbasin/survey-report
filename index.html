@@ -1471,9 +1471,22 @@ function resetGame(){
   lodgeSpawned=false;
   familyZoneFences=[];
   familyZoneLabel=null;
+  trailSigns=[];
+  trailSignIndex=0;
 }
 
 var bearHollowDone=false, lodgeSpawned=false;
+var trailSigns=[], trailSignIndex=0;
+
+var TRAIL_SIGN_SCHEDULE = [
+  { frame:350,  name:'Sweet Revenge',       type:'blue' },
+  { frame:550,  name:'City Hill',            type:'blue' },
+  { frame:800,  name:'Wildcat Bowl',         type:'blue' },
+  { frame:1100, name:'Wildflower Downhill',  type:'diamond' },
+  { frame:1450, name:'Grizzly Downhill',     type:'diamond' },
+  { frame:1850, name:'No Name',             type:'double' },
+  { frame:2300, name:'Lone Tree',           type:'double' }
+];
 var familyZoneFences=[], familyZoneLabel=null;
 
 function spawnObstacle(){
@@ -1597,6 +1610,20 @@ function update(){
   // Spawn green coats every ~400 frames
   if(frame%400===200) spawnGreenCoat();
 
+  // Spawn trail signs at set frames
+  if(trailSignIndex < TRAIL_SIGN_SCHEDULE.length && frame >= TRAIL_SIGN_SCHEDULE[trailSignIndex].frame){
+    var ts = TRAIL_SIGN_SCHEDULE[trailSignIndex];
+    var W=canvas._w, H=canvas._h;
+    trailSigns.push({ x: W-45, y: H+20, name:ts.name, type:ts.type });
+    trailSignIndex++;
+  }
+
+  // Update trail signs (scroll up, no collision)
+  for(var s=trailSigns.length-1;s>=0;s--){
+    trailSigns[s].y -= speed;
+    if(trailSigns[s].y < -60) trailSigns.splice(s,1);
+  }
+
   tooCloseTimer=Math.max(0,tooCloseTimer-1);
 
   // Update obstacles
@@ -1714,6 +1741,11 @@ function draw(){
   ctx.beginPath(); ctx.moveTo(35,0); ctx.lineTo(35,H); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(W-35,0); ctx.lineTo(W-35,H); ctx.stroke();
   ctx.setLineDash([]);
+
+  // Trail signs (scenery, right side)
+  for(var s=0;s<trailSigns.length;s++){
+    drawTrailSign(trailSigns[s]);
+  }
 
   // Bear Hollow Family Zone elements
   for(var f=0;f<familyZoneFences.length;f++){
@@ -2102,6 +2134,55 @@ function drawMoose(x,y,o){
   ctx.font='bold 10px Source Sans Pro, sans-serif';
   ctx.textAlign='center';
   ctx.fillText('🫎 MOOSE!',x,y-28);
+}
+
+function drawTrailSign(s){
+  var x=s.x, y=s.y;
+  // Post
+  ctx.fillStyle='#654321';
+  ctx.fillRect(x-2,y-6,4,28);
+  // Sign board
+  ctx.fillStyle='#f5f0e0';
+  ctx.strokeStyle='#8B7355';
+  ctx.lineWidth=1.5;
+  roundRect(ctx,x-55,y-24,58,22,3); ctx.fill();
+  roundRect(ctx,x-55,y-24,58,22,3); ctx.stroke();
+  // Difficulty symbol
+  var symX=x-50, symY=y-13;
+  if(s.type==='blue'){
+    // Blue square
+    ctx.fillStyle='#2D5B9D';
+    ctx.fillRect(symX-5,symY-5,10,10);
+  } else if(s.type==='diamond'){
+    // Black diamond
+    ctx.fillStyle='#111';
+    ctx.beginPath();
+    ctx.moveTo(symX,symY-6);
+    ctx.lineTo(symX+6,symY);
+    ctx.lineTo(symX,symY+6);
+    ctx.lineTo(symX-6,symY);
+    ctx.closePath(); ctx.fill();
+  } else if(s.type==='double'){
+    // Double black diamond
+    ctx.fillStyle='#111';
+    ctx.beginPath();
+    ctx.moveTo(symX-3,symY-6);
+    ctx.lineTo(symX+3,symY);
+    ctx.lineTo(symX-3,symY+6);
+    ctx.lineTo(symX-9,symY);
+    ctx.closePath(); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(symX+4,symY-6);
+    ctx.lineTo(symX+10,symY);
+    ctx.lineTo(symX+4,symY+6);
+    ctx.lineTo(symX-2,symY);
+    ctx.closePath(); ctx.fill();
+  }
+  // Trail name
+  ctx.fillStyle='#333';
+  ctx.font='bold 9px Source Sans Pro, sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText(s.name,symX+9,symY+3);
 }
 
 function drawFence(x,y,w){
