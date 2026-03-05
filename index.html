@@ -1598,8 +1598,8 @@ function update(){
   skier.x+=skier.vx;
   skier.x=Math.max(18,Math.min(W-18,skier.x));
 
-  // Spawn obstacles
-  if(frame%Math.max(10,28-Math.floor(frame/180))===0) spawnObstacle();
+  // Spawn obstacles (pause during Bear Hollow so corridor stays clear)
+  if(!bearHollowActive && frame%Math.max(10,28-Math.floor(frame/180))===0) spawnObstacle();
   // Spawn green coats every ~400 frames
   if(frame%400===200) spawnGreenCoat();
 
