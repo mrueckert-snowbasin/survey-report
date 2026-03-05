@@ -1605,14 +1605,14 @@ function update(){
   skier.x+=skier.vx;
   skier.x=Math.max(18,Math.min(W-18,skier.x));
 
-  // Spawn obstacles (no trees/rocks during Bear Hollow, boarders still come)
+  // Spawn obstacles (no trees/rocks from first fence to last fence in Bear Hollow)
   if(frame%Math.max(10,28-Math.floor(frame/180))===0){
-    if(bearHollowActive){
-      // Only spawn boarders during Bear Hollow
+    if(bearHollowPending || bearHollowActive){
+      // Only boarders while zone fences exist
       if(Math.random()<0.14){
-        var W=canvas._w;
+        var W2=canvas._w;
         obstacles.push({
-          x:50+Math.random()*(W-100), y:-40,
+          x:50+Math.random()*(W2-100), y:-40,
           width:20, height:30, kind:'boarder', passed:false,
           wobble:(Math.random()-0.5)*3,
           boarderAngle:Math.random()*0.3-0.15,
@@ -1713,9 +1713,10 @@ function update(){
     if(fz.isEntrance && !bearHollowActive && fz.y<=skier.y){
       bearHollowActive=true; bearHollowPending=false;
     }
-    // Deactivate when exit gate passes player
-    if(fz.isExit && bearHollowActive && fz.y<=skier.y){
+    // Deactivate when exit gate passes player — spawning resumes
+    if(fz.isExit && fz.y<=skier.y){
       bearHollowActive=false;
+      bearHollowPending=false;
     }
     
     if(fz.y<-100) familyZoneFences.splice(f,1);
