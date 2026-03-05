@@ -1467,24 +1467,46 @@ function resetGame(){
   gameOver=false; gameStarted=false;
   tooCloseTimer=0;
   crashCodeIndex = Math.floor(Math.random()*RESPONSIBILITY_CODE.length);
+  bearHollowActive=false;
+  bearHollowCooldown=0;
+  lodgeSpawned=false;
+  familyZoneFences=[];
+  familyZoneLabel=null;
 }
+
+var bearHollowActive=false, bearHollowCooldown=0, lodgeSpawned=false;
+var familyZoneFences=[], familyZoneLabel=null;
 
 function spawnObstacle(){
   var W=canvas._w, H=canvas._h;
   var type=Math.random(), w, h, kind;
-  if(type<0.5){ kind='tree'; w=22+Math.random()*16; h=34+Math.random()*18; }
-  else if(type<0.7){ kind='rock'; w=24+Math.random()*18; h=16+Math.random()*12; }
-  else if(type<0.88){ kind='boarder'; w=20; h=30; }
-  else if(type<0.95){ kind='lodge'; w=60; h=45; }
+  
+  // Spawn starting lodge once near the beginning
+  if(!lodgeSpawned && frame>30 && frame<60){
+    lodgeSpawned=true;
+    obstacles.push({
+      x: W*0.75, y: H+20,
+      width:60, height:45, kind:'lodge', passed:false,
+      wobble:0, boarderAngle:0, mooseDir:0, mooseSpeed:0
+    });
+  }
+  
+  // Bear Hollow Family Zone - triggers periodically
+  if(!bearHollowActive && bearHollowCooldown<=0 && frame>300 && Math.random()<0.008){
+    spawnBearHollow();
+    return;
+  }
+  
+  if(type<0.55){ kind='tree'; w=22+Math.random()*16; h=34+Math.random()*18; }
+  else if(type<0.72){ kind='rock'; w=24+Math.random()*18; h=16+Math.random()*12; }
+  else if(type<0.92){ kind='boarder'; w=20; h=30; }
   else { kind='moose'; w=36; h=32; }
   
   var startY, startX;
   if(kind==='boarder'){
-    // Boarders come from BEHIND (top) going downhill fast
     startY = -40;
     startX = 50+Math.random()*(W-100);
   } else if(kind==='moose'){
-    // Moose runs across the trail from one side
     startY = H * (0.3 + Math.random()*0.4);
     startX = Math.random()<0.5 ? -40 : W+40;
   } else {
@@ -1500,6 +1522,57 @@ function spawnObstacle(){
     mooseDir: kind==='moose' ? (startX<0 ? 1 : -1) : 0,
     mooseSpeed: 2.5+Math.random()*2
   });
+}
+
+function spawnBearHollow(){
+  var W=canvas._w, H=canvas._h;
+  bearHollowActive=true;
+  bearHollowCooldown=800;
+  
+  var gateY = H+40;
+  var gateWidth = 130; // narrowed passage
+  var centerX = W/2 + (Math.random()-0.5)*60;
+  var leftEdge = centerX - gateWidth/2;
+  var rightEdge = centerX + gateWidth/2;
+  
+  // Zone label
+  familyZoneLabel = { y: gateY+80, opacity:1 };
+  
+  // Entrance fences - left side
+  familyZoneFences.push(
+    { x:leftEdge/2, y:gateY, width:leftEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
+    { x:W-(W-rightEdge)/2, y:gateY, width:W-rightEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
+  );
+  
+  // Entrance gate posts
+  familyZoneFences.push(
+    { x:leftEdge, y:gateY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
+    { x:rightEdge, y:gateY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
+  );
+  
+  // FAMILY ZONE and BEAR HOLLOW signs
+  familyZoneFences.push(
+    { x:leftEdge-30, y:gateY+30, width:10, kind:'sign_family', passed:false, height:10, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
+    { x:rightEdge+30, y:gateY+30, width:10, kind:'sign_bear', passed:false, height:10, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
+  );
+  
+  // Slow-moving families inside the zone (small slow obstacles)
+  for(var f=0;f<3;f++){
+    familyZoneFences.push({
+      x: centerX + (Math.random()-0.5)*gateWidth*0.6,
+      y: gateY - 80 - f*90,
+      width:14, height:18, kind:'family',
+      passed:false, wobble:(Math.random()-0.5)*0.5,
+      boarderAngle:0, mooseDir:0, mooseSpeed:0
+    });
+  }
+  
+  // Exit fences
+  var exitY = gateY - 350;
+  familyZoneFences.push(
+    { x:leftEdge/2, y:exitY, width:leftEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
+    { x:W-(W-rightEdge)/2, y:exitY, width:W-rightEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
+  );
 }
 
 function spawnGreenCoat(){
@@ -1591,6 +1664,31 @@ function update(){
     g.bubble = gy<200 ? Math.min(1, g.bubble+0.05) : Math.max(0, g.bubble-0.05);
     if(g.y<-80) greenCoats.splice(j,1);
   }
+  
+  // Update Bear Hollow cooldown
+  if(bearHollowCooldown>0) bearHollowCooldown--;
+  
+  // Update Bear Hollow fences
+  for(var f=familyZoneFences.length-1;f>=0;f--){
+    var fz=familyZoneFences[f];
+    if(fz.kind==='family'){
+      fz.y -= speed*0.4;
+      fz.x += fz.wobble;
+    } else {
+      fz.y -= speed;
+    }
+    if(fz.kind==='fence'||fz.kind==='gatepost'||fz.kind==='family'){
+      var fdx=skier.x-fz.x, fdy=skier.y-fz.y;
+      var fhw=(skier.width+fz.width)*0.4, fhh=(skier.height+fz.height)*0.4;
+      if(Math.abs(fdx)<fhw && Math.abs(fdy)<fhh){
+        gameOver=true; if(score>highScore) highScore=score; return;
+      }
+    }
+    if(!fz.passed && fz.y<skier.y-20){ fz.passed=true; if(fz.kind==='family') score+=2; }
+    if(fz.y<-100) familyZoneFences.splice(f,1);
+  }
+  if(familyZoneLabel){ familyZoneLabel.y-=speed; if(familyZoneLabel.y<-60) familyZoneLabel=null; }
+  if(bearHollowActive && familyZoneFences.length===0) bearHollowActive=false;
 }
 
 function draw(){
@@ -1626,6 +1724,26 @@ function draw(){
   ctx.beginPath(); ctx.moveTo(35,0); ctx.lineTo(35,H); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(W-35,0); ctx.lineTo(W-35,H); ctx.stroke();
   ctx.setLineDash([]);
+
+  // Bear Hollow Family Zone elements
+  for(var f=0;f<familyZoneFences.length;f++){
+    var fz=familyZoneFences[f];
+    if(fz.kind==='fence') drawFence(fz.x,fz.y,fz.width);
+    else if(fz.kind==='gatepost') drawGatePost(fz.x,fz.y);
+    else if(fz.kind==='sign_family') drawZoneSign(fz.x,fz.y,'FAMILY ZONE');
+    else if(fz.kind==='sign_bear') drawZoneSign(fz.x,fz.y,'BEAR HOLLOW');
+    else if(fz.kind==='family') drawFamilyGroup(fz.x,fz.y);
+  }
+  
+  // Bear Hollow zone label banner
+  if(familyZoneLabel && familyZoneLabel.y>0 && familyZoneLabel.y<H){
+    ctx.fillStyle='rgba(255,140,0,0.85)';
+    roundRect(ctx,W/2-90,familyZoneLabel.y-14,180,28,14); ctx.fill();
+    ctx.fillStyle='#fff';
+    ctx.font='bold 13px Source Sans Pro, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('⚠ ENTERING BEAR HOLLOW',W/2,familyZoneLabel.y+4);
+  }
 
   // Green Coats
   for(var j=0;j<greenCoats.length;j++){
@@ -1994,6 +2112,92 @@ function drawMoose(x,y,o){
   ctx.font='bold 10px Source Sans Pro, sans-serif';
   ctx.textAlign='center';
   ctx.fillText('🫎 MOOSE!',x,y-28);
+}
+
+function drawFence(x,y,w){
+  // Orange ski fence barrier
+  ctx.fillStyle='#ff6600';
+  var hw=w/2;
+  ctx.fillRect(x-hw,y-4,w,8);
+  // Fence poles
+  ctx.fillStyle='#333';
+  var poles=Math.max(2,Math.floor(w/20));
+  for(var p=0;p<poles;p++){
+    var px=x-hw+p*(w/(poles-1));
+    ctx.fillRect(px-1.5,y-14,3,22);
+  }
+  // Orange netting between poles
+  ctx.strokeStyle='rgba(255,102,0,0.6)';
+  ctx.lineWidth=1;
+  for(var n=0;n<poles-1;n++){
+    var nx1=x-hw+n*(w/(poles-1));
+    var nx2=x-hw+(n+1)*(w/(poles-1));
+    for(var r=0;r<3;r++){
+      var ry=y-12+r*5;
+      ctx.beginPath(); ctx.moveTo(nx1,ry); ctx.lineTo(nx2,ry); ctx.stroke();
+    }
+  }
+}
+
+function drawGatePost(x,y){
+  // Tall gate post with flag
+  ctx.fillStyle='#555';
+  ctx.fillRect(x-2,y-20,4,36);
+  // Orange flag
+  ctx.fillStyle='#ff6600';
+  ctx.beginPath();
+  ctx.moveTo(x+2,y-20);
+  ctx.lineTo(x+16,y-16);
+  ctx.lineTo(x+2,y-12);
+  ctx.closePath(); ctx.fill();
+  // Base
+  ctx.fillStyle='#444';
+  ctx.beginPath(); ctx.ellipse(x,y+16,6,3,0,0,Math.PI*2); ctx.fill();
+}
+
+function drawZoneSign(x,y,text){
+  // Sign post
+  ctx.fillStyle='#654321';
+  ctx.fillRect(x-2,y-8,4,24);
+  // Sign board
+  ctx.fillStyle='#3a2510';
+  roundRect(ctx,x-40,y-22,80,18,4); ctx.fill();
+  // Wood grain border
+  ctx.strokeStyle='#5a3a15';
+  ctx.lineWidth=1;
+  ctx.strokeRect(x-39,y-21,78,16);
+  // Text
+  ctx.fillStyle='#FFD400';
+  ctx.font='bold 9px Source Sans Pro, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText(text,x,y-10);
+}
+
+function drawFamilyGroup(x,y){
+  // Small family group — adult + child, slow-moving
+  // Adult
+  ctx.fillStyle='#4488cc';
+  ctx.beginPath(); ctx.arc(x-5,y-10,5,0,Math.PI*2); ctx.fill();
+  ctx.fillRect(x-9,y-5,8,13);
+  // Adult skis
+  ctx.strokeStyle='#666';
+  ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(x-10,y+8); ctx.lineTo(x-10,y+16); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x-2,y+8); ctx.lineTo(x-2,y+16); ctx.stroke();
+  // Child
+  ctx.fillStyle='#ee5599';
+  ctx.beginPath(); ctx.arc(x+7,y-6,4,0,Math.PI*2); ctx.fill();
+  ctx.fillRect(x+4,y-2,6,9);
+  // Child skis
+  ctx.strokeStyle='#666';
+  ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x+4,y+7); ctx.lineTo(x+4,y+13); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+10,y+7); ctx.lineTo(x+10,y+13); ctx.stroke();
+  // Slow indicator
+  ctx.fillStyle='rgba(68,136,204,0.5)';
+  ctx.font='8px Source Sans Pro, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('👨‍👧 SLOW',x,y-18);
 }
 
 function drawGreenCoat(g){
