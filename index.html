@@ -1473,6 +1473,20 @@ var tooCloseTimer=0, crashCodeIndex=0;
 var keys = {};
 var touchX = null;
 
+/* Leaderboard */
+var SHEET_URL='https://script.google.com/macros/s/AKfycbyTK9HJMVyefogLgXPqTcxPShymoO5v3JbormvS9zxU8RqhcCULzo6s1-1iMCmi6b9-Uw/exec';
+var leaderboard=[], playerName='', nameInput=false, nameBuffer='', scoreSubmitted=false;
+
+function fetchLeaderboard(){
+  fetch(SHEET_URL).then(function(r){return r.json()}).then(function(d){
+    leaderboard=d.slice(0,10);
+  }).catch(function(){});
+}
+function submitScore(name,sc){
+  fetch(SHEET_URL,{method:'POST',body:JSON.stringify({name:name,score:sc}),headers:{'Content-Type':'text/plain'}})
+  .then(function(){fetchLeaderboard()}).catch(function(){});
+}
+
 var RESPONSIBILITY_CODE = [
   "1. Always stay in control. You must be able to stop or avoid people or objects.",
   "2. People ahead or downhill of you have the right-of-way. You must avoid them.",
@@ -1498,19 +1512,48 @@ function initGame(){
   canvas.style.width = W + 'px';
   canvas.style.height = H + 'px';
   ctx.scale(dpr, dpr);
-
-  // Use logical dimensions everywhere
   canvas._w = W;
   canvas._h = H;
 
-  document.addEventListener('keydown', function(e){ keys[e.key]=true; if(e.key===' '||e.key==='ArrowLeft'||e.key==='ArrowRight') e.preventDefault(); });
+  fetchLeaderboard();
+
+  document.addEventListener('keydown', function(e){
+    if(nameInput){
+      e.preventDefault();
+      if(e.key==='Backspace'){ nameBuffer=nameBuffer.slice(0,-1); }
+      else if(e.key==='Enter' && nameBuffer.trim().length>0){
+        var finalScore=score*3;
+        submitScore(nameBuffer.trim(),finalScore);
+        scoreSubmitted=true;
+        nameInput=false;
+        playerName=nameBuffer.trim();
+      }
+      else if(e.key==='Escape'){
+        nameInput=false;
+      }
+      else if(e.key.length===1 && nameBuffer.length<20){ nameBuffer+=e.key; }
+      return;
+    }
+    keys[e.key]=true;
+    if(e.key===' '||e.key==='ArrowLeft'||e.key==='ArrowRight') e.preventDefault();
+  });
   document.addEventListener('keyup', function(e){ keys[e.key]=false; });
 
   canvas.addEventListener('touchstart', function(e){
     e.preventDefault();
     var t=e.touches[0], r=canvas.getBoundingClientRect();
     touchX = (t.clientX - r.left) * (canvas._w / r.width);
-    if(gameOver) resetGame(); else if(!gameStarted) gameStarted=true;
+    if(gameOver && nameInput){
+      // Mobile: use prompt for name entry
+      var n=prompt('Enter your name for the leaderboard:');
+      if(n && n.trim().length>0){
+        playerName=n.trim().substring(0,20);
+        submitScore(playerName,score*3);
+        scoreSubmitted=true;
+      }
+      nameInput=false;
+    } else if(gameOver && !nameInput) { resetGame(); }
+    else if(!gameStarted) gameStarted=true;
   },{passive:false});
   canvas.addEventListener('touchmove', function(e){
     e.preventDefault();
@@ -1532,6 +1575,7 @@ function resetGame(){
   gameOver=false; gameStarted=false;
   tooCloseTimer=0;
   crashCodeIndex = Math.floor(Math.random()*RESPONSIBILITY_CODE.length);
+  nameInput=false; nameBuffer=''; scoreSubmitted=false;
   bearHollowDone=false;
   lodgeSpawned=false;
   familyZoneFences=[];
@@ -1705,6 +1749,7 @@ function update(){
     if(Math.abs(dx)<hw && Math.abs(dy)<hh){
       gameOver=true;
       if(score>highScore) highScore=score;
+      nameInput=true; nameBuffer=''; scoreSubmitted=false;
       return;
     }
 
@@ -1753,7 +1798,8 @@ function update(){
       var fdx=skier.x-fz.x, fdy=skier.y-fz.y;
       var fhw=(skier.width+fz.width)*0.4, fhh=(skier.height+fz.height)*0.4;
       if(Math.abs(fdx)<fhw && Math.abs(fdy)<fhh){
-        gameOver=true; if(score>highScore) highScore=score; return;
+        gameOver=true; if(score>highScore) highScore=score;
+        nameInput=true; nameBuffer=''; scoreSubmitted=false; return;
       }
     }
     if(!fz.passed && fz.y<skier.y-20){ fz.passed=true; if(fz.kind==='family') score+=2; }
@@ -1920,66 +1966,125 @@ function draw(){
 
   // Game over screen
   if(gameOver){
-    ctx.fillStyle='rgba(13,34,64,0.88)';
+    ctx.fillStyle='rgba(13,34,64,0.90)';
     ctx.fillRect(0,0,W,H);
 
     // Score
     ctx.fillStyle='#dc2626';
     ctx.font='bold 20px Source Sans Pro, sans-serif';
     ctx.textAlign='center';
-    ctx.fillText('COLLISION!',W/2,H*0.14);
+    ctx.fillText('COLLISION!',W/2,H*0.08);
 
     ctx.fillStyle='#fff';
     ctx.font='bold 48px Source Sans Pro, sans-serif';
-    ctx.fillText(score*3+' ft',W/2,H*0.22);
+    ctx.fillText(score*3+' ft',W/2,H*0.15);
 
-    ctx.font='14px Source Sans Pro, sans-serif';
-    ctx.fillStyle='rgba(255,255,255,0.45)';
-    ctx.fillText('BEST: '+highScore*3+' ft',W/2,H*0.27);
+    ctx.font='13px Source Sans Pro, sans-serif';
+    ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.fillText('PERSONAL BEST: '+highScore*3+' ft',W/2,H*0.19);
 
-    // Responsibility Code header
+    // Name input or submitted state
+    var nameY=H*0.25;
+    if(nameInput){
+      ctx.fillStyle='#FFD400';
+      ctx.font='bold 12px Source Sans Pro, sans-serif';
+      ctx.fillText('ENTER YOUR NAME FOR THE LEADERBOARD',W/2,nameY);
+      // Input box
+      ctx.fillStyle='rgba(255,255,255,0.1)';
+      roundRect(ctx,W/2-100,nameY+8,200,32,6); ctx.fill();
+      ctx.strokeStyle='#FFD400';
+      ctx.lineWidth=2;
+      roundRect(ctx,W/2-100,nameY+8,200,32,6); ctx.stroke();
+      ctx.fillStyle='#fff';
+      ctx.font='18px Source Sans Pro, sans-serif';
+      // Blinking cursor
+      var cursorBlink = Math.floor(Date.now()/500)%2===0 ? '|':'';
+      ctx.fillText(nameBuffer+cursorBlink,W/2,nameY+30);
+      ctx.fillStyle='rgba(255,255,255,0.3)';
+      ctx.font='11px Source Sans Pro, sans-serif';
+      ctx.fillText('Press ENTER to submit  •  ESC to skip',W/2,nameY+54);
+    } else if(scoreSubmitted){
+      ctx.fillStyle='#16a34a';
+      ctx.font='bold 13px Source Sans Pro, sans-serif';
+      ctx.fillText('✓ Score submitted as '+playerName,W/2,nameY);
+    } else {
+      ctx.fillStyle='rgba(255,255,255,0.3)';
+      ctx.font='12px Source Sans Pro, sans-serif';
+      ctx.fillText('Score not submitted',W/2,nameY);
+    }
+
+    // Leaderboard
+    var lbY=H*0.37;
     ctx.fillStyle='#FFD400';
-    ctx.font='bold 13px Source Sans Pro, sans-serif';
-    ctx.fillText('YOUR RESPONSIBILITY CODE',W/2,H*0.34);
+    ctx.font='bold 14px Source Sans Pro, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('🏆  LEADERBOARD',W/2,lbY);
 
-    ctx.fillStyle='rgba(255,255,255,0.35)';
+    var top3=leaderboard.slice(0,3);
+    if(top3.length>0){
+      for(var lb=0;lb<top3.length;lb++){
+        var row=top3[lb];
+        var rowY=lbY+24+lb*28;
+        var medal=['🥇','🥈','🥉'][lb];
+        // Row background
+        ctx.fillStyle=lb===0?'rgba(255,212,0,0.1)':lb===1?'rgba(192,192,192,0.08)':'rgba(205,127,50,0.06)';
+        roundRect(ctx,W/2-140,rowY-12,280,24,6); ctx.fill();
+        // Medal + name
+        ctx.fillStyle='#fff';
+        ctx.font=lb===0?'bold 14px Source Sans Pro, sans-serif':'13px Source Sans Pro, sans-serif';
+        ctx.textAlign='left';
+        ctx.fillText(medal+'  '+row.name,W/2-130,rowY+4);
+        // Score
+        ctx.textAlign='right';
+        ctx.fillStyle=lb===0?'#FFD400':'rgba(255,255,255,0.7)';
+        ctx.font='bold 14px Source Sans Pro, sans-serif';
+        ctx.fillText(row.score+' ft',W/2+130,rowY+4);
+      }
+    } else {
+      ctx.fillStyle='rgba(255,255,255,0.3)';
+      ctx.font='12px Source Sans Pro, sans-serif';
+      ctx.textAlign='center';
+      ctx.fillText('Loading...',W/2,lbY+30);
+    }
+
+    // Responsibility Code (compact — one highlighted rule)
+    var codeY=H*0.60;
+    ctx.textAlign='center';
+    ctx.fillStyle='rgba(255,212,0,0.6)';
+    ctx.font='bold 10px Source Sans Pro, sans-serif';
+    ctx.fillText('YOUR RESPONSIBILITY CODE',W/2,codeY);
+
+    ctx.fillStyle='rgba(255,255,255,0.5)';
     ctx.font='11px Source Sans Pro, sans-serif';
-    var introY=H*0.38;
-    wrapText(ctx,'In 2022 the National Ski Area Association introduced an updated',W/2,introY,W-50,14);
-    wrapText(ctx,'Your Responsibility Code to keep everyone safe on the slopes.',W/2,introY+14,W-50,14);
+    wrapText(ctx,RESPONSIBILITY_CODE[crashCodeIndex],W/2,codeY+18,W-60,14);
 
-    // Show all 10 codes
+    // All 10 codes smaller below
     ctx.textAlign='left';
-    ctx.font='11px Source Sans Pro, sans-serif';
-    var codeY=H*0.45;
+    ctx.font='9.5px Source Sans Pro, sans-serif';
+    var allY=codeY+60;
     for(var c=0;c<RESPONSIBILITY_CODE.length;c++){
-      // Highlight the one they "violated"
       if(c===crashCodeIndex){
         ctx.fillStyle='#FFD400';
-        ctx.font='bold 11.5px Source Sans Pro, sans-serif';
+        ctx.font='bold 9.5px Source Sans Pro, sans-serif';
       } else {
-        ctx.fillStyle='rgba(255,255,255,0.55)';
-        ctx.font='11px Source Sans Pro, sans-serif';
+        ctx.fillStyle='rgba(255,255,255,0.3)';
+        ctx.font='9.5px Source Sans Pro, sans-serif';
       }
-      var lines=wrapTextReturn(ctx,RESPONSIBILITY_CODE[c],42,W-50,14);
+      var lines=wrapTextReturn(ctx,RESPONSIBILITY_CODE[c],32,W-44,12);
       for(var l=0;l<lines.length;l++){
-        ctx.fillText(lines[l],42,codeY);
-        codeY+=14;
+        ctx.fillText(lines[l],32,allY);
+        allY+=12;
       }
-      codeY+=4;
+      allY+=2;
     }
 
-    // Arrow pointing to highlighted code
-    if(crashCodeIndex>=0){
-      ctx.fillStyle='#FFD400';
-      ctx.font='bold 10px Source Sans Pro, sans-serif';
-      ctx.textAlign='center';
-    }
-
+    // Try again
     ctx.textAlign='center';
-    ctx.fillStyle='#FFD400';
-    ctx.font='bold 16px Source Sans Pro, sans-serif';
-    ctx.fillText('SPACE or TAP to try again',W/2,H*0.95);
+    if(!nameInput){
+      ctx.fillStyle='#FFD400';
+      ctx.font='bold 15px Source Sans Pro, sans-serif';
+      ctx.fillText('SPACE or TAP to try again',W/2,H*0.96);
+    }
   }
 }
 
@@ -2456,7 +2561,7 @@ function wrapTextReturn(ctx,text,startX,maxW,lineH){
 
 function gameLoop(){
   if(!gameRunning) return;
-  if(keys[' ']||keys['Space']){
+  if(!nameInput && (keys[' ']||keys['Space'])){
     if(gameOver) resetGame();
     else if(!gameStarted) gameStarted=true;
     keys[' ']=false; keys['Space']=false;
