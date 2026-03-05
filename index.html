@@ -41,48 +41,6 @@ body {
   padding: 20px;
 }
 
-/* HEADER */
-.report-header {
-  background: linear-gradient(135deg, var(--blue) 0%, #1a3d6e 100%);
-  color: white;
-  padding: 40px 48px;
-  border-radius: 16px;
-  margin-bottom: 28px;
-  position: relative;
-  overflow: hidden;
-}
-.report-header::after {
-  content: '';
-  position: absolute;
-  top: -60px; right: -60px;
-  width: 260px; height: 260px;
-  background: rgba(255,212,0,0.08);
-  border-radius: 50%;
-}
-.report-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 4px;
-  letter-spacing: -0.5px;
-}
-.report-header .subtitle {
-  font-size: 16px;
-  font-weight: 300;
-  opacity: 0.85;
-}
-.report-header .date-badge {
-  display: inline-block;
-  background: var(--yellow);
-  color: var(--grey);
-  font-weight: 700;
-  font-size: 13px;
-  padding: 4px 14px;
-  border-radius: 20px;
-  margin-top: 12px;
-  letter-spacing: 0.5px;
-}
-
 /* SUMMARY ROW */
 .summary-row {
   display: grid;
@@ -442,7 +400,6 @@ p { margin-bottom: 10px; }
   border-radius: 24px;
   cursor: pointer;
   margin-top: 10px;
-  margin-left: 12px;
   letter-spacing: 0.5px;
   transition: all 0.2s;
   vertical-align: middle;
@@ -452,6 +409,46 @@ p { margin-bottom: 10px; }
   color: var(--blue);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* PIN Lock */
+#lock{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(145deg,#0d2240 0%,#1a3d6e 40%,var(--blue) 100%);z-index:10000;display:flex;align-items:center;justify-content:center;transition:opacity .4s,visibility .4s}
+#lock.gone{opacity:0;visibility:hidden;pointer-events:none}
+.lock-box{text-align:center;color:#fff}
+.lock-box h2{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.lock-box p{font-size:12px;opacity:.4;margin-bottom:28px}
+.pin-row{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+.pin-dot{width:48px;height:56px;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.15);border-radius:10px;font-family:'Source Sans Pro',sans-serif;font-size:24px;font-weight:700;color:#fff;text-align:center;outline:none;transition:border-color .2s,background .2s;-webkit-appearance:none}
+.pin-dot:focus{border-color:var(--yellow);background:rgba(255,212,0,.08)}
+.pin-dot.filled{border-color:rgba(255,255,255,.3)}
+.lock-err{font-size:12px;color:#fca5a5;height:18px;transition:opacity .2s}
+
+/* Hero Header */
+.hero{background:linear-gradient(145deg,#0d2240 0%,#1a3d6e 40%,var(--blue) 100%);color:#fff;padding:40px 48px 0;position:relative;overflow:hidden;border-radius:16px;margin-bottom:28px}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='1060' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='0,300 180,180 320,220 480,140 600,190 750,100 900,160 1060,80 1060,300' fill='rgba(255,255,255,0.02)'/%3E%3Cpolygon points='0,300 100,240 250,260 400,200 550,240 700,170 850,210 1060,130 1060,300' fill='rgba(255,255,255,0.015)'/%3E%3C/svg%3E") no-repeat bottom;opacity:.8}
+.hero-inner{position:relative;z-index:1}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start}
+.hero-tag{font-size:10px;text-transform:uppercase;letter-spacing:4px;opacity:.4;font-weight:500}
+.hero h1{font-size:30px;font-weight:800;letter-spacing:-.8px;margin:6px 0 2px;line-height:1.1;font-family:'Playfair Display',serif}
+.hero-sub{font-size:13px;opacity:.45;font-weight:400}
+.hero-nps{text-align:right}
+.hero-nps .num{font-size:64px;font-weight:900;line-height:1;letter-spacing:-3px;background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,.7));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-nps .lbl{font-size:10px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.08);border-radius:12px;overflow:hidden;margin-top:28px;position:relative;z-index:1}
+.kpi{padding:16px 20px;text-align:center;background:rgba(255,255,255,.04);backdrop-filter:blur(4px)}
+.kpi-v{font-size:22px;font-weight:700}
+.kpi-l{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;opacity:.35;margin-top:2px}
+.kpi-s{font-size:10px;opacity:.5;margin-top:3px}
+.pill-sm{display:inline-block;font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px}
+.pill-up{background:rgba(22,163,74,.15);color:#86efac}
+.pill-dn{background:rgba(220,38,38,.15);color:#fca5a5}
+
+@media(max-width:768px){
+  .hero{padding:24px}
+  .hero h1{font-size:22px}
+  .hero-nps .num{font-size:42px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
 }
 
 /* Chart boxes */
@@ -606,41 +603,34 @@ p { margin-bottom: 10px; }
 </style>
 </head>
 <body>
-<div class="report-container">
+
+<!-- PIN LOCK -->
+<div id="lock"><div class="lock-box"><h2>Snowbasin Survey Report</h2><p>Enter PIN to access</p><div class="pin-row"><input class="pin-dot" type="password" maxlength="1" inputmode="numeric" autofocus><input class="pin-dot" type="password" maxlength="1" inputmode="numeric"><input class="pin-dot" type="password" maxlength="1" inputmode="numeric"><input class="pin-dot" type="password" maxlength="1" inputmode="numeric"></div><div class="lock-err" id="lockErr"></div></div></div>
+
+<div class="report-container" id="mainApp" style="display:none">
 
 <!-- HEADER -->
-<div class="report-header">
-  <h1>Snowbasin Guest Survey Report</h1>
-  <div class="subtitle">Weekly Analysis &amp; Year-over-Year Insights — 2025–26 Season</div>
-  <div class="date-badge">WEEK ENDING MARCH 4, 2026 &bull; 331 RESPONSES</div>
-  <button class="play-btn" onclick="openGame()">🎿 Play the Safety Run Game</button>
-</div>
-
-<!-- EXECUTIVE SUMMARY CARDS -->
-<div class="summary-row">
-  <div class="summary-card">
-    <div class="label">Weekly NPS</div>
-    <div class="value">63.14</div>
-    <div class="change down">▼ 5.40 from 68.54</div>
-    <div class="context">Prior week had fresh snow boost</div>
-  </div>
-  <div class="summary-card">
-    <div class="label">Season Average</div>
-    <div class="value">63.74</div>
-    <div class="change down">▼ 0.02 from 63.76</div>
-    <div class="context">Essentially flat; weekly score near avg</div>
-  </div>
-  <div class="summary-card">
-    <div class="label">YoY Season Gap</div>
-    <div class="value" style="color:var(--red);">-0.62</div>
-    <div class="change up">▲ Narrowed from -0.67</div>
-    <div class="context">vs. 64.36 last year at this date</div>
-  </div>
-  <div class="summary-card">
-    <div class="label">Detractor Rate</div>
-    <div class="value">7.6%</div>
-    <div class="change down">▲ from 7.2% last week</div>
-    <div class="context">25 of 331 respondents</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div>
+        <div class="hero-tag">Snowbasin Resort</div>
+        <h1>Weekly Survey Report</h1>
+        <div class="hero-sub">Week Ending March 4, 2026 &bull; 331 Responses &bull; 3,061 Season</div>
+        <button class="play-btn" onclick="openGame()">🎿 Play the Safety Run Game</button>
+      </div>
+      <div class="hero-nps">
+        <div class="num" id="heroNum">0.00</div>
+        <div class="lbl">Weekly NPS</div>
+        <div style="margin-top:8px"><span class="pill-sm pill-dn">&darr; 5.40 vs prior week</span></div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-v"><span id="kpi1">0.00</span> <span class="pill-sm pill-dn" style="font-size:9px">&darr;0.02</span></div><div class="kpi-l">Season Average</div><div class="kpi-s">essentially flat from 63.76</div></div>
+      <div class="kpi"><div class="kpi-v" style="color:var(--yellow)" id="kpi2">0.00</div><div class="kpi-l">Last Year at This Date</div><div class="kpi-s">3/5/2025 dashboard</div></div>
+      <div class="kpi"><div class="kpi-v" id="kpi3">0.00</div><div class="kpi-l">YoY Season Gap</div><div class="kpi-s">narrowed from -6.0 in Jan</div></div>
+      <div class="kpi"><div class="kpi-v">8<sup style="font-size:12px">th</sup></div><div class="kpi-l">Consecutive Week 63+</div><div class="kpi-s">steady through low-snow stretch</div></div>
+    </div>
   </div>
 </div>
 
@@ -1361,7 +1351,7 @@ p { margin-bottom: 10px; }
   <span style="color:var(--blue);">■</span> 2025-26 &nbsp; <span style="color:var(--yellow-dark);">■</span> 2024-25 &nbsp; | &nbsp; Data Source: Qualtrics Survey Dashboard &amp; Comments
 </div>
 
-</div>
+</div><!-- end mainApp -->
 <!-- GAME OVERLAY -->
 <div class="game-overlay" id="gameOverlay">
   <button class="game-close" onclick="closeGame()">✕ Close</button>
@@ -1375,6 +1365,63 @@ p { margin-bottom: 10px; }
 </div>
 
 <script>
+/* ═══ PIN LOCK ═══ */
+var dots=document.querySelectorAll('.pin-dot');
+var PIN='1940';
+dots.forEach(function(dot,i){
+  dot.addEventListener('input',function(){
+    if(dot.value.length===1){
+      dot.classList.add('filled');
+      if(i<3)dots[i+1].focus();
+      checkPin();
+    }
+  });
+  dot.addEventListener('keydown',function(e){
+    if(e.key==='Backspace'&&dot.value===''&&i>0){dots[i-1].focus();dots[i-1].value='';dots[i-1].classList.remove('filled')}
+  });
+  dot.addEventListener('paste',function(e){
+    e.preventDefault();
+    var paste=(e.clipboardData||window.clipboardData).getData('text').trim();
+    for(var j=0;j<Math.min(paste.length,4);j++){dots[j].value=paste[j];dots[j].classList.add('filled')}
+    checkPin();
+  });
+});
+function checkPin(){
+  var entered='';
+  dots.forEach(function(d){entered+=d.value});
+  if(entered.length===4){
+    if(entered===PIN){
+      document.getElementById('lock').classList.add('gone');
+      document.getElementById('mainApp').style.display='';
+      setTimeout(function(){
+        document.getElementById('lock').remove();
+        countUp(document.getElementById('heroNum'),63.14,1200,2);
+        countUp(document.getElementById('kpi1'),63.74,1000,2);
+        countUp(document.getElementById('kpi2'),64.36,1000,2);
+        countUp(document.getElementById('kpi3'),-0.62,800,2);
+      },400);
+    } else {
+      document.getElementById('lockErr').textContent='Incorrect PIN';
+      dots.forEach(function(d){d.value='';d.classList.remove('filled')});
+      dots[0].focus();
+      setTimeout(function(){document.getElementById('lockErr').textContent=''},1500);
+    }
+  }
+}
+function countUp(el,target,duration,decimals,prefix){
+  var start=0,startTime=null;
+  prefix=prefix||'';
+  function step(ts){
+    if(!startTime)startTime=ts;
+    var progress=Math.min((ts-startTime)/duration,1);
+    var eased=1-Math.pow(1-progress,3);
+    var current=start+(target-start)*eased;
+    el.textContent=prefix+current.toFixed(decimals||2);
+    if(progress<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 /* ═══════════════════ CHARTS ═══════════════════ */
 var chartFont = {family:"'Source Sans Pro',system-ui,sans-serif"};
 var gridColor = '#f1f5f9';
@@ -1479,13 +1526,13 @@ var bearHollowDone=false, lodgeSpawned=false;
 var trailSigns=[], trailSignIndex=0;
 
 var TRAIL_SIGN_SCHEDULE = [
-  { frame:350,  name:'Sweet Revenge',       type:'blue' },
-  { frame:550,  name:'City Hill',            type:'blue' },
-  { frame:800,  name:'Wildcat Bowl',         type:'blue' },
-  { frame:1100, name:'Wildflower Downhill',  type:'diamond' },
-  { frame:1450, name:'Grizzly Downhill',     type:'diamond' },
-  { frame:1850, name:'No Name',             type:'double' },
-  { frame:2300, name:'Lone Tree',           type:'double' }
+  { frame:400,  name:'Sweet Revenge',       type:'blue' },
+  { frame:800,  name:'City Hill',            type:'blue' },
+  { frame:1200, name:'Wildcat Bowl',         type:'blue' },
+  { frame:1700, name:'Wildflower Downhill',  type:'diamond' },
+  { frame:2200, name:'Grizzly Downhill',     type:'diamond' },
+  { frame:2700, name:'No Name',             type:'double' },
+  { frame:3200, name:'Lone Tree',           type:'double' }
 ];
 var familyZoneFences=[], familyZoneLabel=null;
 
@@ -1547,13 +1594,10 @@ function spawnBearHollow(){
   
   familyZoneLabel = { y: gateY+80, opacity:1 };
   
-  // Entrance fences
+  // Single row of fencing with gate opening
   familyZoneFences.push(
     { x:leftEdge/2, y:gateY, width:leftEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:W-(W-rightEdge)/2, y:gateY, width:W-rightEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
-  );
-  // Entrance gate posts
-  familyZoneFences.push(
+    { x:W-(W-rightEdge)/2, y:gateY, width:W-rightEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
     { x:leftEdge, y:gateY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
     { x:rightEdge, y:gateY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
   );
@@ -1562,24 +1606,16 @@ function spawnBearHollow(){
     { x:leftEdge-30, y:gateY+30, width:10, kind:'sign_family', passed:false, height:10, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
     { x:rightEdge+30, y:gateY+30, width:10, kind:'sign_bear', passed:false, height:10, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
   );
-  // Families inside
+  // Slow-moving families after the gate
   for(var f=0;f<3;f++){
     familyZoneFences.push({
-      x: centerX + (Math.random()-0.5)*gateWidth*0.6,
-      y: gateY - 80 - f*90,
+      x: centerX + (Math.random()-0.5)*gateWidth*0.7,
+      y: gateY - 80 - f*100,
       width:14, height:18, kind:'family',
       passed:false, wobble:(Math.random()-0.5)*0.5,
       boarderAngle:0, mooseDir:0, mooseSpeed:0
     });
   }
-  // Exit fences + gate posts
-  var exitY = gateY - 350;
-  familyZoneFences.push(
-    { x:leftEdge/2, y:exitY, width:leftEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:W-(W-rightEdge)/2, y:exitY, width:W-rightEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:leftEdge, y:exitY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:rightEdge, y:exitY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
-  );
 }
 
 function spawnGreenCoat(){
