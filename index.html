@@ -510,7 +510,9 @@ p { margin-bottom: 10px; }
   border: 2px solid rgba(255,255,255,0.1);
   display: block;
   margin: 0 auto;
-  background: #e8f4f0;
+  background: #dceef8;
+  max-width: 100%;
+  height: auto;
 }
 .game-controls-hint {
   color: rgba(255,255,255,0.4);
@@ -1365,10 +1367,10 @@ p { margin-bottom: 10px; }
   <button class="game-close" onclick="closeGame()">✕ Close</button>
   <div class="game-wrapper">
     <h2>🎿 Snowbasin Safety Run</h2>
-    <div class="game-sub">Dodge the trees. Stay in control. How far can you go?</div>
-    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div class="game-sub">Dodge the trees. Stay in control. Know the code.</div>
+    <canvas id="gameCanvas"></canvas>
     <div class="game-controls-hint">← → ARROW KEYS or TOUCH to steer &nbsp;|&nbsp; SPACE or TAP to start</div>
-    <div class="nsaa-badge">⛷ Presented by Snowbasin Resort &bull; NSAA Responsibility Code</div>
+    <div class="nsaa-badge">⛷ Presented by Snowbasin Resort &bull; Your Responsibility Code</div>
   </div>
 </div>
 
@@ -1401,384 +1403,538 @@ function openGame(){ document.getElementById('gameOverlay').classList.add('open'
 function closeGame(){ document.getElementById('gameOverlay').classList.remove('open'); gameRunning=false; }
 
 var canvas, ctx, gameRunning=false, gameStarted=false, gameOver=false;
-var skier, obstacles, score, highScore=0, speed, frame;
+var skier, obstacles, greenCoats, score, highScore=0, speed, frame, dpr;
+var tooCloseTimer=0, crashCodeIndex=0;
 var keys = {};
 var touchX = null;
 
-var NSAA_CODES = [
-  "Always stay in control and be able to stop or avoid other people or objects.",
-  "People ahead of you have the right of way. It is your responsibility to avoid them.",
-  "You must not stop where you obstruct a trail, or are not visible from above.",
-  "Whenever starting downhill or merging into a trail, look uphill and yield to others.",
-  "Always use devices to help prevent runaway equipment.",
-  "Observe all posted signs and warnings. Keep off closed trails and out of closed areas.",
-  "Prior to using any lift, you must have the knowledge and ability to load, ride and unload safely.",
-  "Know your ability level and choose terrain that matches your skill."
-];
-
-var TRAIL_NAMES = [
-  "Wildcat","Porcupine","Bear Hollow","Middle Bowl","Needles","Strawberry","City Hill",
-  "Penny Lane","John Paul","DeMoisy","Becker","Sweet Revenge","Powder Puff","Last Chance"
+var RESPONSIBILITY_CODE = [
+  "1. Always stay in control. You must be able to stop or avoid people or objects.",
+  "2. People ahead or downhill of you have the right-of-way. You must avoid them.",
+  "3. Stop only where you are visible from above and do not restrict traffic.",
+  "4. Look uphill and avoid others before starting downhill or entering a trail.",
+  "5. You must prevent runaway equipment.",
+  "6. Read and obey all signs, warnings, and hazard markings.",
+  "7. Keep off closed trails and out of closed areas.",
+  "8. You must know how and be able to load, ride and unload lifts safely. If you need assistance, ask the lift attendant.",
+  "9. Do not use lifts or terrain when impaired by alcohol or drugs.",
+  "10. If you are involved in a collision or incident, share your contact information with each other and a ski area employee."
 ];
 
 function initGame(){
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
-  
+
+  // Hi-DPI scaling
+  dpr = window.devicePixelRatio || 1;
+  var W = 480, H = 720;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  // Use logical dimensions everywhere
+  canvas._w = W;
+  canvas._h = H;
+
   document.addEventListener('keydown', function(e){ keys[e.key]=true; if(e.key===' '||e.key==='ArrowLeft'||e.key==='ArrowRight') e.preventDefault(); });
   document.addEventListener('keyup', function(e){ keys[e.key]=false; });
-  
+
   canvas.addEventListener('touchstart', function(e){
     e.preventDefault();
-    var t = e.touches[0];
-    var r = canvas.getBoundingClientRect();
-    touchX = t.clientX - r.left;
-    if(gameOver){ resetGame(); }
-    else if(!gameStarted){ gameStarted=true; }
+    var t=e.touches[0], r=canvas.getBoundingClientRect();
+    touchX = (t.clientX - r.left) * (canvas._w / r.width);
+    if(gameOver) resetGame(); else if(!gameStarted) gameStarted=true;
   },{passive:false});
   canvas.addEventListener('touchmove', function(e){
     e.preventDefault();
-    var t = e.touches[0];
-    var r = canvas.getBoundingClientRect();
-    touchX = t.clientX - r.left;
+    var t=e.touches[0], r=canvas.getBoundingClientRect();
+    touchX = (t.clientX - r.left) * (canvas._w / r.width);
   },{passive:false});
-  canvas.addEventListener('touchend', function(e){ touchX=null; });
-  
+  canvas.addEventListener('touchend', function(){ touchX=null; });
+
   resetGame();
   if(!gameRunning){ gameRunning=true; gameLoop(); }
 }
 
 function resetGame(){
-  skier = { x:200, y:140, width:20, height:28, vx:0 };
-  obstacles = [];
-  score = 0;
-  speed = 2.5;
-  frame = 0;
-  gameOver = false;
-  gameStarted = false;
+  var W=canvas._w||480;
+  skier={x:W/2, y:170, width:24, height:34, vx:0};
+  obstacles=[];
+  greenCoats=[];
+  score=0; speed=2.8; frame=0;
+  gameOver=false; gameStarted=false;
+  tooCloseTimer=0;
+  crashCodeIndex = Math.floor(Math.random()*RESPONSIBILITY_CODE.length);
 }
 
 function spawnObstacle(){
-  var type = Math.random();
-  var w, h, kind;
-  if(type < 0.7){ kind='tree'; w=18+Math.random()*14; h=28+Math.random()*16; }
-  else if(type < 0.85){ kind='rock'; w=20+Math.random()*16; h=14+Math.random()*10; }
-  else { kind='skier'; w=16; h=24; }
+  var W=canvas._w, H=canvas._h;
+  var type=Math.random(), w, h, kind;
+  if(type<0.6){ kind='tree'; w=22+Math.random()*16; h=34+Math.random()*18; }
+  else if(type<0.8){ kind='rock'; w=24+Math.random()*18; h=16+Math.random()*12; }
+  else { kind='boarder'; w=20; h=30; }
   obstacles.push({
-    x: 20 + Math.random()*(canvas.width-40),
-    y: canvas.height + 10,
-    width: w, height: h,
-    kind: kind,
-    passed: false,
-    nearMiss: false,
-    wobble: kind==='skier' ? (Math.random()-0.5)*1.5 : 0
+    x: 30+Math.random()*(W-60), y: H+20,
+    width:w, height:h, kind:kind, passed:false,
+    wobble: kind==='boarder'?(Math.random()-0.5)*2:0,
+    boarderAngle: Math.random()*0.3-0.15
   });
 }
 
+function spawnGreenCoat(){
+  var W=canvas._w, H=canvas._h;
+  var side = Math.random()<0.5 ? 18 : W-18;
+  greenCoats.push({ x:side, y:H+20, bubble:0 });
+}
+
 function update(){
-  if(!gameStarted || gameOver) return;
-  
+  if(!gameStarted||gameOver) return;
+  var W=canvas._w, H=canvas._h;
   frame++;
-  speed = 2.5 + frame*0.002;
-  
-  // Input
-  var accel = 0;
-  if(keys['ArrowLeft'] || keys['a']) accel = -0.6;
-  if(keys['ArrowRight'] || keys['d']) accel = 0.6;
-  if(touchX !== null){
-    var diff = touchX - skier.x;
-    accel = Math.max(-0.8, Math.min(0.8, diff * 0.03));
+  speed = 2.8 + frame*0.0018;
+
+  var accel=0;
+  if(keys['ArrowLeft']||keys['a']) accel=-0.7;
+  if(keys['ArrowRight']||keys['d']) accel=0.7;
+  if(touchX!==null){
+    var diff=touchX-skier.x;
+    accel=Math.max(-0.9,Math.min(0.9,diff*0.03));
   }
-  
-  skier.vx += accel;
-  skier.vx *= 0.92;
-  skier.x += skier.vx;
-  skier.x = Math.max(15, Math.min(canvas.width-15, skier.x));
-  
-  // Spawn
-  if(frame % Math.max(12, 30 - Math.floor(frame/200)) === 0) spawnObstacle();
-  
+  skier.vx+=accel; skier.vx*=0.91;
+  skier.x+=skier.vx;
+  skier.x=Math.max(18,Math.min(W-18,skier.x));
+
+  // Spawn obstacles
+  if(frame%Math.max(10,28-Math.floor(frame/180))===0) spawnObstacle();
+  // Spawn green coats every ~400 frames
+  if(frame%400===200) spawnGreenCoat();
+
+  tooCloseTimer=Math.max(0,tooCloseTimer-1);
+
   // Update obstacles
-  for(var i=obstacles.length-1; i>=0; i--){
-    var o = obstacles[i];
-    o.y -= speed;
-    if(o.kind==='skier') o.x += o.wobble + Math.sin(frame*0.05)*0.5;
-    
+  for(var i=obstacles.length-1;i>=0;i--){
+    var o=obstacles[i];
+    o.y-=speed;
+    if(o.kind==='boarder'){
+      o.y -= speed*0.3; // boarders going faster downhill
+      o.x += o.wobble + Math.sin(frame*0.06+i)*0.8;
+      o.x = Math.max(20,Math.min(W-20,o.x));
+    }
+
+    var dx=skier.x-o.x, dy=skier.y-o.y;
+    var hw=(skier.width+o.width)*0.4, hh=(skier.height+o.height)*0.4;
+
     // Collision
-    var dx = skier.x - o.x;
-    var dy = skier.y - o.y;
-    var hw = (skier.width + o.width) * 0.42;
-    var hh = (skier.height + o.height) * 0.42;
-    
-    if(Math.abs(dx) < hw && Math.abs(dy) < hh){
-      gameOver = true;
-      if(score > highScore) highScore = score;
+    if(Math.abs(dx)<hw && Math.abs(dy)<hh){
+      gameOver=true;
+      if(score>highScore) highScore=score;
       return;
     }
-    
-    // Near miss bonus
-    if(!o.passed && o.y < skier.y - o.height){
-      o.passed = true;
-      score += 1;
-      if(Math.abs(dx) < hw*1.8 && Math.abs(dy) < hh*2){
-        o.nearMiss = true;
-        score += 5;
-      }
+
+    // Too close warning
+    if(Math.abs(dx)<hw*2.0 && Math.abs(dy)<hh*2.0 && !o.passed){
+      tooCloseTimer=20;
     }
-    
-    // Remove
-    if(o.y < -40) obstacles.splice(i, 1);
+
+    // Passed
+    if(!o.passed && o.y<skier.y-o.height){
+      o.passed=true;
+      score+=1;
+    }
+
+    if(o.y<-50) obstacles.splice(i,1);
+  }
+
+  // Update green coats
+  for(var j=greenCoats.length-1;j>=0;j--){
+    var g=greenCoats[j];
+    g.y-=speed;
+    // Bubble visible when near player
+    var gy=Math.abs(skier.y-g.y);
+    g.bubble = gy<200 ? Math.min(1, g.bubble+0.05) : Math.max(0, g.bubble-0.05);
+    if(g.y<-80) greenCoats.splice(j,1);
   }
 }
 
 function draw(){
-  // Sky gradient (top-down view of snow)
-  var grad = ctx.createLinearGradient(0,0,0,canvas.height);
-  grad.addColorStop(0, '#dceef8');
-  grad.addColorStop(1, '#f0f7fb');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  
-  // Snow texture dots
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
-  for(var i=0; i<40; i++){
-    var sx = (i*97 + frame*0.3) % canvas.width;
-    var sy = (i*73 - frame*speed*0.5) % canvas.height;
-    if(sy<0) sy += canvas.height;
-    ctx.beginPath();
-    ctx.arc(sx, sy, 1, 0, Math.PI*2);
-    ctx.fill();
+  var W=canvas._w, H=canvas._h;
+
+  // Snow background
+  var grad=ctx.createLinearGradient(0,0,0,H);
+  grad.addColorStop(0,'#dceef8'); grad.addColorStop(1,'#f0f7fb');
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,W,H);
+
+  // Snow particles
+  ctx.fillStyle='rgba(255,255,255,0.6)';
+  for(var i=0;i<60;i++){
+    var sx=(i*113+frame*0.4)%W;
+    var sy=(i*89-frame*speed*0.5)%H;
+    if(sy<0) sy+=H;
+    ctx.beginPath(); ctx.arc(sx,sy,1.2,0,Math.PI*2); ctx.fill();
   }
-  
+
+  // Trail grooming lines
+  ctx.strokeStyle='rgba(45,91,157,0.04)';
+  ctx.lineWidth=1;
+  for(var t=0;t<8;t++){
+    var tx=W*0.1+t*(W*0.8/7);
+    ctx.beginPath(); ctx.moveTo(tx,0); ctx.lineTo(tx,H); ctx.stroke();
+  }
+
   // Trail edges
-  ctx.strokeStyle = 'rgba(45,91,157,0.08)';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([8,8]);
-  ctx.beginPath(); ctx.moveTo(30,0); ctx.lineTo(30,canvas.height); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(canvas.width-30,0); ctx.lineTo(canvas.width-30,canvas.height); ctx.stroke();
+  ctx.strokeStyle='rgba(45,91,157,0.1)';
+  ctx.lineWidth=2.5;
+  ctx.setLineDash([10,10]);
+  ctx.beginPath(); ctx.moveTo(35,0); ctx.lineTo(35,H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W-35,0); ctx.lineTo(W-35,H); ctx.stroke();
   ctx.setLineDash([]);
-  
-  // Obstacles
-  for(var i=0; i<obstacles.length; i++){
-    var o = obstacles[i];
-    if(o.kind==='tree') drawTree(o.x, o.y, o.width, o.height);
-    else if(o.kind==='rock') drawRock(o.x, o.y, o.width, o.height);
-    else drawOtherSkier(o.x, o.y);
-    
-    // Near miss flash
-    if(o.nearMiss && o.passed){
-      ctx.fillStyle = 'rgba(255,212,0,0.6)';
-      ctx.font = 'bold 11px Source Sans Pro, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('+5 NEAR MISS!', o.x, o.y - 20);
-    }
+
+  // Green Coats
+  for(var j=0;j<greenCoats.length;j++){
+    drawGreenCoat(greenCoats[j]);
   }
-  
-  // Skier
-  drawPlayer(skier.x, skier.y, skier.vx);
-  
-  // Ski tracks (behind player)
-  ctx.strokeStyle = 'rgba(45,91,157,0.12)';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(skier.x-6, skier.y + 14);
-  ctx.lineTo(skier.x-6 - skier.vx*3, canvas.height);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(skier.x+6, skier.y + 14);
-  ctx.lineTo(skier.x+6 - skier.vx*3, canvas.height);
-  ctx.stroke();
-  
+
+  // Obstacles
+  for(var i=0;i<obstacles.length;i++){
+    var o=obstacles[i];
+    if(o.kind==='tree') drawTree(o.x,o.y,o.width,o.height);
+    else if(o.kind==='rock') drawRock(o.x,o.y,o.width,o.height);
+    else drawBoarder(o.x,o.y,o);
+  }
+
+  // Ski tracks
+  ctx.strokeStyle='rgba(45,91,157,0.1)';
+  ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(skier.x-7,skier.y+16); ctx.lineTo(skier.x-7-skier.vx*4,H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(skier.x+7,skier.y+16); ctx.lineTo(skier.x+7-skier.vx*4,H); ctx.stroke();
+
+  // Player
+  drawPlayer(skier.x,skier.y,skier.vx);
+
+  // Too close warning
+  if(tooCloseTimer>0){
+    var wa=Math.min(1,tooCloseTimer/10);
+    ctx.fillStyle='rgba(220,38,38,'+wa*0.15+')';
+    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(220,38,38,'+wa+')';
+    ctx.font='bold 16px Source Sans Pro, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('⚠ TOO CLOSE!', W/2, skier.y-45);
+    ctx.font='11px Source Sans Pro, sans-serif';
+    ctx.fillStyle='rgba(220,38,38,'+wa*0.8+')';
+    ctx.fillText('Keep your distance!', W/2, skier.y-28);
+  }
+
   // HUD
-  ctx.fillStyle = 'rgba(13,34,64,0.85)';
-  roundRect(ctx, 10, 10, 120, 44, 8); ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 10px Source Sans Pro, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('DISTANCE', 20, 28);
-  ctx.font = 'bold 20px Source Sans Pro, sans-serif';
-  ctx.fillText(score + ' m', 20, 48);
-  
-  ctx.fillStyle = 'rgba(13,34,64,0.85)';
-  roundRect(ctx, canvas.width-130, 10, 120, 44, 8); ctx.fill();
-  ctx.fillStyle = 'rgba(255,212,0,0.9)';
-  ctx.font = 'bold 10px Source Sans Pro, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('BEST', canvas.width-120, 28);
-  ctx.font = 'bold 20px Source Sans Pro, sans-serif';
-  ctx.fillText(highScore + ' m', canvas.width-120, 48);
-  
-  // Speed indicator
-  var speedPct = Math.min(1, (speed-2.5)/6);
-  ctx.fillStyle = 'rgba(13,34,64,0.5)';
-  ctx.font = '10px Source Sans Pro, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('SPEED', canvas.width/2, 22);
-  ctx.fillStyle = 'rgba(13,34,64,0.2)';
-  roundRect(ctx, canvas.width/2-30, 28, 60, 6, 3); ctx.fill();
-  ctx.fillStyle = speedPct > 0.7 ? '#dc2626' : '#2D5B9D';
-  roundRect(ctx, canvas.width/2-30, 28, 60*speedPct, 6, 3); ctx.fill();
-  
+  ctx.fillStyle='rgba(13,34,64,0.88)';
+  roundRect(ctx,12,12,140,50,10); ctx.fill();
+  ctx.fillStyle='#fff';
+  ctx.font='bold 11px Source Sans Pro, sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('DISTANCE',24,32);
+  ctx.font='bold 24px Source Sans Pro, sans-serif';
+  ctx.fillText(score+' m',24,56);
+
+  ctx.fillStyle='rgba(13,34,64,0.88)';
+  roundRect(ctx,W-152,12,140,50,10); ctx.fill();
+  ctx.fillStyle='rgba(255,212,0,0.95)';
+  ctx.font='bold 11px Source Sans Pro, sans-serif';
+  ctx.textAlign='left';
+  ctx.fillText('BEST',W-140,32);
+  ctx.font='bold 24px Source Sans Pro, sans-serif';
+  ctx.fillText(highScore+' m',W-140,56);
+
+  // Speed bar
+  var speedPct=Math.min(1,(speed-2.8)/5.5);
+  ctx.fillStyle='rgba(13,34,64,0.5)';
+  ctx.font='10px Source Sans Pro, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('SPEED',W/2,26);
+  ctx.fillStyle='rgba(13,34,64,0.15)';
+  roundRect(ctx,W/2-35,32,70,7,3.5); ctx.fill();
+  ctx.fillStyle=speedPct>0.7?'#dc2626':'#2D5B9D';
+  roundRect(ctx,W/2-35,32,70*speedPct,7,3.5); ctx.fill();
+
   // Start screen
   if(!gameStarted && !gameOver){
-    ctx.fillStyle = 'rgba(13,34,64,0.7)';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 26px Playfair Display, serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Snowbasin Safety Run', canvas.width/2, canvas.height/2 - 40);
-    ctx.font = '14px Source Sans Pro, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillText('Dodge trees, rocks & reckless skiers', canvas.width/2, canvas.height/2 - 10);
-    ctx.fillText('Near misses = bonus points!', canvas.width/2, canvas.height/2 + 12);
-    ctx.fillStyle = '#FFD400';
-    ctx.font = 'bold 16px Source Sans Pro, sans-serif';
-    ctx.fillText('PRESS SPACE or TAP to start', canvas.width/2, canvas.height/2 + 55);
-    ctx.font = '11px Source Sans Pro, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.fillText('← → Arrow Keys or Touch to steer', canvas.width/2, canvas.height/2 + 80);
+    ctx.fillStyle='rgba(13,34,64,0.75)';
+    ctx.fillRect(0,0,W,H);
+
+    ctx.fillStyle='#fff';
+    ctx.font='bold 30px Playfair Display, serif';
+    ctx.textAlign='center';
+    ctx.fillText('Snowbasin Safety Run',W/2,H/2-60);
+
+    ctx.font='15px Source Sans Pro, sans-serif';
+    ctx.fillStyle='rgba(255,255,255,0.7)';
+    ctx.fillText('Dodge trees, rocks & out-of-control boarders',W/2,H/2-28);
+
+    ctx.fillStyle='rgba(255,212,0,0.5)';
+    ctx.font='12px Source Sans Pro, sans-serif';
+    ctx.fillText('Stay in control — give everyone space!',W/2,H/2-6);
+
+    // Mini skier preview
+    drawPlayer(W/2, H/2+40, 0);
+
+    ctx.fillStyle='#FFD400';
+    ctx.font='bold 17px Source Sans Pro, sans-serif';
+    ctx.fillText('PRESS SPACE or TAP to start',W/2,H/2+90);
+    ctx.font='12px Source Sans Pro, sans-serif';
+    ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.fillText('← → Arrow Keys or Touch to steer',W/2,H/2+115);
   }
-  
-  // Game over
+
+  // Game over screen
   if(gameOver){
-    ctx.fillStyle = 'rgba(13,34,64,0.82)';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    
-    var trail = TRAIL_NAMES[Math.floor(Math.random()*0.9999*TRAIL_NAMES.length)];
-    var code = NSAA_CODES[Math.floor(Math.random()*0.9999*NSAA_CODES.length)];
-    
-    ctx.fillStyle = '#dc2626';
-    ctx.font = 'bold 24px Playfair Display, serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Yard Sale on ' + trail + '!', canvas.width/2, canvas.height/2 - 80);
-    
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 40px Source Sans Pro, sans-serif';
-    ctx.fillText(score + ' m', canvas.width/2, canvas.height/2 - 35);
-    ctx.font = '13px Source Sans Pro, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillText('BEST: ' + highScore + ' m', canvas.width/2, canvas.height/2 - 10);
-    
-    // NSAA code
-    ctx.fillStyle = '#FFD400';
-    ctx.font = 'bold 10px Source Sans Pro, sans-serif';
-    ctx.fillText('⛷  NSAA RESPONSIBILITY CODE', canvas.width/2, canvas.height/2 + 30);
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.font = '12px Source Sans Pro, sans-serif';
-    wrapText(ctx, '"'+code+'"', canvas.width/2, canvas.height/2 + 50, canvas.width-60, 16);
-    
-    ctx.fillStyle = '#FFD400';
-    ctx.font = 'bold 15px Source Sans Pro, sans-serif';
-    ctx.fillText('SPACE or TAP to try again', canvas.width/2, canvas.height/2 + 120);
+    ctx.fillStyle='rgba(13,34,64,0.88)';
+    ctx.fillRect(0,0,W,H);
+
+    // Score
+    ctx.fillStyle='#dc2626';
+    ctx.font='bold 20px Source Sans Pro, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('COLLISION!',W/2,H*0.14);
+
+    ctx.fillStyle='#fff';
+    ctx.font='bold 48px Source Sans Pro, sans-serif';
+    ctx.fillText(score+' m',W/2,H*0.22);
+
+    ctx.font='14px Source Sans Pro, sans-serif';
+    ctx.fillStyle='rgba(255,255,255,0.45)';
+    ctx.fillText('BEST: '+highScore+' m',W/2,H*0.27);
+
+    // Responsibility Code header
+    ctx.fillStyle='#FFD400';
+    ctx.font='bold 13px Source Sans Pro, sans-serif';
+    ctx.fillText('YOUR RESPONSIBILITY CODE',W/2,H*0.34);
+
+    ctx.fillStyle='rgba(255,255,255,0.35)';
+    ctx.font='11px Source Sans Pro, sans-serif';
+    var introY=H*0.38;
+    wrapText(ctx,'In 2022 the National Ski Area Association introduced an updated',W/2,introY,W-50,14);
+    wrapText(ctx,'Your Responsibility Code to keep everyone safe on the slopes.',W/2,introY+14,W-50,14);
+
+    // Show all 10 codes
+    ctx.textAlign='left';
+    ctx.font='11px Source Sans Pro, sans-serif';
+    var codeY=H*0.45;
+    for(var c=0;c<RESPONSIBILITY_CODE.length;c++){
+      // Highlight the one they "violated"
+      if(c===crashCodeIndex){
+        ctx.fillStyle='#FFD400';
+        ctx.font='bold 11.5px Source Sans Pro, sans-serif';
+      } else {
+        ctx.fillStyle='rgba(255,255,255,0.55)';
+        ctx.font='11px Source Sans Pro, sans-serif';
+      }
+      var lines=wrapTextReturn(ctx,RESPONSIBILITY_CODE[c],42,W-50,14);
+      for(var l=0;l<lines.length;l++){
+        ctx.fillText(lines[l],42,codeY);
+        codeY+=14;
+      }
+      codeY+=4;
+    }
+
+    // Arrow pointing to highlighted code
+    if(crashCodeIndex>=0){
+      ctx.fillStyle='#FFD400';
+      ctx.font='bold 10px Source Sans Pro, sans-serif';
+      ctx.textAlign='center';
+    }
+
+    ctx.textAlign='center';
+    ctx.fillStyle='#FFD400';
+    ctx.font='bold 16px Source Sans Pro, sans-serif';
+    ctx.fillText('SPACE or TAP to try again',W/2,H*0.95);
   }
 }
 
-function drawTree(x, y, w, h){
+function drawTree(x,y,w,h){
   // Shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.08)';
-  ctx.beginPath();
-  ctx.ellipse(x+3, y+h*0.4, w*0.45, h*0.18, 0, 0, Math.PI*2);
-  ctx.fill();
+  ctx.fillStyle='rgba(0,0,0,0.08)';
+  ctx.beginPath(); ctx.ellipse(x+3,y+h*0.4,w*0.5,h*0.18,0,0,Math.PI*2); ctx.fill();
   // Trunk
-  ctx.fillStyle = '#6b4423';
-  ctx.fillRect(x-2, y, 4, h*0.3);
-  // Canopy layers
-  var g1 = '#1a6b3a'; var g2 = '#237a44'; var g3 = '#2d8a4e';
-  for(var i=0; i<3; i++){
-    ctx.fillStyle = [g1,g2,g3][i];
+  ctx.fillStyle='#5c3a1e';
+  ctx.fillRect(x-3,y-2,6,h*0.32);
+  // Canopy
+  var cols=['#16623a','#1d7642','#258a4c'];
+  for(var i=0;i<3;i++){
+    ctx.fillStyle=cols[i];
     ctx.beginPath();
-    var ty = y - h*0.15 - i*h*0.22;
-    var tw = w*(0.55 - i*0.1);
-    ctx.moveTo(x, ty - h*0.25);
-    ctx.lineTo(x-tw, ty+4);
-    ctx.lineTo(x+tw, ty+4);
-    ctx.closePath();
-    ctx.fill();
+    var ty=y-h*0.12-i*h*0.24;
+    var tw=w*(0.58-i*0.12);
+    ctx.moveTo(x,ty-h*0.28);
+    ctx.lineTo(x-tw,ty+5);
+    ctx.lineTo(x+tw,ty+5);
+    ctx.closePath(); ctx.fill();
   }
-  // Snow caps
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  for(var i=0; i<3; i++){
-    var ty = y - h*0.15 - i*h*0.22 - h*0.25;
+  // Snow
+  ctx.fillStyle='rgba(255,255,255,0.75)';
+  for(var i=0;i<3;i++){
+    var ty=y-h*0.12-i*h*0.24-h*0.28;
     ctx.beginPath();
-    ctx.moveTo(x, ty);
-    ctx.lineTo(x-w*0.15, ty+4);
-    ctx.lineTo(x+w*0.15, ty+4);
-    ctx.closePath();
-    ctx.fill();
+    ctx.moveTo(x,ty);
+    ctx.lineTo(x-w*0.18,ty+5);
+    ctx.lineTo(x+w*0.18,ty+5);
+    ctx.closePath(); ctx.fill();
   }
 }
 
-function drawRock(x, y, w, h){
-  ctx.fillStyle = 'rgba(0,0,0,0.06)';
+function drawRock(x,y,w,h){
+  ctx.fillStyle='rgba(0,0,0,0.06)';
+  ctx.beginPath(); ctx.ellipse(x+2,y+h*0.45,w*0.5,h*0.22,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#7a7a7a';
   ctx.beginPath();
-  ctx.ellipse(x+2, y+h*0.45, w*0.5, h*0.22, 0, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle = '#8a8a8a';
+  ctx.moveTo(x-w*0.42,y+h*0.22);
+  ctx.lineTo(x-w*0.2,y-h*0.38);
+  ctx.lineTo(x+w*0.18,y-h*0.42);
+  ctx.lineTo(x+w*0.42,y-h*0.1);
+  ctx.lineTo(x+w*0.38,y+h*0.22);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#8e8e8e';
   ctx.beginPath();
-  ctx.moveTo(x-w*0.4, y+h*0.2);
-  ctx.lineTo(x-w*0.2, y-h*0.35);
-  ctx.lineTo(x+w*0.15, y-h*0.4);
-  ctx.lineTo(x+w*0.4, y-h*0.1);
-  ctx.lineTo(x+w*0.35, y+h*0.2);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = '#9a9a9a';
+  ctx.moveTo(x-w*0.08,y-h*0.36);
+  ctx.lineTo(x+w*0.18,y-h*0.42);
+  ctx.lineTo(x+w*0.42,y-h*0.1);
+  ctx.lineTo(x+w*0.05,y-h*0.05);
+  ctx.closePath(); ctx.fill();
+  // Snow dusting
+  ctx.fillStyle='rgba(255,255,255,0.3)';
   ctx.beginPath();
-  ctx.moveTo(x-w*0.1, y-h*0.35);
-  ctx.lineTo(x+w*0.15, y-h*0.4);
-  ctx.lineTo(x+w*0.4, y-h*0.1);
-  ctx.lineTo(x+w*0.05, y-h*0.05);
-  ctx.closePath();
-  ctx.fill();
+  ctx.moveTo(x-w*0.15,y-h*0.35);
+  ctx.lineTo(x+w*0.12,y-h*0.4);
+  ctx.lineTo(x+w*0.05,y-h*0.28);
+  ctx.closePath(); ctx.fill();
 }
 
-function drawOtherSkier(x, y){
-  // Out of control skier (red)
-  ctx.fillStyle = '#dc2626';
-  ctx.beginPath();
-  ctx.arc(x, y-14, 6, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle = '#dc2626';
-  ctx.fillRect(x-5, y-8, 10, 16);
-  // Skis
-  ctx.strokeStyle = '#333';
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(x-6,y+8); ctx.lineTo(x-8,y+18); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+6,y+8); ctx.lineTo(x+8,y+18); ctx.stroke();
-  // Warning
-  ctx.fillStyle = 'rgba(220,38,38,0.4)';
-  ctx.font = 'bold 9px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('⚠', x, y-24);
-}
-
-function drawPlayer(x, y, vx){
-  // Skier body (blue)
-  ctx.fillStyle = '#2D5B9D';
-  ctx.beginPath();
-  ctx.arc(x, y-12, 7, 0, Math.PI*2);
-  ctx.fill();
-  // Body
-  ctx.fillStyle = '#2D5B9D';
+function drawBoarder(x,y,o){
   ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(vx * 0.08);
-  ctx.fillRect(-6, -6, 12, 18);
+  ctx.translate(x,y);
+  ctx.rotate(o.boarderAngle + Math.sin(frame*0.08)*0.1);
+  // Head (red helmet = out of control)
+  ctx.fillStyle='#dc2626';
+  ctx.beginPath(); ctx.arc(0,-16,7,0,Math.PI*2); ctx.fill();
+  // Goggles
+  ctx.fillStyle='#222';
+  ctx.fillRect(-6,-18,12,4);
+  // Body
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillRect(-7,-9,14,20);
+  // Board (sideways)
+  ctx.fillStyle='#dc2626';
+  ctx.save();
+  ctx.rotate(0.3+Math.sin(frame*0.1)*0.15);
+  roundRect(ctx,-16,10,32,6,3);
+  ctx.fill();
+  ctx.restore();
+  ctx.restore();
+  // Warning icon
+  ctx.fillStyle='rgba(220,38,38,0.5)';
+  ctx.font='bold 14px sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('⚠',x,y-30);
+}
+
+function drawGreenCoat(g){
+  var x=g.x, y=g.y;
+  // Person in green jacket
+  // Head
+  ctx.fillStyle='#f0c8a0';
+  ctx.beginPath(); ctx.arc(x,y-16,7,0,Math.PI*2); ctx.fill();
+  // Helmet
+  ctx.fillStyle='#222';
+  ctx.beginPath(); ctx.arc(x,y-18,7,0,Math.PI,true); ctx.fill();
+  // Green jacket
+  ctx.fillStyle='#2d8a4e';
+  ctx.fillRect(x-8,y-9,16,22);
+  // Arms out
+  ctx.strokeStyle='#2d8a4e';
+  ctx.lineWidth=4;
+  ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(x-8,y-4); ctx.lineTo(x-16,y+2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+8,y-4); ctx.lineTo(x+16,y+2); ctx.stroke();
+  // Hands
+  ctx.fillStyle='#f0c8a0';
+  ctx.beginPath(); ctx.arc(x-16,y+2,3,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+16,y+2,3,0,Math.PI*2); ctx.fill();
+  // Pants
+  ctx.fillStyle='#333';
+  ctx.fillRect(x-7,y+13,6,12);
+  ctx.fillRect(x+1,y+13,6,12);
+  // Skis (standing)
+  ctx.strokeStyle='#FFD400';
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(x-6,y+25); ctx.lineTo(x-6,y+32); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+6,y+25); ctx.lineTo(x+6,y+32); ctx.stroke();
+
+  // Speech bubble
+  if(g.bubble>0.05){
+    var bx = x < 100 ? x+30 : x-30;
+    var by = y-38;
+    ctx.globalAlpha=g.bubble;
+    // Bubble bg
+    ctx.fillStyle='#fff';
+    roundRect(ctx,bx-52,by-14,104,24,12);
+    ctx.fill();
+    // Bubble tail
+    ctx.beginPath();
+    var tailX = x<100 ? bx-40 : bx+40;
+    ctx.moveTo(tailX-4,by+10);
+    ctx.lineTo(x<100?x+12:x-12,y-22);
+    ctx.lineTo(tailX+4,by+10);
+    ctx.closePath(); ctx.fill();
+    // Text
+    ctx.fillStyle='#dc2626';
+    ctx.font='bold 13px Source Sans Pro, sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('🛑 SLOW DOWN!',bx,by+2);
+    ctx.globalAlpha=1;
+  }
+}
+
+function drawPlayer(x,y,vx){
+  ctx.save();
+  // Head (blue helmet)
+  ctx.fillStyle='#2D5B9D';
+  ctx.beginPath(); ctx.arc(x,y-14,8,0,Math.PI*2); ctx.fill();
+  // Goggles
+  ctx.fillStyle='#FFD400';
+  ctx.fillRect(x-6,y-16,12,4);
+  // Body
+  ctx.fillStyle='#2D5B9D';
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(vx*0.07);
+  ctx.fillRect(-7,-7,14,20);
+  // Arms
+  ctx.strokeStyle='#2D5B9D';
+  ctx.lineWidth=3;
+  ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(-7,-2); ctx.lineTo(-14,6); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(7,-2); ctx.lineTo(14,6); ctx.stroke();
   ctx.restore();
   // Skis
-  ctx.strokeStyle = '#FFD400';
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(x-7,y+10); ctx.lineTo(x-7-vx*0.8,y+20); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+7,y+10); ctx.lineTo(x+7-vx*0.8,y+20); ctx.stroke();
+  ctx.strokeStyle='#FFD400';
+  ctx.lineWidth=3;
+  ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(x-8,y+12); ctx.lineTo(x-8-vx*0.9,y+24); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+8,y+12); ctx.lineTo(x+8-vx*0.9,y+24); ctx.stroke();
   // Poles
-  ctx.strokeStyle = 'rgba(0,0,0,0.3)';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(x-9,y-2); ctx.lineTo(x-16,y+14); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+9,y-2); ctx.lineTo(x+16,y+14); ctx.stroke();
+  ctx.strokeStyle='rgba(80,80,80,0.5)';
+  ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(x-14,y+4); ctx.lineTo(x-20,y+18); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+14,y+4); ctx.lineTo(x+20,y+18); ctx.stroke();
+  // Pole baskets
+  ctx.fillStyle='rgba(80,80,80,0.4)';
+  ctx.beginPath(); ctx.arc(x-20,y+18,2,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+20,y+18,2,0,Math.PI*2); ctx.fill();
+  ctx.restore();
 }
 
-function roundRect(ctx, x, y, w, h, r){
+function roundRect(ctx,x,y,w,h,r){
   ctx.beginPath();
   ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
   ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h-r);
@@ -1788,31 +1944,37 @@ function roundRect(ctx, x, y, w, h, r){
   ctx.closePath();
 }
 
-function wrapText(ctx, text, x, y, maxW, lineH){
-  var words = text.split(' ');
-  var line = '';
-  for(var i=0; i<words.length; i++){
-    var test = line + words[i] + ' ';
-    if(ctx.measureText(test).width > maxW && i > 0){
-      ctx.fillText(line.trim(), x, y);
-      line = words[i] + ' ';
-      y += lineH;
-    } else { line = test; }
+function wrapText(ctx,text,x,y,maxW,lineH){
+  var words=text.split(' '), line='';
+  for(var i=0;i<words.length;i++){
+    var test=line+words[i]+' ';
+    if(ctx.measureText(test).width>maxW&&i>0){
+      ctx.fillText(line.trim(),x,y); line=words[i]+' '; y+=lineH;
+    } else { line=test; }
   }
-  ctx.fillText(line.trim(), x, y);
+  ctx.fillText(line.trim(),x,y);
+}
+
+function wrapTextReturn(ctx,text,startX,maxW,lineH){
+  var words=text.split(' '), line='', lines=[];
+  for(var i=0;i<words.length;i++){
+    var test=line+words[i]+' ';
+    if(ctx.measureText(test).width>maxW&&i>0){
+      lines.push(line.trim()); line=words[i]+' ';
+    } else { line=test; }
+  }
+  lines.push(line.trim());
+  return lines;
 }
 
 function gameLoop(){
   if(!gameRunning) return;
-  
-  if(keys[' '] || keys['Space']){
+  if(keys[' ']||keys['Space']){
     if(gameOver) resetGame();
-    else if(!gameStarted) gameStarted = true;
+    else if(!gameStarted) gameStarted=true;
     keys[' ']=false; keys['Space']=false;
   }
-  
-  update();
-  draw();
+  update(); draw();
   requestAnimationFrame(gameLoop);
 }
 </script>
