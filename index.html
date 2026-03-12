@@ -797,7 +797,7 @@ var TW=220;
 var trees=[],fences=[],startShack=null;
 var lastGateSide=1; /* track which side last gate was on */
 
-var SH_URL='https://script.google.com/macros/s/AKfycbw8QFaMXLWzY7XAzZOtvfvGTnzYloqn9Z2Nc38ef13S_tiHhNLQsSxIYoXQ1bO9Sy-vZg/exec';
+var SH_URL='https://script.google.com/macros/s/AKfycbzEHZYNsYBn80rTk_bJdPcomo7tn1mGu9jAlWRWPZV4MmONHSixgDyJWSHwAd8iwQQ5JA/exec';
 var lb=[],pName='',nInput=false,nBuf='',nSub=false;
 function fLb(){fetch(SH_URL).then(function(r){return r.json()}).then(function(d){
   lb=d.sort(function(a,b){return b.score-a.score}).slice(0,10);
