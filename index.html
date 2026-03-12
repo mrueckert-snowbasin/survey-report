@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snowbasin Survey Report — Week of March 4, 2026</title>
+<title>Snowbasin Survey Report — Week of March 11, 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -24,410 +24,90 @@
   --white: #ffffff;
   --border: #dde3ea;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: 'Source Sans Pro', -apple-system, sans-serif;
-  background: #f5f6f8;
-  color: var(--grey);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-.report-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px;
-  overflow-x: hidden;
-}
-
-/* SUMMARY ROW */
-.summary-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
-}
-.summary-card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px 24px;
-  text-align: center;
-  border: 1px solid var(--border);
-  position: relative;
-}
-.summary-card .label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--grey-light);
-  margin-bottom: 6px;
-}
-.summary-card .value {
-  font-size: 36px;
-  font-weight: 900;
-  color: var(--blue);
-  line-height: 1.1;
-}
-.summary-card .change {
-  font-size: 13px;
-  font-weight: 600;
-  margin-top: 4px;
-}
+body { font-family: 'Source Sans Pro', -apple-system, sans-serif; background: #f5f6f8; color: var(--grey); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.report-container { max-width: 1100px; margin: 0 auto; padding: 20px; overflow-x: hidden; }
+.summary-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+.summary-card { background: white; border-radius: 12px; padding: 20px 24px; text-align: center; border: 1px solid var(--border); position: relative; }
+.summary-card .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--grey-light); margin-bottom: 6px; }
+.summary-card .value { font-size: 36px; font-weight: 900; color: var(--blue); line-height: 1.1; }
+.summary-card .change { font-size: 13px; font-weight: 600; margin-top: 4px; }
 .summary-card .change.up { color: var(--green); }
 .summary-card .change.down { color: var(--red); }
-.summary-card .context {
-  font-size: 11px;
-  color: var(--grey-light);
-  margin-top: 2px;
-}
-
-/* SECTION PANELS */
-.panel {
-  background: white;
-  border-radius: 12px;
-  padding: 32px;
-  margin-bottom: 24px;
-  border: 1px solid var(--border);
-  overflow: hidden;
-}
-.panel h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
-  color: var(--blue);
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--blue-bg);
-}
-.panel h3 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--grey);
-  margin: 18px 0 10px;
-}
-
-/* TWO COLUMN */
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-.two-col > div {
-  min-width: 0;
-}
-
-/* BAR CHARTS */
+.summary-card .context { font-size: 11px; color: var(--grey-light); margin-top: 2px; }
+.panel { background: white; border-radius: 12px; padding: 32px; margin-bottom: 24px; border: 1px solid var(--border); overflow: hidden; }
+.panel h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--blue); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid var(--blue-bg); }
+.panel h3 { font-size: 16px; font-weight: 700; color: var(--grey); margin: 18px 0 10px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.two-col > div { min-width: 0; }
 .bar-chart { margin: 16px 0; }
-.bar-row {
-  display: grid;
-  grid-template-columns: 180px 1fr 60px;
-  align-items: center;
-  margin-bottom: 8px;
-  font-size: 13px;
-}
-.bar-row .bar-label {
-  font-weight: 600;
-  color: var(--grey);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.bar-row .bar-track {
-  height: 22px;
-  background: var(--grey-bg);
-  border-radius: 4px;
-  position: relative;
-  overflow: hidden;
-}
-.bar-row .bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.6s ease;
-  min-width: 2px;
-}
+.bar-row { display: grid; grid-template-columns: 180px 1fr 60px; align-items: center; margin-bottom: 8px; font-size: 13px; }
+.bar-row .bar-label { font-weight: 600; color: var(--grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-row .bar-track { height: 22px; background: var(--grey-bg); border-radius: 4px; position: relative; overflow: hidden; }
+.bar-row .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; min-width: 2px; }
 .bar-row .bar-fill.blue { background: var(--blue); }
 .bar-row .bar-fill.yellow { background: var(--yellow); }
 .bar-row .bar-fill.grey { background: #aaa; }
 .bar-row .bar-fill.green { background: var(--green); }
 .bar-row .bar-fill.red { background: var(--red-light); }
-.bar-row .bar-value {
-  text-align: right;
-  font-weight: 700;
-  font-size: 13px;
-  padding-left: 8px;
-}
-
-/* COMPARISON BARS (stacked) */
-.compare-row {
-  display: grid;
-  grid-template-columns: 160px 1fr 80px;
-  align-items: center;
-  margin-bottom: 14px;
-  font-size: 13px;
-}
-.compare-row .comp-label {
-  font-weight: 600;
-  color: var(--grey);
-}
-.compare-row .comp-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.comp-bar {
-  height: 14px;
-  border-radius: 3px;
-  transition: width 0.6s ease;
-  min-width: 2px;
-}
+.bar-row .bar-value { text-align: right; font-weight: 700; font-size: 13px; padding-left: 8px; }
+.compare-row { display: grid; grid-template-columns: 160px 1fr 80px; align-items: center; margin-bottom: 14px; font-size: 13px; }
+.compare-row .comp-label { font-weight: 600; color: var(--grey); }
+.compare-row .comp-bars { display: flex; flex-direction: column; gap: 3px; }
+.comp-bar { height: 14px; border-radius: 3px; transition: width 0.6s ease; min-width: 2px; }
 .comp-bar.this-year { background: var(--blue); }
 .comp-bar.last-year { background: var(--yellow); }
-.compare-row .comp-values {
-  text-align: right;
-  font-size: 12px;
-  line-height: 1.5;
-}
+.compare-row .comp-values { text-align: right; font-size: 12px; line-height: 1.5; }
 .comp-values .cv-blue { color: var(--blue); font-weight: 700; }
 .comp-values .cv-yellow { color: var(--yellow-dark); font-weight: 600; }
-
-/* LEGEND */
-.legend {
-  display: flex;
-  gap: 20px;
-  font-size: 12px;
-  margin-bottom: 16px;
-  color: var(--grey-mid);
-}
-.legend span {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.legend-dot {
-  width: 12px; height: 12px;
-  border-radius: 3px;
-  display: inline-block;
-}
+.legend { display: flex; gap: 20px; font-size: 12px; margin-bottom: 16px; color: var(--grey-mid); }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 .legend-dot.blue { background: var(--blue); }
 .legend-dot.yellow { background: var(--yellow); }
 .legend-dot.grey { background: #aaa; }
-
-/* METRIC TABLE */
-.metric-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  margin: 12px 0;
-}
-.table-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin: 12px 0;
-}
-.table-scroll .metric-table {
-  min-width: 420px;
-}
-.two-col .table-scroll .metric-table {
-  min-width: 320px;
-}
-.table-wide {
-  min-width: 600px !important;
-}
-.metric-table th {
-  background: var(--blue);
-  color: white;
-  padding: 8px 12px;
-  text-align: left;
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+.metric-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; }
+.table-scroll .metric-table { min-width: 420px; }
+.two-col .table-scroll .metric-table { min-width: 320px; }
+.table-wide { min-width: 600px !important; }
+.metric-table th { background: var(--blue); color: white; padding: 8px 12px; text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
 .metric-table th:not(:first-child) { text-align: center; }
-.metric-table td {
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--border);
-}
+.metric-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
 .metric-table td:not(:first-child) { text-align: center; font-weight: 600; }
 .metric-table tr:nth-child(even) { background: #fafbfc; }
 .metric-table .positive { color: var(--green); }
 .metric-table .negative { color: var(--red); }
-
-/* CALLOUT BOXES */
-.callout {
-  padding: 16px 20px;
-  border-radius: 10px;
-  margin: 12px 0;
-  font-size: 14px;
-  line-height: 1.55;
-}
-.callout.positive {
-  background: #edf7f0;
-  border-left: 4px solid var(--green);
-}
-.callout.negative {
-  background: #fdf0ef;
-  border-left: 4px solid var(--red);
-}
-.callout.neutral {
-  background: var(--blue-bg);
-  border-left: 4px solid var(--blue);
-}
-.callout.warning {
-  background: var(--yellow-bg);
-  border-left: 4px solid var(--yellow);
-}
+.callout { padding: 16px 20px; border-radius: 10px; margin: 12px 0; font-size: 14px; line-height: 1.55; }
+.callout.positive { background: #edf7f0; border-left: 4px solid var(--green); }
+.callout.negative { background: #fdf0ef; border-left: 4px solid var(--red); }
+.callout.neutral { background: var(--blue-bg); border-left: 4px solid var(--blue); }
+.callout.warning { background: var(--yellow-bg); border-left: 4px solid var(--yellow); }
 .callout strong { font-weight: 700; }
-
-/* EMPLOYEE CARDS */
-.employee-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
-  margin: 16px 0;
-}
-.employee-card {
-  background: #f7faff;
-  border: 1px solid var(--blue-bg);
-  border-radius: 10px;
-  padding: 14px 18px;
-}
-.employee-card .emp-name {
-  font-weight: 700;
-  color: var(--blue);
-  font-size: 15px;
-}
-.employee-card .emp-dept {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--grey-light);
-  margin-bottom: 6px;
-}
-.employee-card .emp-quote {
-  font-size: 13px;
-  color: var(--grey-mid);
-  font-style: italic;
-  line-height: 1.5;
-}
-
-/* COMMENT CARDS */
-.comment-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 20px;
-  margin: 10px 0;
-  font-size: 14px;
-  line-height: 1.55;
-  position: relative;
-}
-.comment-card::before {
-  content: '\201C';
-  font-size: 48px;
-  color: var(--blue-bg);
-  position: absolute;
-  top: 2px;
-  left: 12px;
-  font-family: Georgia, serif;
-  line-height: 1;
-}
-.comment-card p {
-  padding-left: 28px;
-  color: var(--grey-mid);
-}
-.comment-card .comment-tag {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-top: 8px;
-  margin-left: 28px;
-}
+.employee-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 16px 0; }
+.employee-card { background: #f7faff; border: 1px solid var(--blue-bg); border-radius: 10px; padding: 14px 18px; }
+.employee-card .emp-name { font-weight: 700; color: var(--blue); font-size: 15px; }
+.employee-card .emp-dept { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--grey-light); margin-bottom: 6px; }
+.employee-card .emp-quote { font-size: 13px; color: var(--grey-mid); font-style: italic; line-height: 1.5; }
+.comment-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin: 10px 0; font-size: 14px; line-height: 1.55; position: relative; }
+.comment-card::before { content: '\201C'; font-size: 48px; color: var(--blue-bg); position: absolute; top: 2px; left: 12px; font-family: Georgia, serif; line-height: 1; }
+.comment-card p { padding-left: 28px; color: var(--grey-mid); }
+.comment-card .comment-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; margin-top: 8px; margin-left: 28px; }
 .comment-tag.praise { background: #edf7f0; color: var(--green); }
 .comment-tag.concern { background: #fdf0ef; color: var(--red); }
 .comment-tag.insight { background: var(--blue-bg); color: var(--blue); }
-
-/* THEME LIST */
-.theme-list {
-  counter-reset: theme;
-  list-style: none;
-  padding: 0;
-}
-.theme-list li {
-  counter-increment: theme;
-  padding: 10px 0 10px 40px;
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 14px;
-  position: relative;
-  line-height: 1.5;
-}
-.theme-list li::before {
-  content: counter(theme);
-  position: absolute;
-  left: 0;
-  top: 10px;
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  background: var(--blue);
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.theme-list.concerns li::before {
-  background: var(--red);
-}
-
-/* PILL TAGS */
-.pill {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 10px;
-  border-radius: 12px;
-  margin-right: 4px;
-}
+.theme-list { counter-reset: theme; list-style: none; padding: 0; }
+.theme-list li { counter-increment: theme; padding: 10px 0 10px 40px; border-bottom: 1px solid #f0f0f0; font-size: 14px; position: relative; line-height: 1.5; }
+.theme-list li::before { content: counter(theme); position: absolute; left: 0; top: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.theme-list.concerns li::before { background: var(--red); }
+.pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 12px; margin-right: 4px; }
 .pill.blue { background: var(--blue-bg); color: var(--blue); }
 .pill.yellow { background: var(--yellow-bg); color: #8a6d00; }
 .pill.green { background: #edf7f0; color: var(--green); }
 .pill.red { background: #fdf0ef; color: var(--red); }
-
 p { margin-bottom: 10px; }
-
-/* Play Button */
-.play-btn {
-  display: inline-block;
-  background: var(--yellow);
-  color: var(--grey);
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 800;
-  font-size: 13px;
-  padding: 8px 22px;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
-  margin-top: 10px;
-  letter-spacing: 0.5px;
-  transition: all 0.2s;
-  vertical-align: middle;
-}
-.play-btn:hover {
-  background: #fff;
-  color: var(--blue);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-/* PIN Lock */
+.play-btn { display: inline-block; background: var(--yellow); color: var(--grey); font-family: 'Source Sans Pro', sans-serif; font-weight: 800; font-size: 13px; padding: 8px 22px; border: none; border-radius: 24px; cursor: pointer; margin-top: 10px; letter-spacing: 0.5px; transition: all 0.2s; vertical-align: middle; }
+.play-btn:hover { background: #fff; color: var(--blue); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 #lock{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(145deg,#0d2240 0%,#1a3d6e 40%,var(--blue) 100%);z-index:10000;display:flex;align-items:center;justify-content:center;transition:opacity .4s,visibility .4s}
 #lock.gone{opacity:0;visibility:hidden;pointer-events:none}
 .lock-box{text-align:center;color:#fff}
@@ -438,8 +118,6 @@ p { margin-bottom: 10px; }
 .pin-dot:focus{border-color:var(--yellow);background:rgba(255,212,0,.08)}
 .pin-dot.filled{border-color:rgba(255,255,255,.3)}
 .lock-err{font-size:12px;color:#fca5a5;height:18px;transition:opacity .2s}
-
-/* Hero Header */
 .hero{background:linear-gradient(145deg,#0d2240 0%,#1a3d6e 40%,var(--blue) 100%);color:#fff;padding:40px 48px 0;position:relative;overflow:hidden;border-radius:16px;margin-bottom:28px}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:url("data:image/svg+xml,%3Csvg width='1060' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='0,300 180,180 320,220 480,140 600,190 750,100 900,160 1060,80 1060,300' fill='rgba(255,255,255,0.02)'/%3E%3Cpolygon points='0,300 100,240 250,260 400,200 550,240 700,170 850,210 1060,130 1060,300' fill='rgba(255,255,255,0.015)'/%3E%3C/svg%3E") no-repeat bottom;opacity:.8}
 .hero-inner{position:relative;z-index:1}
@@ -458,7 +136,6 @@ p { margin-bottom: 10px; }
 .pill-sm{display:inline-block;font-size:9px;font-weight:700;padding:3px 10px;border-radius:20px}
 .pill-up{background:rgba(22,163,74,.15);color:#86efac}
 .pill-dn{background:rgba(220,38,38,.15);color:#fca5a5}
-
 @media(max-width:768px){
   .hero{padding:24px}
   .hero h1{font-size:22px}
@@ -468,156 +145,26 @@ p { margin-bottom: 10px; }
   .panel{padding:20px 16px}
   .report-container{padding:12px}
 }
-
-/* Chart boxes */
-.chart-box {
-  position: relative;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 16px 0;
-  background: #fafbfc;
-}
-
-/* Game Overlay */
-.game-overlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(13, 34, 64, 0.95);
-  z-index: 9999;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
+.chart-box { position: relative; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 16px 0; background: #fafbfc; }
+.game-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(13, 34, 64, 0.95); z-index: 9999; justify-content: center; align-items: center; flex-direction: column; }
 .game-overlay.open { display: flex; }
-.game-close {
-  position: absolute;
-  top: 20px; right: 28px;
-  background: none;
-  border: 2px solid rgba(255,255,255,0.3);
-  color: white;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 6px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-family: 'Source Sans Pro', sans-serif;
-  transition: all 0.2s;
-}
+.game-close { position: absolute; top: 20px; right: 28px; background: none; border: 2px solid rgba(255,255,255,0.3); color: white; font-size: 14px; font-weight: 700; padding: 6px 16px; border-radius: 20px; cursor: pointer; font-family: 'Source Sans Pro', sans-serif; transition: all 0.2s; }
 .game-close:hover { background: rgba(255,255,255,0.1); border-color: white; }
-.game-wrapper {
-  text-align: center;
-}
-.game-wrapper h2 {
-  font-family: 'Playfair Display', serif;
-  color: white;
-  font-size: 28px;
-  margin-bottom: 4px;
-}
-.game-wrapper .game-sub {
-  color: rgba(255,255,255,0.5);
-  font-size: 13px;
-  margin-bottom: 16px;
-}
-#gameCanvas {
-  border-radius: 12px;
-  border: 2px solid rgba(255,255,255,0.1);
-  display: block;
-  margin: 0 auto;
-  background: #dceef8;
-  max-width: 100%;
-  height: auto;
-}
-.game-controls-hint {
-  color: rgba(255,255,255,0.4);
-  font-size: 11px;
-  margin-top: 10px;
-  letter-spacing: 0.5px;
-}
-.nsaa-badge {
-  color: var(--yellow);
-  font-size: 12px;
-  font-weight: 600;
-  margin-top: 12px;
-  opacity: 0.8;
-}
-
-/* Footer */
-.report-footer {
-  text-align: center;
-  padding: 24px;
-  color: var(--grey-light);
-  font-size: 12px;
-}
-
-/* NPS Gauge */
-.nps-gauge-container {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.nps-gauge {
-  width: 140px; height: 80px;
-  position: relative;
-}
-.gauge-bg {
-  width: 140px; height: 70px;
-  border-radius: 70px 70px 0 0;
-  background: linear-gradient(90deg, var(--red-light) 0%, var(--yellow) 50%, var(--green) 100%);
-  position: relative;
-  overflow: hidden;
-}
-.gauge-mask {
-  width: 100px; height: 50px;
-  border-radius: 50px 50px 0 0;
-  background: white;
-  position: absolute;
-  bottom: 0;
-  left: 20px;
-}
-.gauge-value {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  font-size: 24px;
-  font-weight: 900;
-  color: var(--blue);
-}
-
-/* Trend sparkline */
-.trend-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  font-weight: 600;
-}
+.game-wrapper { text-align: center; }
+.game-wrapper h2 { font-family: 'Playfair Display', serif; color: white; font-size: 28px; margin-bottom: 4px; }
+.game-wrapper .game-sub { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 16px; }
+#gc { border-radius: 12px; border: 2px solid rgba(255,255,255,0.1); display: block; margin: 0 auto; background: #dceef8; max-width: 100%; height: auto; }
+.game-controls-hint { color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 10px; letter-spacing: 0.5px; }
+.nsaa-badge { color: var(--yellow); font-size: 12px; font-weight: 600; margin-top: 12px; opacity: 0.8; }
+.report-footer { text-align: center; padding: 24px; color: var(--grey-light); font-size: 12px; }
+.nps-gauge-container { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.section-intro { font-size: 15px; color: var(--grey-mid); margin-bottom: 18px; line-height: 1.6; }
+.action-item { background: #fff9d9; border-left: 4px solid var(--yellow); padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 8px 0; font-size: 13px; }
+.action-item strong { color: var(--grey); }
+.trend-indicator { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; }
 .trend-indicator.up { color: var(--green); }
 .trend-indicator.down { color: var(--red); }
 .trend-indicator.flat { color: var(--grey-light); }
-
-.section-intro {
-  font-size: 15px;
-  color: var(--grey-mid);
-  margin-bottom: 18px;
-  line-height: 1.6;
-}
-
-.action-item {
-  background: #fff9d9;
-  border-left: 4px solid var(--yellow);
-  padding: 12px 16px;
-  border-radius: 0 8px 8px 0;
-  margin: 8px 0;
-  font-size: 13px;
-}
-.action-item strong {
-  color: var(--grey);
-}
 </style>
 </head>
 <body>
@@ -634,20 +181,20 @@ p { margin-bottom: 10px; }
       <div>
         <div class="hero-tag">Snowbasin Resort</div>
         <h1>Weekly Survey Report</h1>
-        <div class="hero-sub">Week Ending March 4, 2026 &bull; 331 Responses &bull; 3,061 Season</div>
-        <button class="play-btn" onclick="openGame()">🎿 Play the Safety Run Game</button>
+        <div class="hero-sub">Week Ending March 11, 2026 &bull; 546 Responses &bull; 3,629 Season</div>
+        <button class="play-btn" onclick="openGame()">🎿 Race the Grizzly Downhill</button>
       </div>
       <div class="hero-nps">
         <div class="num" id="heroNum">0.00</div>
         <div class="lbl">Weekly NPS</div>
-        <div style="margin-top:8px"><span class="pill-sm pill-dn">&darr; 5.40 vs prior week</span></div>
+        <div style="margin-top:8px"><span class="pill-sm pill-dn">&darr; 0.50 vs prior week</span></div>
       </div>
     </div>
     <div class="kpis">
-      <div class="kpi"><div class="kpi-v"><span id="kpi1">0.00</span> <span class="pill-sm pill-dn" style="font-size:9px">&darr;0.02</span></div><div class="kpi-l">Season Average</div><div class="kpi-s">essentially flat from 63.76</div></div>
-      <div class="kpi"><div class="kpi-v" style="color:var(--yellow)" id="kpi2">0.00</div><div class="kpi-l">Last Year at This Date</div><div class="kpi-s">3/5/2025 dashboard</div></div>
-      <div class="kpi"><div class="kpi-v" id="kpi3">0.00</div><div class="kpi-l">YoY Season Gap</div><div class="kpi-s">narrowed from -6.0 in Jan</div></div>
-      <div class="kpi"><div class="kpi-v">8<sup style="font-size:12px">th</sup></div><div class="kpi-l">Consecutive Week 63+</div><div class="kpi-s">steady through low-snow stretch</div></div>
+      <div class="kpi"><div class="kpi-v"><span id="kpi1">0.00</span> <span class="pill-sm pill-up" style="font-size:9px">&uarr;0.02</span></div><div class="kpi-l">Season Average</div><div class="kpi-s">holding steady at 63.76</div></div>
+      <div class="kpi"><div class="kpi-v" style="color:var(--yellow)" id="kpi2">0.00</div><div class="kpi-l">Last Year at This Date</div><div class="kpi-s">3/12/2025 dashboard</div></div>
+      <div class="kpi"><div class="kpi-v" id="kpi3">0.00</div><div class="kpi-l">YoY Season Gap</div><div class="kpi-s">widened from -0.62 as LY March surged</div></div>
+      <div class="kpi"><div class="kpi-v">546</div><div class="kpi-l">Weekly Responses</div><div class="kpi-s">season high &mdash; pass sale driving engagement</div></div>
     </div>
   </div>
 </div>
@@ -655,20 +202,24 @@ p { margin-bottom: 10px; }
 <!-- TOP-LINE NARRATIVE -->
 <div class="panel">
   <h2>Week in Review</h2>
-  <p>Our weekly NPS pulled back to <strong>63.14</strong> from last week's <strong>68.54</strong>, a predictable reversion as the fresh snow that boosted last week's numbers gave way to deteriorating conditions. Snow Quality NPS crashed from <strong>+10.16 back to -37.12</strong> (a 47-point swing), which dragged Mountain NPS down with it to <strong>35.74</strong> from 60.25. Despite this, the season average held steady at <strong>63.74</strong>, and the year-over-year gap continued to narrow — now just <strong>0.62 points</strong> behind last season's pace (64.36 at the comparable 3/5/25 dashboard).</p>
+  <p>This was a milestone week for survey engagement: <strong>546 responses</strong>, the highest single-week total this season, pushing our season total to 3,629. The surge coincided with the 2026-27 season pass launch, and the respondent mix tells the story: Snowbasin pass holders (Premier + Value) jumped from 33% to <strong>53% of weekly respondents</strong>, many clearly weighing their renewal decision while conditions and value remain top of mind.</p>
 
-  <p>The encouraging story this week: <strong>crowd-dependent metrics improved significantly</strong>. Lift Line NPS surged to <strong>61.66</strong> (+15.97), Trail Crowding improved to <strong>15.00</strong> (+11.82), and F&B seating satisfaction recovered to <strong>26.97</strong> (+12.22) — all reversing the heavy weekend-driven declines from two weeks ago. This suggests lower midweek-weighted volume this period. Parking also recovered to <strong>61.63</strong> (+2.98).</p>
+  <p>Our weekly NPS came in at <strong>62.64</strong>, essentially flat from last week's 63.14 (-0.50). Snow Quality improved from -37.12 to <strong>-28.47</strong> (+8.65) with some weekend snowfall, and Mountain NPS edged up to 38.10 (+2.36). The bright spot: <strong>Likely to Return bounced back sharply</strong> to 57.77 from last week's season-low 47.02 (+10.75), now sitting above last year's comparable (55.58). That worst-case scenario did not sustain.</p>
 
-  <p>The biggest red flag: <strong>Likely to Return dropped sharply to 47.02</strong> from 58.62 (-11.60). While some of this is seasonal fatigue and destination guests rating on geography, it warrants attention. Combined with snow quality struggles and end-of-season vibes, we should monitor whether this stabilizes or deteriorates further.</p>
+  <p>The biggest concern this week is an <strong>F&B regression across all outlets</strong>: overall F&B NPS dropped from 37.10 to 30.58 (-6.52), with John Paul Lodge falling the hardest (50.85 to 24.72). Higher weekend volume drove seating and food speed pressure. On the positive side, Tune Shop surged to 68.63 (+18.63), Rentals posted a strong 63.46 (+7.05), and Retail improved to 59.26 (+3.47).</p>
+
+  <div class="callout warning">
+    <strong>Season Pass Renewal Is This Week's Defining Theme.</strong> At least 8 separate comments specifically request a renewal discount, loyalty program, or retention incentive. A 12-year pass holder says they may skip next year. A 10-year holder is looking elsewhere. Several cite competitors offering renewal discounts Snowbasin does not. With the 26-27 pass sale now live, this feedback has immediate strategic relevance.
+  </div>
 
   <div class="callout neutral">
-    <strong>Season Context:</strong> Despite the second consecutive low-snow winter, our controllable metrics continue to dramatically outperform last season. Service (+4.22 YoY), Safety (+5.38), Parking (+11.53), and F&B (+6.53) are all tracking well ahead. The Mountain and Snow Quality gaps (-19.21 and -44.78 YoY respectively) are entirely weather-driven — last season had far more natural snow at this point.
+    <strong>Season Context:</strong> The YoY gap widened to -1.21 (63.76 vs. 64.97), though this reflects last year's strong March rather than any deterioration on our side. Last year's comparable weekly NPS was 70.57 following productive snowfall we simply haven't had. Controllable metrics remain well ahead: Service (+3.18 YoY), Parking (+9.80), Safety (+3.93), F&B (+5.24), Rentals (+4.13).
   </div>
 </div>
 
 <!-- SEASON TRENDLINE CHARTS -->
 <div class="panel">
-  <h2>📈 Season NPS Trends</h2>
+  <h2>Season NPS Trends</h2>
   <div class="legend">
     <span><span class="legend-dot blue"></span> 2025-26 Season</span>
     <span><span class="legend-dot yellow"></span> 2024-25 Season</span>
@@ -679,7 +230,7 @@ p { margin-bottom: 10px; }
 
   <h3>Season Average Convergence</h3>
   <div class="chart-box" style="height:270px"><canvas id="c2"></canvas></div>
-  <p style="font-size:11px;color:var(--grey-light);margin-top:6px;font-style:italic;">From a 6+ point deficit in early January to less than 1 point — the result of eight consecutive weeks above 63.</p>
+  <p style="font-size:11px;color:var(--grey-light);margin-top:6px;font-style:italic;">The gap was narrowing through early March but has widened slightly as last year's strong March pushes its rolling average higher. Our season average has been essentially flat for three consecutive weeks.</p>
 
   <h3>Category NPS: This Week vs Prior Week vs Last Year Same Week</h3>
   <div class="chart-box" style="height:360px"><canvas id="c3"></canvas></div>
@@ -689,9 +240,9 @@ p { margin-bottom: 10px; }
 <div class="panel">
   <h2>Weekly Category NPS — Week-over-Week</h2>
   <div class="legend">
-    <span><span class="legend-dot blue"></span> This Week (3/4/26)</span>
-    <span><span class="legend-dot yellow"></span> Prior Week (2/25/26)</span>
-    <span><span class="legend-dot grey"></span> Last Season Same Week (3/5/25)</span>
+    <span><span class="legend-dot blue"></span> This Week (3/11/26)</span>
+    <span><span class="legend-dot yellow"></span> Prior Week (3/4/26)</span>
+    <span><span class="legend-dot grey"></span> Last Season Same Week (3/12/25)</span>
   </div>
 
   <div class="table-scroll"><table class="metric-table table-wide">
@@ -706,106 +257,29 @@ p { margin-bottom: 10px; }
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><strong>Overall NPS</strong></td>
-        <td>63.14</td>
-        <td>68.54</td>
-        <td class="negative">-5.40</td>
-        <td>64.52</td>
-        <td class="negative">-1.38</td>
-      </tr>
-      <tr>
-        <td><strong>Service</strong></td>
-        <td>71.25</td>
-        <td>74.76</td>
-        <td class="negative">-3.51</td>
-        <td>71.11</td>
-        <td class="positive">+0.14</td>
-      </tr>
-      <tr>
-        <td><strong>Parking</strong></td>
-        <td>61.63</td>
-        <td>58.65</td>
-        <td class="positive">+2.98</td>
-        <td>51.33</td>
-        <td class="positive">+10.30</td>
-      </tr>
-      <tr>
-        <td><strong>Safety</strong></td>
-        <td>60.92</td>
-        <td>66.88</td>
-        <td class="negative">-5.96</td>
-        <td>53.78</td>
-        <td class="positive">+7.14</td>
-      </tr>
-      <tr>
-        <td><strong>Mountain</strong></td>
-        <td>35.74</td>
-        <td>60.25</td>
-        <td class="negative">-24.51</td>
-        <td>57.93</td>
-        <td class="negative">-22.19</td>
-      </tr>
-      <tr>
-        <td><strong>F&amp;B</strong></td>
-        <td>37.10</td>
-        <td>37.25</td>
-        <td class="negative">-0.15</td>
-        <td>30.50</td>
-        <td class="positive">+6.60</td>
-      </tr>
-      <tr>
-        <td><strong>Retail</strong></td>
-        <td>55.79</td>
-        <td>55.67</td>
-        <td class="positive">+0.12</td>
-        <td>56.25</td>
-        <td class="negative">-0.46</td>
-      </tr>
-      <tr>
-        <td><strong>Lessons</strong></td>
-        <td>55.26</td>
-        <td>66.67</td>
-        <td class="negative">-11.41</td>
-        <td>44.44</td>
-        <td class="positive">+10.82</td>
-      </tr>
-      <tr>
-        <td><strong>Rentals</strong></td>
-        <td>56.41</td>
-        <td>58.00</td>
-        <td class="negative">-1.59</td>
-        <td>94.12</td>
-        <td class="negative">-37.71</td>
-      </tr>
-      <tr>
-        <td><strong>Tune Shop</strong></td>
-        <td>50.00</td>
-        <td>53.85</td>
-        <td class="negative">-3.85</td>
-        <td>47.83</td>
-        <td class="positive">+2.17</td>
-      </tr>
-      <tr>
-        <td><strong>Likely Return</strong></td>
-        <td>47.02</td>
-        <td>58.62</td>
-        <td class="negative">-11.60</td>
-        <td>48.46</td>
-        <td class="negative">-1.44</td>
-      </tr>
+      <tr><td><strong>Overall NPS</strong></td><td>62.64</td><td>63.14</td><td class="negative">-0.50</td><td>70.57</td><td class="negative">-7.93</td></tr>
+      <tr><td><strong>Service</strong></td><td>69.96</td><td>71.25</td><td class="negative">-1.29</td><td>77.87</td><td class="negative">-7.91</td></tr>
+      <tr><td><strong>Parking</strong></td><td>57.78</td><td>61.63</td><td class="negative">-3.85</td><td>60.10</td><td class="negative">-2.32</td></tr>
+      <tr><td><strong>Safety</strong></td><td>58.21</td><td>60.92</td><td class="negative">-2.71</td><td>68.00</td><td class="negative">-9.79</td></tr>
+      <tr><td><strong>Mountain</strong></td><td>38.10</td><td>35.74</td><td class="positive">+2.36</td><td>69.21</td><td class="negative">-31.11</td></tr>
+      <tr><td><strong>F&amp;B</strong></td><td>30.58</td><td>37.10</td><td class="negative">-6.52</td><td>39.64</td><td class="negative">-9.06</td></tr>
+      <tr><td><strong>Retail</strong></td><td>59.26</td><td>55.79</td><td class="positive">+3.47</td><td>58.43</td><td class="positive">+0.83</td></tr>
+      <tr><td><strong>Lessons</strong></td><td>39.47</td><td>55.26</td><td class="negative">-15.79</td><td>78.57</td><td class="negative">-39.10</td></tr>
+      <tr><td><strong>Rentals</strong></td><td>63.46</td><td>56.41</td><td class="positive">+7.05</td><td>69.23</td><td class="negative">-5.77</td></tr>
+      <tr><td><strong>Tune Shop</strong></td><td>68.63</td><td>50.00</td><td class="positive">+18.63</td><td>57.14</td><td class="positive">+11.49</td></tr>
+      <tr><td><strong>Likely Return</strong></td><td>57.77</td><td>47.02</td><td class="positive">+10.75</td><td>55.58</td><td class="positive">+2.19</td></tr>
     </tbody>
   </table></div>
 
   <div class="callout warning" style="margin-top:16px;">
-    <strong>Note on Rentals YoY:</strong> Last season's comparable week showed 94.12 on only 17 responses — an abnormally high reading on very low volume. This week's 56.41 on 39 responses is more statistically meaningful and aligns with the season average of 53.44. One specific incident this week (boot fitting resulting in toboggan ride) likely contributed to the pullback from last week.
+    <strong>Note on Lessons YoY:</strong> Last year's comparable week of 78.57 was on only 28 responses — an exceptionally high reading on very low volume. This week's 39.47 on 38 responses is also a small sample. The season average of 50.31 is the more reliable trend indicator.
   </div>
 </div>
 
 <!-- MOUNTAIN OPS DEEP DIVE -->
 <div class="panel">
   <h2>Mountain Operations Deep Dive</h2>
-  <div class="section-intro">Snow Quality collapsed back to deeply negative territory after last week's fresh-snow reprieve. However, the lower-traffic period delivered significant crowd relief across Lift Lines and Trail Crowding.</div>
+  <div class="section-intro">Snow Quality recovered partially after last weekend's snowfall but remains deeply negative. Higher volume this period reversed last week's crowd relief gains, with Lift Lines and Trail Crowding both pulling back from their recent bests.</div>
 
   <div class="legend">
     <span><span class="legend-dot blue"></span> This Week</span>
@@ -813,201 +287,96 @@ p { margin-bottom: 10px; }
   </div>
 
   <div class="bar-chart">
-    <!-- Snow Quality -->
     <div class="compare-row">
       <div class="comp-label">Snow Quality</div>
       <div class="comp-bars">
-        <div class="comp-bar" style="width:2%; background:var(--red-light);"></div>
-        <div class="comp-bar last-year" style="width:55%;"></div>
+        <div class="comp-bar" style="width:22%; background:var(--red-light);"></div>
+        <div class="comp-bar" style="width:2%; background:var(--yellow);"></div>
       </div>
       <div class="comp-values">
-        <div class="cv-blue" style="color:var(--red);">-37.12</div>
-        <div class="cv-yellow">+10.16</div>
+        <div class="cv-blue" style="color:var(--red);">-28.47</div>
+        <div class="cv-yellow" style="color:var(--red);">-37.12</div>
       </div>
     </div>
-    <!-- Crowding -->
     <div class="compare-row">
       <div class="comp-label">Trail Crowding</div>
       <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:57%;"></div>
-        <div class="comp-bar last-year" style="width:52%;"></div>
+        <div class="comp-bar this-year" style="width:53%;"></div>
+        <div class="comp-bar last-year" style="width:57%;"></div>
       </div>
       <div class="comp-values">
-        <div class="cv-blue">+15.00</div>
-        <div class="cv-yellow">+3.18</div>
+        <div class="cv-blue">+6.41</div>
+        <div class="cv-yellow">+15.00</div>
       </div>
     </div>
-    <!-- Value -->
     <div class="compare-row">
       <div class="comp-label">Ticket/Pass Value</div>
       <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:59%;"></div>
-        <div class="comp-bar last-year" style="width:64%;"></div>
+        <div class="comp-bar this-year" style="width:58%;"></div>
+        <div class="comp-bar last-year" style="width:59%;"></div>
       </div>
       <div class="comp-values">
-        <div class="cv-blue">+18.83</div>
-        <div class="cv-yellow">+27.21</div>
+        <div class="cv-blue">+16.70</div>
+        <div class="cv-yellow">+18.83</div>
       </div>
     </div>
-    <!-- Grooming -->
     <div class="compare-row">
       <div class="comp-label">Grooming Quality</div>
       <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:66%;"></div>
-        <div class="comp-bar last-year" style="width:69%;"></div>
+        <div class="comp-bar this-year" style="width:65%;"></div>
+        <div class="comp-bar last-year" style="width:66%;"></div>
       </div>
       <div class="comp-values">
-        <div class="cv-blue">+32.92</div>
-        <div class="cv-yellow">+38.54</div>
+        <div class="cv-blue">+30.26</div>
+        <div class="cv-yellow">+32.92</div>
       </div>
     </div>
-    <!-- Lift Lines -->
     <div class="compare-row">
       <div class="comp-label">Lift Line Waits</div>
       <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:81%;"></div>
-        <div class="comp-bar last-year" style="width:73%;"></div>
+        <div class="comp-bar this-year" style="width:76%;"></div>
+        <div class="comp-bar last-year" style="width:81%;"></div>
       </div>
       <div class="comp-values">
-        <div class="cv-blue">+61.66</div>
-        <div class="cv-yellow">+45.69</div>
+        <div class="cv-blue">+52.85</div>
+        <div class="cv-yellow">+61.66</div>
       </div>
     </div>
   </div>
 
-  <div class="callout negative">
-    <strong>Snow Quality at -37.12</strong> represents the deepest weekly reading since the early-season stretch. Comments overwhelmingly cite icy conditions, limited terrain, and exposed rocks/dirt. Multiple guests explicitly note this isn't the resort's fault but it's dominating the negative sentiment. Last season's comparable week was -4.22 — that gap reflects the significantly better natural snow conditions last March.
-  </div>
   <div class="callout positive">
-    <strong>Lift Lines at 61.66</strong> is the best weekly reading in several weeks (+15.97 WoW) and meaningfully above last year's 48.22 at this same point. Lower visitation this period eased pressure across the mountain. Trail Crowding at +15.00 is similarly the strongest recent reading.
+    <strong>Snow Quality at -28.47</strong> improved from -37.12 (+8.65), with last weekend's snow providing some relief. Still deeply negative and far below last year's comparable +39.68. The ~68-point YoY gap represents the most dramatic snow disparity of the season at a comparable date.
+  </div>
+  <div class="callout negative">
+    <strong>Crowd metrics reversed</strong> as higher weekend volume erased last week's gains. Lift Lines pulled back to 52.85 from 61.66 (-8.81), and Trail Crowding dropped to 6.41 from 15.00 (-8.59). Comments continue to cite funnel points (Blue Grouse to Porky's, City Hill, Bear Hollow) as danger zones when limited terrain concentrates traffic.
   </div>
 </div>
 
 <!-- SEASON YOY COMPARISON -->
 <div class="panel">
   <h2>Season-to-Date: Year-over-Year Comparison</h2>
-  <p class="section-intro">At the same point in the season, here is how 2025-26 compares to 2024-25 across all categories. Blue represents this season (pages 1-2, 3/4/26 dashboard), yellow represents last season (pages 1-2, 3/5/25 dashboard).</p>
+  <p class="section-intro">At the same point in the season, here is how 2025-26 compares to 2024-25 across all categories. Blue represents this season (pages 1-2, 3/11/26 dashboard), yellow represents last season (pages 1-2, 3/12/25 dashboard).</p>
 
   <div class="legend">
-    <span><span class="legend-dot blue"></span> 2025-26 Season (3,061 responses)</span>
-    <span><span class="legend-dot yellow"></span> 2024-25 Season (4,579 responses)</span>
+    <span><span class="legend-dot blue"></span> 2025-26 Season (3,629 responses)</span>
+    <span><span class="legend-dot yellow"></span> 2024-25 Season (5,050 responses)</span>
   </div>
 
   <div class="bar-chart">
-    <div class="compare-row">
-      <div class="comp-label">Service</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:86%;"></div>
-        <div class="comp-bar last-year" style="width:84%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">72.24</div>
-        <div class="cv-yellow">68.02</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Parking</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:82%;"></div>
-        <div class="comp-bar last-year" style="width:77%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">64.60</div>
-        <div class="cv-yellow">53.07</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Safety</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:82%;"></div>
-        <div class="comp-bar last-year" style="width:79%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">64.00</div>
-        <div class="cv-yellow">58.62</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Tune Shop</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:82%;"></div>
-        <div class="comp-bar last-year" style="width:82%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">64.40</div>
-        <div class="cv-yellow">63.93</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Likely Return</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:79%;"></div>
-        <div class="comp-bar last-year" style="width:80%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">58.77</div>
-        <div class="cv-yellow">59.78</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Retail</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:77%;"></div>
-        <div class="comp-bar last-year" style="width:78%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">54.96</div>
-        <div class="cv-yellow">56.66</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Rentals</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:77%;"></div>
-        <div class="comp-bar last-year" style="width:75%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">53.44</div>
-        <div class="cv-yellow">49.53</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Lessons</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:75%;"></div>
-        <div class="comp-bar last-year" style="width:78%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">50.68</div>
-        <div class="cv-yellow">55.50</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">Mountain</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:69%;"></div>
-        <div class="comp-bar last-year" style="width:78%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">37.74</div>
-        <div class="cv-yellow">56.95</div>
-      </div>
-    </div>
-    <div class="compare-row">
-      <div class="comp-label">F&amp;B</div>
-      <div class="comp-bars">
-        <div class="comp-bar this-year" style="width:66%;"></div>
-        <div class="comp-bar last-year" style="width:62%;"></div>
-      </div>
-      <div class="comp-values">
-        <div class="cv-blue">31.14</div>
-        <div class="cv-yellow">24.61</div>
-      </div>
-    </div>
+    <div class="compare-row"><div class="comp-label">Service</div><div class="comp-bars"><div class="comp-bar this-year" style="width:86%;"></div><div class="comp-bar last-year" style="width:84%;"></div></div><div class="comp-values"><div class="cv-blue">72.03</div><div class="cv-yellow">68.85</div></div></div>
+    <div class="compare-row"><div class="comp-label">Tune Shop</div><div class="comp-bars"><div class="comp-bar this-year" style="width:83%;"></div><div class="comp-bar last-year" style="width:82%;"></div></div><div class="comp-values"><div class="cv-blue">65.12</div><div class="cv-yellow">63.22</div></div></div>
+    <div class="compare-row"><div class="comp-label">Parking</div><div class="comp-bars"><div class="comp-bar this-year" style="width:82%;"></div><div class="comp-bar last-year" style="width:77%;"></div></div><div class="comp-values"><div class="cv-blue">63.63</div><div class="cv-yellow">53.83</div></div></div>
+    <div class="compare-row"><div class="comp-label">Safety</div><div class="comp-bars"><div class="comp-bar this-year" style="width:82%;"></div><div class="comp-bar last-year" style="width:80%;"></div></div><div class="comp-values"><div class="cv-blue">63.28</div><div class="cv-yellow">59.35</div></div></div>
+    <div class="compare-row"><div class="comp-label">Likely Return</div><div class="comp-bars"><div class="comp-bar this-year" style="width:79%;"></div><div class="comp-bar last-year" style="width:80%;"></div></div><div class="comp-values"><div class="cv-blue">58.73</div><div class="cv-yellow">59.06</div></div></div>
+    <div class="compare-row"><div class="comp-label">Retail</div><div class="comp-bars"><div class="comp-bar this-year" style="width:78%;"></div><div class="comp-bar last-year" style="width:78%;"></div></div><div class="comp-values"><div class="cv-blue">55.61</div><div class="cv-yellow">56.90</div></div></div>
+    <div class="compare-row"><div class="comp-label">Rentals</div><div class="comp-bars"><div class="comp-bar this-year" style="width:77%;"></div><div class="comp-bar last-year" style="width:75%;"></div></div><div class="comp-values"><div class="cv-blue">54.55</div><div class="cv-yellow">50.42</div></div></div>
+    <div class="compare-row"><div class="comp-label">Lessons</div><div class="comp-bars"><div class="comp-bar this-year" style="width:75%;"></div><div class="comp-bar last-year" style="width:78%;"></div></div><div class="comp-values"><div class="cv-blue">50.31</div><div class="cv-yellow">57.35</div></div></div>
+    <div class="compare-row"><div class="comp-label">Mountain</div><div class="comp-bars"><div class="comp-bar this-year" style="width:69%;"></div><div class="comp-bar last-year" style="width:79%;"></div></div><div class="comp-values"><div class="cv-blue">38.02</div><div class="cv-yellow">57.91</div></div></div>
+    <div class="compare-row"><div class="comp-label">F&amp;B</div><div class="comp-bars"><div class="comp-bar this-year" style="width:66%;"></div><div class="comp-bar last-year" style="width:63%;"></div></div><div class="comp-values"><div class="cv-blue">31.24</div><div class="cv-yellow">26.00</div></div></div>
   </div>
 
   <div class="callout positive">
-    <strong>Controllable metrics are winning.</strong> Across Service, Safety, Parking, F&B, Rentals, and Tune Shop, this season is outperforming last year at the same point in time. The combined improvement across these categories is remarkable given the headwinds from poor snow conditions.
+    <strong>Controllable metrics continue to win.</strong> Service, Safety, Parking, F&B, Tune Shop, and Rentals are all outperforming last season at the same point. The combined improvement across these categories is remarkable given the headwinds from the poorest snow year in modern memory.
   </div>
 </div>
 
@@ -1018,193 +387,148 @@ p { margin-bottom: 10px; }
     <div>
       <h3>F&B Sub-Category NPS (Weekly)</h3>
       <div class="table-scroll"><table class="metric-table">
-        <thead>
-          <tr><th>Sub-Category</th><th>This Wk</th><th>Prior Wk</th><th>Change</th></tr>
-        </thead>
+        <thead><tr><th>Sub-Category</th><th>This Wk</th><th>Prior Wk</th><th>Change</th></tr></thead>
         <tbody>
-          <tr><td>Lodge Comfort/Cleanliness</td><td>77.59</td><td>77.42</td><td class="positive">+0.17</td></tr>
-          <tr><td>Speed of Getting Food</td><td>35.71</td><td>30.33</td><td class="positive">+5.38</td></tr>
-          <tr><td>Menu Offerings</td><td>30.80</td><td>34.32</td><td class="negative">-3.52</td></tr>
-          <tr><td>Ease of Finding a Seat</td><td>26.97</td><td>14.75</td><td class="positive">+12.22</td></tr>
-          <tr><td>Value for Price</td><td>10.88</td><td>7.85</td><td class="positive">+3.03</td></tr>
+          <tr><td>Lodge Comfort/Cleanliness</td><td>82.71</td><td>77.59</td><td class="positive">+5.12</td></tr>
+          <tr><td>Speed of Getting Food</td><td>39.24</td><td>35.71</td><td class="positive">+3.53</td></tr>
+          <tr><td>Ease of Finding a Seat</td><td>21.16</td><td>26.97</td><td class="negative">-5.81</td></tr>
+          <tr><td>Menu Offerings</td><td>22.08</td><td>30.80</td><td class="negative">-8.72</td></tr>
+          <tr><td>Value for Price</td><td>10.80</td><td>10.88</td><td class="negative">-0.08</td></tr>
         </tbody>
       </table></div>
 
-      <div class="callout positive" style="margin-top:14px;">
-        <strong>Seating recovered strongly</strong> from last week's crowding-driven low. The +12.22 swing aligns with the lower overall volume this period. Speed of food also improved.
+      <div class="callout negative" style="margin-top:14px;">
+        <strong>Menu Offerings dropped sharply</strong> from 30.80 to 22.08 (-8.72). Multiple comments cite items running out (fries, shepherd's pie, hamburger buns), early station closures, and limited variety. Combined with the seating pressure at -5.81, this was a rough F&B week driven by higher weekend volumes.
       </div>
     </div>
     <div>
-      <h3>NPS by Dining Outlet (Weekly)</h3>
+      <h3>F&B by Outlet (Weekly)</h3>
       <div class="table-scroll"><table class="metric-table">
-        <thead>
-          <tr><th>Outlet</th><th>This Wk</th><th>Prior Wk</th><th>Change</th></tr>
-        </thead>
+        <thead><tr><th>Outlet</th><th>This Wk</th><th>Prior Wk</th><th>Change</th></tr></thead>
         <tbody>
-          <tr><td>The Overlook</td><td>52.17</td><td>25.00</td><td class="positive">+27.17</td></tr>
-          <tr><td>John Paul Lodge</td><td>50.85</td><td>52.11</td><td class="negative">-1.26</td></tr>
-          <tr><td>Strawberry Patio</td><td>39.13</td><td>35.29</td><td class="positive">+3.84</td></tr>
-          <tr><td>Cinnabar</td><td>37.50</td><td>34.48</td><td class="positive">+3.02</td></tr>
-          <tr><td>Earl's Lodge Servery</td><td>37.16</td><td>36.50</td><td class="positive">+0.66</td></tr>
-          <tr><td>Needles Lodge Servery</td><td>33.33</td><td>40.40</td><td class="negative">-7.07</td></tr>
+          <tr><td>The Overlook</td><td>44.12</td><td>52.17</td><td class="negative">-8.05</td></tr>
+          <tr><td>Cinnabar</td><td>31.58</td><td>37.50</td><td class="negative">-5.92</td></tr>
+          <tr><td>Strawberry Patio</td><td>29.63</td><td>39.13</td><td class="negative">-9.50</td></tr>
+          <tr><td>Earl's Lodge Servery</td><td>29.12</td><td>37.16</td><td class="negative">-8.04</td></tr>
+          <tr><td>Needles Lodge Servery</td><td>27.67</td><td>33.33</td><td class="negative">-5.66</td></tr>
+          <tr><td>John Paul Lodge</td><td>24.72</td><td>50.85</td><td class="negative">-26.13</td></tr>
         </tbody>
       </table></div>
 
-      <div class="callout positive" style="margin-top:14px;">
-        <strong>The Overlook surged +27.17</strong> after its sharp decline last week. John Paul continues as a consistent top performer. Needles pulled back, with comments mentioning a hostess issue and some staff unfriendliness.
+      <div class="callout negative" style="margin-top:14px;">
+        <strong>All six outlets declined.</strong> John Paul Lodge fell the most dramatically: 50.85 to 24.72 (-26.13). The Overlook remains the strongest but also pulled back from its recent highs. Cinnabar continues to draw slow-service complaints.
       </div>
     </div>
   </div>
-
-  <h3 style="margin-top:20px;">Season F&B vs. Last Year</h3>
-  <p>Season F&B NPS sits at <strong>31.14 vs. 24.61</strong> last year — a <strong>+6.53 improvement</strong> year-over-year. The biggest driver is Value for Price at <strong>6.63 NPS</strong> this season vs. <strong>-1.24</strong> last year, an 8-point swing. Menu Offerings are up to <strong>31.79 vs. 23.01</strong> (+8.78). Lodge Comfort/Cleanliness leads at <strong>81.59</strong> vs. 74.66 last year. F&B remains our most-improved controllable category on a YoY basis.</p>
 </div>
 
 <!-- TICKET TYPE ANALYSIS -->
 <div class="panel">
-  <h2>NPS by Ticket/Pass Type (Weekly)</h2>
-  <div class="section-intro">Pass holder satisfaction showed mixed results this week. Basin Flex Card posted a perfect 100 (on just 3 responses), while local pass types remained in the mid-60s to high-70s. Mountain Collective dropped to the weakest position at 41.67.</div>
+  <h2>Ticket Type Analysis</h2>
+  <div class="section-intro">The 2026-27 season pass sale drove a major shift in respondent composition this week. Snowbasin pass holders (Premier + Value) made up 53% of respondents, up from 33% last week. Their NPS trailed other segments, reflecting renewal-decision frustration visible in comments.</div>
 
   <div class="bar-chart">
-    <div class="bar-row">
-      <div class="bar-label">Basin Flex Card</div>
-      <div class="bar-track"><div class="bar-fill blue" style="width:100%;"></div></div>
-      <div class="bar-value">100.00</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label">Value Pass</div>
-      <div class="bar-track"><div class="bar-fill blue" style="width:78%;"></div></div>
-      <div class="bar-value">77.78</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label">Premier Pass</div>
-      <div class="bar-track"><div class="bar-fill blue" style="width:67%;"></div></div>
-      <div class="bar-value">67.14</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label">Lift Ticket</div>
-      <div class="bar-track"><div class="bar-fill blue" style="width:62%;"></div></div>
-      <div class="bar-value">62.16</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label">Ikon Pass</div>
-      <div class="bar-track"><div class="bar-fill blue" style="width:62%;"></div></div>
-      <div class="bar-value">61.54</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label">Learn &amp; Earn</div>
-      <div class="bar-track"><div class="bar-fill blue" style="width:59%;"></div></div>
-      <div class="bar-value">58.82</div>
-    </div>
-    <div class="bar-row">
-      <div class="bar-label">Mountain Collective</div>
-      <div class="bar-track"><div class="bar-fill blue" style="width:42%;"></div></div>
-      <div class="bar-value">41.67</div>
-    </div>
+    <div class="bar-row"><div class="bar-label">Basin Flex Card</div><div class="bar-track"><div class="bar-fill blue" style="width:84%;"></div></div><div class="bar-value">84.21</div></div>
+    <div class="bar-row"><div class="bar-label">Mountain Collective</div><div class="bar-track"><div class="bar-fill blue" style="width:74%;"></div></div><div class="bar-value">73.68</div></div>
+    <div class="bar-row"><div class="bar-label">Lift Ticket</div><div class="bar-track"><div class="bar-fill blue" style="width:69%;"></div></div><div class="bar-value">68.57</div></div>
+    <div class="bar-row"><div class="bar-label">Ikon Pass</div><div class="bar-track"><div class="bar-fill blue" style="width:65%;"></div></div><div class="bar-value">65.09</div></div>
+    <div class="bar-row"><div class="bar-label">Learn &amp; Earn</div><div class="bar-track"><div class="bar-fill blue" style="width:64%;"></div></div><div class="bar-value">64.29</div></div>
+    <div class="bar-row"><div class="bar-label">Premier Pass</div><div class="bar-track"><div class="bar-fill blue" style="width:60%;"></div></div><div class="bar-value">59.66</div></div>
+    <div class="bar-row"><div class="bar-label">Value Pass</div><div class="bar-track"><div class="bar-fill blue" style="width:57%;"></div></div><div class="bar-value">57.27</div></div>
   </div>
 
-  <p><strong>Week-over-Week Shifts:</strong> Premier Pass recovered from 60.00 last week to 67.14 (+7.14). Value Pass surged from 58.33 to 77.78 (+19.45). Ikon dropped from 78.50 to 61.54 (-16.96) — the fresh snow last week had particularly boosted Ikon visitors. Mountain Collective fell sharply from 92.86 to 41.67, though on small sample sizes (13 respondents).</p>
+  <p><strong>Week-over-Week Shifts:</strong> Value Pass dropped sharply from 77.78 to 57.27 (-20.51). Premier Pass fell from 67.14 to 59.66 (-7.48). Both local pass types are registering the lowest NPS among segments. Meanwhile, Mountain Collective surged from 41.67 to 73.68 (+32.01, on 19 responses) and Basin Flex Card posted 84.21 (19 responses).</p>
 
-  <p><strong>Season Picture:</strong> Ikon leads the season at 69.93, followed by Learn &amp; Earn at 67.30. Premier Pass remains the lowest of the Snowbasin pass types at 60.73 — consistent with frequent visitors feeling the snow impact most acutely over a full season. Last year at this point, Premier was at 63.43, so this season's 60.73 represents a -2.70 gap likely driven by weather frustration.</p>
+  <p><strong>Season Picture:</strong> Basin Flex Card leads the season at 69.57, followed by Ikon at 69.52. Premier Pass remains the lowest Snowbasin pass type at 60.61 — down from 60.73 last week. The pass sale timing makes this segment the most important to understand. Their frustration is not primarily about the experience (Service and lodge praise remain universal); it's about the value equation in a low-snow year and the absence of loyalty recognition.</p>
+
+  <div class="callout warning">
+    <strong>Respondent Mix Shift:</strong> Premier Pass holders surged from 70 to 177 respondents this week (up 153%), and Value Pass from 37 to 112 (up 203%). This composition change alone partially explains the overall NPS softening — it's not that the experience degraded, it's that the people most affected by the snow year are the ones responding in higher numbers as they weigh renewal.
+  </div>
 </div>
 
 <!-- POSITIVES -->
 <div class="panel">
-  <h2 style="color: var(--green);">✦ Positives</h2>
+  <h2 style="color: var(--green);">Positives</h2>
 
   <div class="callout positive">
-    <strong>Lift Lines Best in Weeks at 61.66</strong> — Up +15.97 from last week and +13.44 above last year's comparable week (48.22). Lower volume this period delivered outstanding wait times.
+    <strong>Likely to Return Bounced Back to 57.77</strong> — Up +10.75 from last week's season-low 47.02. Now above last year's comparable 55.58 (+2.19). This is the most important positive signal of the week, indicating last week's reading was an outlier rather than a new baseline.
   </div>
-
   <div class="callout positive">
-    <strong>Trail Crowding Improved to 15.00</strong> — Up +11.82 from last week's 3.18. This is the best crowding reading in multiple weeks. Last year's comparable: 5.80.
+    <strong>Snow Quality Improved to -28.47</strong> — Up +8.65 from -37.12. Weekend snow provided meaningful relief. Still far from positive, but trending in the right direction. Multiple comments note conditions were better later in the period.
   </div>
-
   <div class="callout positive">
-    <strong>Parking Continued Its Strong Run at 61.63</strong> — Up +2.98 WoW and a massive +10.30 above last year's comparable week (51.33). Season average of 64.60 is +11.53 above last year's 53.07 — our single largest YoY controllable improvement.
+    <strong>Tune Shop Surged to 68.63</strong> — Up +18.63 from 50.00, posting the highest single-outlet NPS reading of the week. The season average of 65.12 is +1.90 above last year's 63.22. One comment specifically praised fast and excellent wax service.
   </div>
-
   <div class="callout positive">
-    <strong>F&B Held Steady at 37.10</strong> — Essentially flat (-0.15) despite snow conditions. The season average of 31.14 remains +6.53 ahead of last year. F&B Value perception (+10.88) ticked up from +7.85.
+    <strong>Rentals Strong at 63.46</strong> — Up +7.05 from 56.41. Season average of 54.55 is +4.13 above last year's 50.42. One detailed comment praised the rental team for going above and beyond, including proactively calling a guest about skis left behind.
   </div>
-
   <div class="callout positive">
-    <strong>Service Remains Rock-Solid at 71.25</strong> — While down slightly from last week's 74.76, it's +0.14 above last year's comparable week. Season Service at 72.24 is +4.22 YoY. Comments overwhelmingly praise staff friendliness, helpfulness, and professionalism.
+    <strong>Lodge Comfort Reached 82.71</strong> — The highest weekly F&B sub-score, up from 77.59 (+5.12). "Best lodges around!" "Most impressive bathroom we've ever been in." "Lodge is the best I've been to including those in Europe." The facilities continue to distinguish Snowbasin.
   </div>
-
   <div class="callout positive">
-    <strong>Lessons Outperformed Last Year at 55.26</strong> — Down from last week's 66.67 but well above last year's 44.44 (+10.82 YoY weekly). Multiple instructors received glowing, specific praise. Brian Kim received two independent mentions.
+    <strong>Service Held at 69.96</strong> — Down only -1.29 from 71.25, maintaining the season's most consistent bright spot. Season average of 72.03 is +3.18 YoY. "In 51 years of skiing all over North America we have never experienced such a courteous and professional staff."
   </div>
-
   <div class="callout positive">
-    <strong>The Overlook Surged to 52.17</strong> — Up +27.17 from last week's 25.00, the strongest single-outlet weekly performance. John Paul held strong at 50.85.
+    <strong>Retail Improved to 59.26</strong> — Up +3.47 from 55.79 and above last year's comparable 58.43 (+0.83). Season average of 55.61 is nearly at parity with last year's 56.90 (-1.29).
   </div>
 </div>
 
 <!-- NEGATIVES -->
 <div class="panel">
-  <h2 style="color: var(--red);">✦ Negatives</h2>
+  <h2 style="color: var(--red);">Negatives</h2>
 
   <div class="callout negative">
-    <strong>Snow Quality Crashed Back to -37.12</strong> — A 47-point swing from last week's +10.16. This is near the season's worst readings and reflects the return to icy, limited conditions after last week's brief snowfall. Last year's comparable: -4.22. The ~33-point gap is entirely weather-driven.
+    <strong>F&B Dropped Across All Outlets to 30.58</strong> — Down -6.52 from 37.10. This is the most significant operational regression of the week. John Paul Lodge collapsed from 50.85 to 24.72 (-26.13). Menu Offerings fell to 22.08 (-8.72), Seating dropped to 21.16 (-5.81). Higher weekend volume combined with food outages (ran out of fries, shepherd's pie, hamburger buns) and early station closures drove the decline.
   </div>
-
   <div class="callout negative">
-    <strong>Mountain NPS Dropped to 35.74</strong> — Down -24.51 from 60.25, closely tracking the snow quality decline. Season average of 37.74 sits -19.21 behind last year's 56.95 at this point.
+    <strong>Safety Declined to 58.21</strong> — Down -2.71 from 60.92 and -9.79 below last year's comparable 68.00. Out-of-control skiers on limited terrain remain the #1 safety concern. Multiple collision reports this week. Blue Grouse to Porky's Face and City Hill are the most cited danger zones. Green coat enforcement perception remains polarized.
   </div>
-
   <div class="callout negative">
-    <strong>Likely to Return Fell Sharply to 47.02</strong> — Down -11.60 from 58.62. This is the <strong>lowest weekly reading of the season</strong> and sits below last year's comparable (48.46). End-of-season fatigue, poor conditions, and some destination guests rating on geography likely contribute. This warrants monitoring.
+    <strong>Parking Pulled Back to 57.78</strong> — Down -3.85 from 61.63, reflecting higher weekend volume. Season average of 63.63 remains massively ahead of last year (+9.80). Comments this week include Wildcat lot paving requests and frustration with the parking guidance process.
   </div>
-
   <div class="callout negative">
-    <strong>Ticket/Pass Value Declined to 18.83</strong> — Down -8.38 from 27.21. Guests seeing less terrain open with poor snow are feeling the value squeeze. Season average of 14.73 is -16.69 behind last year's 31.42.
+    <strong>Value Pass NPS Fell to 57.27 / Premier to 59.66</strong> — The two Snowbasin pass types brought up the rear as renewal frustration manifests in NPS scores. Together they represented 53% of this week's respondents, pulling the overall number down. The comment themes tell the rest of the story.
   </div>
-
   <div class="callout negative">
-    <strong>Needles Lodge Servery Dropped to 33.33</strong> — Down -7.07 from 40.40. Comments cite a hostess restricting seating for friends and some staff members being unfriendly. Worth investigating with management.
+    <strong>Porcupine Lift Safety Continues</strong> — New concern this week: a guest describes helmets repeatedly hitting roller stops when sitting on the chair. "My helmet is marked up with multiple hits. I try to always go single and sit dead center to avoid getting hit in the head." Separate comment: "Please slow down Porcupine lift. The lift surely isn't safe." Joins last week's two-incident report.
   </div>
-
   <div class="callout negative">
-    <strong>Porcupine Lift Safety Concerns (New)</strong> — Two separate incidents described in detail this week from the same family. One person hit hard enough to bend a pole; another had to grab the chair and drop to the ground after a ski tip caught. They describe it as "outdated and dangerous." Multiple other commenters separately request a Porcupine upgrade.
-  </div>
-
-  <div class="callout negative">
-    <strong>Unanswered Guest Communications</strong> — Two separate complaints about emails not being returned: one parent emailed the Lessons department twice about a safety concern with the children's Learn &amp; Earn program with no response, and another guest emailed info@snowbasin.com about a Strawberry area incident (resulting in a child concussion) with no response.
+    <strong>Unanswered Guest Communication</strong> — A guest who tore their ACL emailed the resort hoping for a discount on their lift tickets and received no reply. A separate guest who purchased a Black Friday 2-day pass says the email response took 10 days. These are guest recovery opportunities being missed.
   </div>
 </div>
 
 <!-- COMMENT ANALYSIS -->
 <div class="panel">
-  <h2>Comment Analysis — 255 Total Comments</h2>
-  <p class="section-intro">This week's comments (79 dissatisfaction responses + 176 additional comments) reveal clear themes. The dominant narrative remains the challenging snow year, but several actionable operational themes emerged.</p>
+  <h2>Comment Analysis — 415 Total Comments</h2>
+  <p class="section-intro">This week generated 142 dissatisfaction comments and 273 additional comments — the highest comment volume of the season. The season pass renewal theme dominates, but several recurring operational themes and new concerns emerged.</p>
 
   <div class="two-col">
     <div>
       <h3 style="color:var(--green);">Themes of Praise</h3>
       <ol class="theme-list">
-        <li><strong>Staff Excellence</strong> — The single most consistent positive theme. "Your employee's attitudes and willingness to help was one of the strongest I've ever seen." Ticket staff rated "15 out of 10." Lifties, bussers, food workers, ski patrol — all praised across departments. Several first-time visitors say staff sets Snowbasin apart from other Utah resorts.</li>
-        <li><strong>Facilities & Lodge Quality</strong> — "World famous bathrooms," "country club level," "chandeliers are gorgeous." Real plates/flatware noted. Lodges consistently described as "next level beautiful" and the best at any resort guests have visited.</li>
-        <li><strong>Parking & Free Parking</strong> — Free parking remains a massive differentiator. "I couldn't believe how easy the parking was!" Military pricing also praised. Carpool system earning accolades even during higher-volume periods.</li>
-        <li><strong>Resilience Despite Snow</strong> — Many guests explicitly acknowledge the snow isn't the resort's fault and praise the team's effort. "Fantastic job for a challenging year." "You have been heroic with what you had to work with." Guests comparing to other Utah resorts say Snowbasin had more terrain open.</li>
-        <li><strong>Learn & Earn Program</strong> — Called a "SOLID WIN" by one detailed commenter. Praised for accessibility, affordability, and instructor quality. "The value is on point — it costs enough to make it not whimsical but still affordable enough for entry level."</li>
-        <li><strong>RFID Scanners & Becker Lift</strong> — "Thank you for finally installing RFID scanners!" and "Love the new RFID gates and Becker high speed lift" — guests noticing and appreciating infrastructure investments.</li>
-        <li><strong>Speed Monitors / Safety Presence</strong> — "I appreciate the speed check on beginner trails. As an instructor [at another resort] I wish our mountain provided that level of safety." "Very glad you have speed monitors on some slopes."</li>
+        <li><strong>Staff Excellence</strong> — The #1 theme for every week this season. "In 51 years of skiing all over North America we have never experienced such a courteous and professional staff." "Every employee was very helpful and friendly." "Snowbasin staff has done a fantastic job." First-time visitors consistently cite staff as the differentiator.</li>
+        <li><strong>Resilience in a Tough Year</strong> — "Snowbasin has done a REALLY GREAT job during a challenging snow year." "You deserve an award for covering the slopes and trails." "What you had to work with was phenomenal." Overwhelming good faith from guests about weather conditions.</li>
+        <li><strong>Facilities & Lodges</strong> — "Best lodges around." "The most impressive bathroom we've ever been in." "Lodge is the best I've been to including those in Europe." "Best Bathroom of Any Ski Area — that could be a great sticker!"</li>
+        <li><strong>Free Parking & Carpool</strong> — "Free parking is a huge reason I keep coming back." "Love the carpool lot!" "I've been skiing at Snowbasin for 50 years. Parking is still free and doesn't require a reservation. It's one of the main reasons I travel from Salt Lake."</li>
+        <li><strong>Safety Presence</strong> — "The safety patrollers in Bear Hollow create value on my season pass." "I appreciate the speed check on beginner trails." "Your efforts result in lower injuries on the mountain."</li>
+        <li><strong>Grooming & Snowmaking</strong> — "I was amazed how good the groomers were!" "You did an outstanding job on snowmaking — I am from the east where we thought we had perfected it." "Middle Bowl was epic!"</li>
+        <li><strong>Military/Veteran Pricing</strong> — Multiple appreciative mentions. "Thank you for the military season pass for veterans and their spouses!" "Please continue to provide discounts to active-duty military."</li>
+        <li><strong>RFID & Becker Upgrades</strong> — "Thanks for updating your ski pass scan system. It works better to have reader gates instead of individual scanners." Becker lift continues earning praise.</li>
       </ol>
     </div>
     <div>
       <h3 style="color:var(--red);">Themes of Concern</h3>
       <ol class="theme-list concerns">
-        <li><strong>Snow Conditions / Limited Terrain</strong> — Dominant negative theme. Icy conditions, exposed rocks/dirt, limited runs open, Strawberry Gondola closed. Not actionable (weather), but driving overall sentiment and the "Likely to Return" decline. Nearly every low NPS score references snow.</li>
-        <li><strong>Out-of-Control Skiers & Safety</strong> — Multiple detailed incidents. One guest hit by a snowboarder going ~40mph with no turns. Requests for more patrol presence at major intersections beyond Bear Hollow. Guests noting limited open terrain concentrates traffic and increases collision risk.</li>
-        <li><strong>Vegetarian/Vegan Options Lacking</strong> — This is an emerging, actionable trend. <strong>Six or more comments</strong> this week specifically cite lack of meat-free options. "No pizza, no soup, no salad, and the garden burger wasn't available." "Extremely limited vegetarian options." "More warm vegan options other than salad and fries." One guest did praise finding a vegan/GF pizza — suggesting options exist inconsistently.</li>
-        <li><strong>F&B Pricing</strong> — Persistent, not new. "$20 chili," "food is super expensive," "way too much food with the sandwich but paltry chili portion." Portion inconsistency may be more actionable than pricing itself.</li>
-        <li><strong>Food Outages & Slow Service</strong> — JP Lodge out of soup and hamburger buns. Cinnabar had an hour-long wait for food. Strawberry Philly sandwich stand lost an order for 25+ minutes. Pizza and soup stations at JP were unmanned.</li>
-        <li><strong>Green Jacket / Mountain Safety Perception</strong> — Polarized feedback. Some guests say "make it hard to enjoy the resort" and are "considering other resorts," while others praise the same program. Suggestion to acknowledge icy conditions make speed control harder, especially for snowboarders and kids.</li>
-        <li><strong>Porcupine Lift Condition</strong> — Safety concerns from two incidents in one trip (detailed above). Multiple unrelated commenters also request Porcupine replacement: "Porcupine next, please?" "Please prioritize replacing the Porcupine chair."</li>
-        <li><strong>Communication Gaps</strong> — Unanswered emails (2 instances). Lodge closure for private event not communicated to pass holders. Restroom closure for Needles wedding without adequate signage. Mountain/snow reporting described as "not helpful" — guests want actual conditions, not just "variable."</li>
-        <li><strong>Beginner Terrain Gap</strong> — Multiple comments about the jump from Little Cat to Wildcat being too big. Ea-sa-long and Penny Lane too narrow for beginners with faster traffic. "Dedicated beginner only runs" requested. City Hill congestion point not groomed.</li>
-        <li><strong>DJ Volume at Plaza</strong> — One very detailed, thoughtful comment requesting the DJ be relocated or volume significantly reduced. The plaza "should be a place for connection" and current volume "makes it difficult to have basic conversations."</li>
+        <li><strong>Season Pass Renewal / Loyalty (NEW — TOP PRIORITY)</strong> — 8+ comments requesting renewal discounts, loyalty programs, or retention incentives. "After 12 years of constant season passes, I'm probably going to skip next year." "10-year holder looking elsewhere." Brighton cited for renewal discounts and higher young adult age threshold. Climate change concerns compound the renewal hesitancy. This is the #1 actionable theme of the week given the 26-27 sale is live.</li>
+        <li><strong>Snow Conditions / Limited Terrain</strong> — Persistent. Climate change explicitly mentioned by several guests. Elevation concerns ("80% of Snowbasin starts at 6,450 feet"). One former LCC skier says "I won't take that chance again." Not actionable weather-wise but directly feeds the renewal conversation above.</li>
+        <li><strong>Out-of-Control Skiers / Safety</strong> — "My husband was hit by a snowboarder who did not even stop." City Hill called an "I-15 deathtrap." Blue Grouse to Porky's Face cited as the worst intersection. Multiple requests for green coats specifically at Porky's. Ski teams singled out for excessive speed.</li>
+        <li><strong>F&B Pricing</strong> — "$11 for a Vitamin Water." "Fountain drinks over $5 and $20 for a burger." Several now bringing their own food. Season pass holder food discount (even 10%) suggested by multiple commenters. Not a change item, but the frequency remains high.</li>
+        <li><strong>Midweek Closures</strong> — "Closing lifts midweek to cater to the weekend crowd is not fair to season pass buyers." "Most of the mountain shut down during the week. It doesn't just seem to be snowpack; it seems to be saving on staff." This directly fuels pass holder frustration.</li>
+        <li><strong>Food Outages & Early Closures</strong> — Ran out of fries, shepherd's pie, hamburger buns. Food stations closed by 2 PM. Cinnabar closed early. Barista refused coffee at 3:01 PM. Pizza counter only prepping as items ran out. Strawberry food service remains inconsistent.</li>
+        <li><strong>Porcupine Lift</strong> — Helmet hitting roller stops, upgrade requests, speed concerns. Builds on last week's two-incident report. Becoming a recurring multi-week pattern.</li>
+        <li><strong>Wildcat Lot Issues</strong> — Porta-potties removed before season end. "PAVE THE WILDCAT PARKING LOT." Multiple mentions of potholes, mud, puddles. Also requested: restore bathroom access at lot.</li>
+        <li><strong>Green Coat Perception</strong> — "Your green coat crew is becoming unbearable" vs. "they create value on my season pass." Gap between waving vs. actual enforcement. Multiple requests to actually pull people over.</li>
+        <li><strong>Mountain Reporting Accuracy</strong> — "Website mountain report was never accurate." "Don't sugarcoat mountain conditions." Trail map needs redrawing. Signage on-mountain described as insufficient for wayfinding.</li>
       </ol>
     </div>
   </div>
@@ -1212,64 +536,54 @@ p { margin-bottom: 10px; }
 
 <!-- EMPLOYEE RECOGNITION -->
 <div class="panel">
-  <h2>⭐ Employee Recognition</h2>
+  <h2>Employee Recognition</h2>
   <p class="section-intro">Guests called out these team members by name for delivering outstanding experiences.</p>
 
   <div class="employee-grid">
     <div class="employee-card">
-      <div class="emp-name">Brian Kim</div>
-      <div class="emp-dept">Ski Lessons — 2 mentions</div>
-      <div class="emp-quote">"Brian Kim was amazing. He knew so much, and helped everyone in the group individually while maintaining a great group dynamic. He's a keeper!" ... "His teaching is top notch. I'm thrilled to have new skills."</div>
+      <div class="emp-name">Sierra</div>
+      <div class="emp-dept">Ticket Yurt — Manager/Supervisor</div>
+      <div class="emp-quote">"Sierra is amazing! I needed help fixing items on a flex-pass and she went above and beyond. Please recognize her for finding a solution and being so kind and patient."</div>
     </div>
     <div class="employee-card">
-      <div class="emp-name">Jeff Bruggeman</div>
-      <div class="emp-dept">Private Lessons / Guide</div>
-      <div class="emp-quote">"Before we even looked at flights, first thing I did was txt Jeff. He's incredible, our kids love him. Skiing Snowbasin without Jeff is something that's hard for us to imagine. Seriously, give the man a raise."</div>
+      <div class="emp-name">AmberLynn</div>
+      <div class="emp-dept">The Overlook</div>
+      <div class="emp-quote">"AmberLynn is so great in the Overlook. Super attentive and gives great hugs."</div>
     </div>
     <div class="employee-card">
-      <div class="emp-name">Jim Powers</div>
+      <div class="emp-name">Bart</div>
+      <div class="emp-dept">Top of Needles Gondola</div>
+      <div class="emp-quote">"Bart, at the top of Needles, always had my skis ready. Nice guy, my hero."</div>
+    </div>
+    <div class="employee-card">
+      <div class="emp-name">Damon</div>
+      <div class="emp-dept">Ski Patrol</div>
+      <div class="emp-quote">"Damon with Ski Patrol helped me with a quick fix to my binding to get me down. The lift opp who called him and ski shop who helped me further were all awesome!"</div>
+    </div>
+    <div class="employee-card">
+      <div class="emp-name">Skip</div>
       <div class="emp-dept">Ski Lessons</div>
-      <div class="emp-quote">"Really enjoyed our last lesson this year with Jim Powers. He instilled confidence in all of us and we all made it down the mountain comfortably."</div>
+      <div class="emp-quote">"Skip was a wonderful teacher and gave us a wonderful experience. We will be returning."</div>
     </div>
     <div class="employee-card">
-      <div class="emp-name">McKayla</div>
-      <div class="emp-dept">Ski Instructor</div>
-      <div class="emp-quote">"I would like to give a shout-out to McKayla, one of the ski instructors. She is always so friendly."</div>
+      <div class="emp-name">The Parking Lot Greeter</div>
+      <div class="emp-dept">Guest Services</div>
+      <div class="emp-quote">"The girl who greets everyone passing to/from the parking lot to the ski area. She is so cheerful and brightens our day."</div>
     </div>
     <div class="employee-card">
-      <div class="emp-name">Kat</div>
-      <div class="emp-dept">Ski Lessons — Level 7</div>
-      <div class="emp-quote">"I had Kat as my level 7 lesson instructor and she was fantastic."</div>
+      <div class="emp-name">Bag Check Lady</div>
+      <div class="emp-dept">Guest Services</div>
+      <div class="emp-quote">"Very helpful and friendly. This attitude reflects very positively on the resort experience."</div>
     </div>
     <div class="employee-card">
-      <div class="emp-name">BK "Brian" &amp; Mark "Chief"</div>
-      <div class="emp-dept">Learn &amp; Earn Instructors</div>
-      <div class="emp-quote">"BK 'Brian', Mark 'Chief', and numerous others are AMAZING. Everyone from equipment rental to the pass team to the instructors truly show passion for this sport."</div>
-    </div>
-    <div class="employee-card">
-      <div class="emp-name">Kristn</div>
-      <div class="emp-dept">Cinnabar F&amp;B</div>
-      <div class="emp-quote">"Kristn in the Cinnabar today was fantastic! Whole staff was polite & efficient."</div>
-    </div>
-    <div class="employee-card">
-      <div class="emp-name">Parker Gray</div>
-      <div class="emp-dept">Freeride Community</div>
-      <div class="emp-quote">"Parker Gray was so helpful and accommodating." Guest traveled from Vermont for a free ski comp and is now considering returning specifically because of Parker's hospitality.</div>
-    </div>
-    <div class="employee-card">
-      <div class="emp-name">Joe Stevens &amp; Coach Adam</div>
-      <div class="emp-dept">Freeride Coaching</div>
-      <div class="emp-quote">"Joe Stevens (freeride coach) and head freeride coach Adam were stellar in making this an immensely positive and safe experience for our family."</div>
-    </div>
-    <div class="employee-card">
-      <div class="emp-name">Ticket Staff (unnamed)</div>
-      <div class="emp-dept">Ticket Office</div>
-      <div class="emp-quote">"The ticket staff were over the top helpful, on a scale of 1-10, they were a 15!"</div>
+      <div class="emp-name">Rental Team</div>
+      <div class="emp-dept">Rentals</div>
+      <div class="emp-quote">"Outstanding. Friendly, knowledgeable, and genuinely committed. One attendant even called a guest to let them know their skis were brought to lost and found — above and beyond!"</div>
     </div>
   </div>
 
   <div class="callout warning" style="margin-top:16px;">
-    <strong>Negative Staff Mention:</strong> A liftie at the Gondola did not help a grandmother attempting to load herself and a 3-year-old skier. Other guests had to step in. Separately, a Needles bar hostess was reportedly restricting seating to save spots for friends. And a female staff member in the lessons area (dark blue jacket, not an instructor) brushed off a guest needing help removing ski boots.
+    <strong>Negative Staff Mentions:</strong> A ski patrol member ("Phillip") is described as "very rude, argumentative, wouldn't listen" and appears in two separate comments. Two employees at Little Wildcat Lift lectured a guest about poor planning at 4:04 PM — the guest is now reconsidering two Premier pass renewals. Gondola crew described as disengaged at first chair. A barista refused to make coffee at 3:01 when closing at 3:00. Lift operators broadly described as rude by one commenter. A liftie at Needles Gondola ignored a report of someone drinking beer on the lift.
   </div>
 </div>
 
@@ -1278,43 +592,38 @@ p { margin-bottom: 10px; }
   <h2>Top Comments of the Week</h2>
 
   <div class="comment-card">
-    <p>"The resort was amazing. We came on a bad day with sleet/rain and gusty winds but even with all that we had a blast. I have been to many resorts and Snowbasin was by far the nicest for both parking and overall aesthetic. Great dining places with attention to detail, especially in the restrooms, which were very elegant."</p>
-    <span class="comment-tag praise">First-time visitor</span>
+    <p>"Every employee we met — and that is a number of them — were exceptional. In fifty-one years of skiing all over North America we have never experienced such a courteous and professional staff in word, deed, and appearance. This was across the board. The ski instructors for our grand-daughter were amazing. This place is the crown jewel!"</p>
+    <span class="comment-tag praise">50+ year skiing veteran</span>
   </div>
 
   <div class="comment-card">
-    <p>"We came back the 2nd year because we had such a great time — a big part of which was our mountain guide Jeff Bruggeman. He's incredible, our kids love him. Before we even looked at flights, first thing I did was text Jeff. Give the man a raise!"</p>
-    <span class="comment-tag praise">Returning guest — Loyalty driver</span>
+    <p>"I am right in the middle of deciding to roll the dice with Mother Nature and renew two Premium Ski passes. Unfortunately, the last employee interaction of the day and potentially the season will be what I remember. I am not sure what the official policy of the Little Cat Lift is, but it would be helpful to post a sign visible when you enter or ski away from the lot stating when that lift closes."</p>
+    <span class="comment-tag concern">Renewal decision — small moment, big impact</span>
   </div>
 
   <div class="comment-card">
-    <p>"I'm an IKON pass holder living in Utah County and a die-hard Cottonwood skier who went to Snowbasin for the first time this year. Despite the drive I plan on purchasing a Snowbasin pass with IKON add-on. It is my new favorite resort despite the poor quality winter. Parking, lodges, staff, and lift lines all exceeded expectations."</p>
-    <span class="comment-tag praise">Market share conversion</span>
-  </div>
-
-  <div class="comment-card">
-    <p>"Went to Snowbird the day before and was absolutely horrible — they didn't groom anything. Came to Snowbasin the next day: immaculate groomers, great staff. Conditions weren't perfect because of warm weather but you could tell the staff really takes pride in what they do."</p>
+    <p>"My home mountain is Mammoth, but Snowbasin beats it all the way around, especially for customer service."</p>
     <span class="comment-tag praise">Competitive comparison</span>
   </div>
 
   <div class="comment-card">
-    <p>"Learn and Earn is a SOLID WIN! The value is on point — it costs enough to make it not whimsical but still affordable enough for entry level. Everyone from equipment rental to the pass team to the instructors truly show passion. I've considered applying to work at Snowbasin just because the culture is amazing."</p>
-    <span class="comment-tag praise">Program validation</span>
+    <p>"After 12 years of constant season passes, I'm probably going to skip next year because instead of offering a discount for my loyalty you raise your prices every year."</p>
+    <span class="comment-tag concern">Retention risk — 12-year pass holder</span>
   </div>
 
   <div class="comment-card">
-    <p>"The Porcupine ski lift is outdated and dangerous. We had two incidents during our trip. My adult son was knocked into the chair hard enough to bend his pole. The next day, my ski tip caught and I had to grab the chair as I was hanging from it — my husband had to yell at the operator to stop the lift. To have two incidents on the same lift with experienced skiers tells me it is not safe."</p>
-    <span class="comment-tag concern">Safety — Requires review</span>
+    <p>"Snowbasin has done a REALLY GREAT job during a challenging snow year. Your snowmaking team has been astounding. I really appreciate the extra efforts that Snowbasin goes to to slow people down in crowded areas. It makes me feel much safer. I'm certain that your efforts result in lower injuries on the mountain."</p>
+    <span class="comment-tag praise">Safety program validation</span>
   </div>
 
   <div class="comment-card">
-    <p>"I sent emails to the Lessons department about a safety concern with the children's Learn and Earn program and still have yet to get a response. I know Snowbasin is extremely safety-oriented but the lack of reply is concerning as a parent."</p>
-    <span class="comment-tag concern">Communication gap — Follow up needed</span>
+    <p>"My great experience this year and last found me returning to Snowbasin even after experiencing Deer Valley. The one hour drive from Park City is well worth the time and effort."</p>
+    <span class="comment-tag praise">Deer Valley conversion</span>
   </div>
 
   <div class="comment-card">
-    <p>"We came from Vermont for a free ski comp hosted by Snowbasin. Your freeride community is fantastic! Parker Gray was so helpful and accommodating. Joe Stevens and head freeride coach Adam were stellar. Although we typically only go to Alta, we would consider making a stop here again next year."</p>
-    <span class="comment-tag praise">Event & freeride program</span>
+    <p>"We were a little disappointed that so many lifts were not operating. Almost half were not in service. Also, nothing more was opened even though it was snowing. That's a lot of money and travel for such little terrain. We will say, though, that's the most impressive bathroom we've ever been in."</p>
+    <span class="comment-tag insight">The Snowbasin paradox — world-class facilities, weather-limited terrain</span>
   </div>
 </div>
 
@@ -1323,1252 +632,609 @@ p { margin-bottom: 10px; }
   <h2>Recommended Action Items</h2>
 
   <div class="action-item">
-    <strong>IMMEDIATE — Unanswered Emails:</strong> Follow up with the parent who emailed the Lessons department twice about a children's safety concern, and with the guest who emailed info@snowbasin.com regarding the Strawberry area incident that resulted in a child concussion. These are high-priority guest recovery opportunities.
+    <strong>STRATEGIC — Season Pass Renewal Messaging:</strong> With the 26-27 sale now live, this week's comments represent the most time-sensitive feedback of the season. Consider whether any retention-focused communication, appreciation gesture, or acknowledgment of the challenging year could be deployed to current pass holders. Even a personalized email from leadership acknowledging the difficult season would address the "feeling valued" gap multiple commenters describe.
   </div>
 
   <div class="action-item">
-    <strong>INVESTIGATE — Porcupine Lift Operations:</strong> Review the two reported incidents from the same family. Confirm loading procedures are being followed and assess whether equipment condition is contributing. Multiple unrelated guests also flagged Porcupine for future replacement.
+    <strong>IMMEDIATE — Unanswered Guest Emails:</strong> Follow up with the guest who tore their ACL and emailed hoping for a ticket discount with no reply. Separately, the Black Friday 2-day pass email took 10 days. Both are recoverable.
   </div>
 
   <div class="action-item">
-    <strong>INVESTIGATE — Needles Lodge:</strong> Hostess reportedly restricting bar seating to save spots for friends. Separate comments about some unfriendly staff at Needles line. Needles NPS dropped -7.07 this week.
+    <strong>INVESTIGATE — F&B Regression Across All Outlets:</strong> Every outlet dropped this week — this isn't noise. John Paul Lodge fell 26 points. Diagnose whether it's staffing, supply chain, or weekend volume overwhelming capacity. Food outages (fries, shepherd's pie, buns) and early closures (food stations at 2 PM, Cinnabar early) suggest operational gaps that will be tested during spring break.
   </div>
 
   <div class="action-item">
-    <strong>REVIEW — Vegetarian/Vegan Menu Availability:</strong> Six+ comments this week requesting more plant-based options. JP Lodge had no meat-free options available (no pizza, no soup, no salad, no garden burger). Some guests found vegan/GF pizza available on other visits — suggests inconsistency. This is a growing trend worth addressing for the home stretch and planning for next season.
+    <strong>INVESTIGATE — Porcupine Lift Roller Stops:</strong> New safety concern: guest describes helmet repeatedly hitting roller stops. Combined with last week's two-incident report, this lift is generating multi-week safety feedback. Review roller stop positioning and loading procedures.
   </div>
 
   <div class="action-item">
-    <strong>REVIEW — Food Outage Tracking:</strong> JP Lodge out of soup and buns. Strawberry stand lost a food order. Pizza/soup stations at JP unmanned. Cinnabar had hour-long food waits. Investigate whether staffing levels or supply chain is driving these issues in late season.
+    <strong>REVIEW — Little Wildcat Lift Closing Signage:</strong> A pass holder reconsidering two Premier renewals because of a 4:04 PM interaction. Installing a visible closing time sign at the lot entry or ski-away point is low-cost and prevents exactly this scenario.
   </div>
 
   <div class="action-item">
-    <strong>CONSIDER — Event Communication:</strong> Two incidents of private events impacting guest access without adequate notice. Lodge closure and restroom closure for events need better guest-facing signage and ideally advance communication to pass holders.
+    <strong>REVIEW — "Phillip" in Ski Patrol:</strong> Two separate comments describe the same named individual as rude and argumentative. Worth a conversation with the ski patrol supervisor.
   </div>
 
   <div class="action-item">
-    <strong>FORWARD-LOOKING — Mountain Reporting:</strong> Multiple comments requesting more descriptive snow/condition reporting beyond "variable." Guests want to know what they're getting into before coming. Consider enhancing the daily mountain report with more specific trail-by-trail conditions.
+    <strong>MONITOR — Wildcat Lot Amenities:</strong> Multiple complaints about porta-potties being removed before season end and paving requests. If any restroom solution can be reinstated for the remaining weeks, it would address a recurring complaint.
   </div>
 </div>
 
 <!-- LOOKING AHEAD -->
 <div class="panel">
   <h2>Looking Ahead</h2>
-  <p>We're entering March, historically when the season begins winding down. The snow quality reading of -37.12 and "Likely to Return" dropping to 47.02 suggest end-of-season fatigue is setting in, compounded by the challenging snow year. The playbook hasn't changed: <strong>keep doubling down on what we can control.</strong></p>
+  <p>This was a defining week not because of the NPS numbers — which held essentially flat — but because of what the comments revealed. The 2026-27 season pass sale has catalyzed a wave of reflection from Snowbasin's most loyal customers. They love the resort. They love the staff. They praise the lodges as the best they've seen anywhere in the world. But after a punishing low-snow year, they want to feel recognized, and the absence of a renewal incentive or loyalty acknowledgment is a tangible gap in the competitive landscape.</p>
 
-  <p>The season-to-date story remains remarkably strong given circumstances. The YoY gap of just <strong>0.62 points</strong> (63.74 vs. 64.36) with dramatically less snow is a testament to the operational improvements across Service, Parking, Safety, and F&B. These are the metrics that will drive season pass renewals and word-of-mouth.</p>
+  <p>The operational picture remains strong. The controllable metrics continue outperforming last season by meaningful margins — Parking (+9.80 YoY), F&B (+5.24), Safety (+3.93), Service (+3.18) — representing the best across-the-board execution in recent memory. The F&B pullback this week needs attention heading into spring break, but the season-level trend is solidly positive.</p>
 
-  <p>Key factors to watch in coming weeks: whether "Likely to Return" stabilizes, food supply chain consistency into the late season, and any further Porcupine lift incidents. If weather delivers any late-season snow, the mountain metrics should respond quickly — as last week's +47 point snow quality swing demonstrated.</p>
+  <p>The response volume surge to 546 — 65% above the prior week — signals heightened engagement at exactly the moment renewal decisions are being made. Every guest interaction over the next few weeks carries disproportionate weight in those decisions. The Little Wildcat lift story is the perfect case study: one employee interaction at 4:04 PM on a Tuesday afternoon could cost two Premier pass sales.</p>
 
-  <p style="margin-top:16px;"><strong>Response Volume Note:</strong> This season has generated 3,061 responses through this date vs. 4,579 at the same point last year — a 33% reduction in survey volume. This likely reflects lower overall visitation due to snow conditions. The response mix is more balanced across pass types this year (Ikon 25%, Premier 23%, Lift Ticket 13%) vs. last year's heavier Ikon skew (40%).</p>
+  <p style="margin-top:16px;"><strong>Response Volume Note:</strong> This season has generated 3,629 responses through this date vs. 5,050 at the same point last year — a 28% reduction in survey volume reflecting lower visitation. The response mix has shifted notably this week: Snowbasin pass holders (Premier + Value) represented 53% of responses vs. 33% last week, likely driven by the pass sale launch.</p>
 </div>
 
 <!-- FOOTER -->
 <div class="report-footer">
-  Snowbasin Resort &bull; Guest Survey Analysis &bull; Week Ending March 4, 2026<br>
-  <span style="color:var(--blue);">■</span> 2025-26 &nbsp; <span style="color:var(--yellow-dark);">■</span> 2024-25 &nbsp; | &nbsp; Data Source: Qualtrics Survey Dashboard &amp; Comments
+  Snowbasin Resort &bull; Guest Survey Analysis &bull; Week Ending March 11, 2026<br>
+  <span style="color:var(--blue);">&#9632;</span> 2025-26 &nbsp; <span style="color:var(--yellow-dark);">&#9632;</span> 2024-25 &nbsp; | &nbsp; Data Source: Qualtrics Survey Dashboard &amp; Comments
 </div>
 
 </div><!-- end mainApp -->
+
 <!-- GAME OVERLAY -->
 <div class="game-overlay" id="gameOverlay">
-  <button class="game-close" onclick="closeGame()">✕ Close</button>
+  <button class="game-close" onclick="closeGame()">&#10005; Close</button>
   <div class="game-wrapper">
-    <h2>🎿 Snowbasin Safety Run</h2>
-    <div class="game-sub">Dodge the trees and snowboarders. Stay in control. Know the code.</div>
-    <canvas id="gameCanvas"></canvas>
-    <div class="game-controls-hint">← → ARROW KEYS or TOUCH to steer &nbsp;|&nbsp; SPACE or TAP to start</div>
-    <div class="nsaa-badge">⛷ Presented by Snowbasin Resort &bull; Your Responsibility Code</div>
+    <h2>Grizzly Downhill</h2>
+    <div class="game-sub">Snowbasin &bull; Olympic Venue &bull; Est. 2002</div>
+    <canvas id="gc"></canvas>
+    <div class="game-controls-hint">&larr; &rarr; ARROW KEYS or TOUCH to steer &nbsp;|&nbsp; SPACE or TAP to start</div>
+    <div class="nsaa-badge">&#9975; Snowbasin Resort &bull; Home of the 2002 &amp; 2034 Winter Olympics</div>
   </div>
 </div>
 
 <script>
-/* ═══ PIN LOCK ═══ */
+/* PIN LOCK */
 var dots=document.querySelectorAll('.pin-dot');
 var PIN='1940';
 dots.forEach(function(dot,i){
   dot.addEventListener('input',function(){
-    if(dot.value.length===1){
-      dot.classList.add('filled');
-      if(i<3)dots[i+1].focus();
-      checkPin();
-    }
+    if(dot.value.length===1){dot.classList.add('filled');if(i<3)dots[i+1].focus();checkPin();}
   });
   dot.addEventListener('keydown',function(e){
     if(e.key==='Backspace'&&dot.value===''&&i>0){dots[i-1].focus();dots[i-1].value='';dots[i-1].classList.remove('filled')}
   });
   dot.addEventListener('paste',function(e){
-    e.preventDefault();
-    var paste=(e.clipboardData||window.clipboardData).getData('text').trim();
-    for(var j=0;j<Math.min(paste.length,4);j++){dots[j].value=paste[j];dots[j].classList.add('filled')}
-    checkPin();
+    e.preventDefault();var paste=(e.clipboardData||window.clipboardData).getData('text').trim();
+    for(var j=0;j<Math.min(paste.length,4);j++){dots[j].value=paste[j];dots[j].classList.add('filled')}checkPin();
   });
 });
 function checkPin(){
-  var entered='';
-  dots.forEach(function(d){entered+=d.value});
+  var entered='';dots.forEach(function(d){entered+=d.value});
   if(entered.length===4){
     if(entered===PIN){
       document.getElementById('lock').classList.add('gone');
       document.getElementById('mainApp').style.display='';
       setTimeout(function(){
         document.getElementById('lock').remove();
-        countUp(document.getElementById('heroNum'),63.14,1200,2);
-        countUp(document.getElementById('kpi1'),63.74,1000,2);
-        countUp(document.getElementById('kpi2'),64.36,1000,2);
-        countUp(document.getElementById('kpi3'),-0.62,800,2);
+        countUp(document.getElementById('heroNum'),62.64,1200,2);
+        countUp(document.getElementById('kpi1'),63.76,1000,2);
+        countUp(document.getElementById('kpi2'),64.97,1000,2);
+        countUp(document.getElementById('kpi3'),-1.21,800,2);
       },400);
     } else {
       document.getElementById('lockErr').textContent='Incorrect PIN';
-      dots.forEach(function(d){d.value='';d.classList.remove('filled')});
-      dots[0].focus();
+      dots.forEach(function(d){d.value='';d.classList.remove('filled')});dots[0].focus();
       setTimeout(function(){document.getElementById('lockErr').textContent=''},1500);
     }
   }
 }
 function countUp(el,target,duration,decimals,prefix){
-  var start=0,startTime=null;
-  prefix=prefix||'';
+  var start=0,startTime=null;prefix=prefix||'';
   function step(ts){
-    if(!startTime)startTime=ts;
-    var progress=Math.min((ts-startTime)/duration,1);
-    var eased=1-Math.pow(1-progress,3);
-    var current=start+(target-start)*eased;
-    el.textContent=prefix+current.toFixed(decimals||2);
-    if(progress<1)requestAnimationFrame(step);
+    if(!startTime)startTime=ts;var progress=Math.min((ts-startTime)/duration,1);
+    var eased=1-Math.pow(1-progress,3);var current=start+(target-start)*eased;
+    el.textContent=prefix+current.toFixed(decimals||2);if(progress<1)requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
-/* ═══════════════════ CHARTS ═══════════════════ */
-var chartFont = {family:"'Source Sans Pro',system-ui,sans-serif"};
-var gridColor = '#f1f5f9';
+/* CHARTS */
+var chartFont={family:"'Source Sans Pro',system-ui,sans-serif"};
+var gridColor='#f1f5f9';
 
 /* Weekly NPS Trend */
-new Chart(document.getElementById('c1'),{type:'line',data:{labels:['12/30','1/7','1/15','1/22','1/28','2/4','2/12','2/18','2/25','3/4'],datasets:[
-  {label:'2025-26',data:[69.20,57.48,54.10,63.79,68.62,69.86,67.13,70.31,68.54,63.14],borderColor:'#2D5B9D',backgroundColor:'rgba(45,91,157,.05)',fill:true,tension:.35,borderWidth:3,pointRadius:6,pointBackgroundColor:'#2D5B9D',pointBorderColor:'#fff',pointBorderWidth:2.5,pointHoverRadius:8},
-  {label:'2024-25',data:[68.33,71.38,null,62.47,71.04,65.18,55.32,64.77,69.77,64.52],borderColor:'#FFD400',backgroundColor:'rgba(255,212,0,.03)',fill:true,tension:.35,borderWidth:2.5,borderDash:[6,3],pointRadius:5,pointBackgroundColor:'#FFD400',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:true}
+new Chart(document.getElementById('c1'),{type:'line',data:{labels:['12/30','1/7','1/15','1/22','1/28','2/4','2/12','2/18','2/25','3/4','3/11'],datasets:[
+  {label:'2025-26',data:[69.20,57.48,54.10,63.79,68.62,69.86,67.13,70.31,68.54,63.14,62.64],borderColor:'#2D5B9D',backgroundColor:'rgba(45,91,157,.05)',fill:true,tension:.35,borderWidth:3,pointRadius:6,pointBackgroundColor:'#2D5B9D',pointBorderColor:'#fff',pointBorderWidth:2.5,pointHoverRadius:8},
+  {label:'2024-25',data:[68.33,71.38,null,62.47,71.04,65.18,55.32,64.77,69.77,64.52,70.57],borderColor:'#FFD400',backgroundColor:'rgba(255,212,0,.03)',fill:true,tension:.35,borderWidth:2.5,borderDash:[6,3],pointRadius:5,pointBackgroundColor:'#FFD400',pointBorderColor:'#fff',pointBorderWidth:2,spanGaps:true}
 ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11,family:chartFont.family},usePointStyle:true,pointStyle:'circle',padding:20}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.raw.toFixed(2)}}}},interaction:{mode:'index',intersect:false},scales:{y:{min:45,max:80,grid:{color:gridColor},ticks:{font:{size:10,family:chartFont.family}}},x:{grid:{display:false},ticks:{font:{size:10,family:chartFont.family}}}}}});
 
 /* Season Average Convergence */
-new Chart(document.getElementById('c2'),{type:'line',data:{labels:['12/30','1/7','1/15','1/22','1/28','2/4','2/12','2/18','2/25','3/4'],datasets:[
-  {label:'2025-26 Season Avg',data:[57.70,57.48,56.20,58.95,59.95,61.32,62.01,62.98,63.76,63.74],borderColor:'#2D5B9D',backgroundColor:'rgba(45,91,157,.07)',fill:true,tension:.3,borderWidth:3,pointRadius:6,pointBackgroundColor:'#2D5B9D',pointBorderColor:'#fff',pointBorderWidth:2.5},
-  {label:'2024-25 Season Avg',data:[62.19,63.20,63.58,63.58,64.53,64.64,63.88,63.88,64.43,64.36],borderColor:'#FFD400',backgroundColor:'rgba(255,212,0,.03)',fill:true,tension:.3,borderWidth:2.5,borderDash:[6,3],pointRadius:5,pointBackgroundColor:'#FFD400',pointBorderColor:'#fff',pointBorderWidth:2}
+new Chart(document.getElementById('c2'),{type:'line',data:{labels:['12/30','1/7','1/15','1/22','1/28','2/4','2/12','2/18','2/25','3/4','3/11'],datasets:[
+  {label:'2025-26 Season Avg',data:[57.70,57.48,56.20,58.95,59.95,61.32,62.01,62.98,63.76,63.74,63.76],borderColor:'#2D5B9D',backgroundColor:'rgba(45,91,157,.07)',fill:true,tension:.3,borderWidth:3,pointRadius:6,pointBackgroundColor:'#2D5B9D',pointBorderColor:'#fff',pointBorderWidth:2.5},
+  {label:'2024-25 Season Avg',data:[62.19,63.20,63.58,63.58,64.53,64.64,63.88,63.88,64.43,64.36,64.97],borderColor:'#FFD400',backgroundColor:'rgba(255,212,0,.03)',fill:true,tension:.3,borderWidth:2.5,borderDash:[6,3],pointRadius:5,pointBackgroundColor:'#FFD400',pointBorderColor:'#fff',pointBorderWidth:2}
 ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11,family:chartFont.family},usePointStyle:true,pointStyle:'circle',padding:20}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.raw.toFixed(2)}}}},interaction:{mode:'index',intersect:false},scales:{y:{min:55,max:67,grid:{color:gridColor},ticks:{font:{size:10,family:chartFont.family}}},x:{grid:{display:false},ticks:{font:{size:10,family:chartFont.family}}}}}});
 
 /* Category WoW + LY */
-new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Service','Safety','Lessons','Mountain','Parking','Return','Rentals','Retail','Tune Shop','F&B'],datasets:[
-  {label:'This Week (3/4)',data:[71.25,60.92,55.26,35.74,61.63,47.02,56.41,55.79,50.00,37.10],backgroundColor:'#2D5B9D',borderRadius:4,barPercentage:.75},
-  {label:'Prior Week (2/25)',data:[74.76,66.88,66.67,60.25,58.65,58.62,58.00,55.67,53.85,37.25],backgroundColor:'#FFD400',borderRadius:4,barPercentage:.75},
-  {label:'LY Same Week (3/5/25)',data:[71.11,53.78,44.44,57.93,51.33,48.46,94.12,56.25,47.83,30.50],backgroundColor:'#4A4A4A',borderRadius:4,barPercentage:.75}
+new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Service','Safety','Rentals','Retail','Tune Shop','Mountain','Parking','Return','Lessons','F&B'],datasets:[
+  {label:'This Week (3/11)',data:[69.96,58.21,63.46,59.26,68.63,38.10,57.78,57.77,39.47,30.58],backgroundColor:'#2D5B9D',borderRadius:4,barPercentage:.75},
+  {label:'Prior Week (3/4)',data:[71.25,60.92,56.41,55.79,50.00,35.74,61.63,47.02,55.26,37.10],backgroundColor:'#FFD400',borderRadius:4,barPercentage:.75},
+  {label:'LY Same Week (3/12/25)',data:[77.87,68.00,69.23,58.43,57.14,69.21,60.10,55.58,78.57,39.64],backgroundColor:'#4A4A4A',borderRadius:4,barPercentage:.75}
 ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11,family:chartFont.family},usePointStyle:true,pointStyle:'rectRounded',padding:20}}},interaction:{mode:'index'},scales:{y:{beginAtZero:true,max:100,grid:{color:gridColor},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
 
-/* ═══════════════════ SNOWBASIN SAFETY RUN GAME ═══════════════════ */
-function openGame(){ document.getElementById('gameOverlay').classList.add('open'); initGame(); }
-function closeGame(){ document.getElementById('gameOverlay').classList.remove('open'); gameRunning=false; }
+/* GRIZZLY DOWNHILL GAME */
+var _gameInited=false;
+function openGame(){ document.getElementById('gameOverlay').classList.add('open'); if(!_gameInited){init();_gameInited=true;}else{reset();if(!running){running=true;requestAnimationFrame(loop);}} }
+function closeGame(){ document.getElementById('gameOverlay').classList.remove('open'); running=false; }
 
-var canvas, ctx, gameRunning=false, gameStarted=false, gameOver=false;
-var skier, obstacles, greenCoats, score, highScore=0, speed, frame, dpr;
-var tooCloseTimer=0, crashCodeIndex=0;
-var keys = {};
-var touchX = null;
-
-/* Leaderboard */
-var SHEET_URL='https://script.google.com/macros/s/AKfycbyTK9HJMVyefogLgXPqTcxPShymoO5v3JbormvS9zxU8RqhcCULzo6s1-1iMCmi6b9-Uw/exec';
-var leaderboard=[], playerName='', nameInput=false, nameBuffer='', scoreSubmitted=false;
-
-function fetchLeaderboard(){
-  fetch(SHEET_URL).then(function(r){return r.json()}).then(function(d){
-    leaderboard=d.slice(0,10);
-  }).catch(function(){});
-}
-function submitScore(name,sc){
-  fetch(SHEET_URL,{method:'POST',body:JSON.stringify({name:name,score:sc}),headers:{'Content-Type':'text/plain'}})
-  .then(function(){fetchLeaderboard()}).catch(function(){});
-}
-
-var RESPONSIBILITY_CODE = [
-  "1. Always stay in control. You must be able to stop or avoid people or objects.",
-  "2. People ahead or downhill of you have the right-of-way. You must avoid them.",
-  "3. Stop only where you are visible from above and do not restrict traffic.",
-  "4. Look uphill and avoid others before starting downhill or entering a trail.",
-  "5. You must prevent runaway equipment.",
-  "6. Read and obey all signs, warnings, and hazard markings.",
-  "7. Keep off closed trails and out of closed areas.",
-  "8. You must know how and be able to load, ride and unload lifts safely. If you need assistance, ask the lift attendant.",
-  "9. Do not use lifts or terrain when impaired by alcohol or drugs.",
-  "10. If you are involved in a collision or incident, share your contact information with each other and a ski area employee."
+var COURSE=[
+  {name:"START \u2014 ALLEN'S PEAK 9,465'",dur:50,gates:0,sec:'start',diff:0},
+  {name:"Flintlock Jump",dur:150,gates:4,sec:'steep',diff:0.3},
+  {name:"Shooting Star Jump",dur:150,gates:5,sec:'steep',diff:0.4},
+  {name:"Glacier Bowl",dur:190,gates:6,sec:'bowl',diff:0.5},
+  {name:"Paintbrush Meadow",dur:170,gates:4,sec:'glide',diff:0.45},
+  {name:"Muzzle Loader Jump",dur:130,gates:4,sec:'jump',diff:0.55},
+  {name:"Draba Drop",dur:130,gates:4,sec:'steep',diff:0.6},
+  {name:"Lupine Flats",dur:170,gates:4,sec:'glide',diff:0.5},
+  {name:"Buffalo Jump",dur:130,gates:4,sec:'jump',diff:0.65},
+  {name:"Rock Garden",dur:150,gates:5,sec:'tech',diff:0.75},
+  {name:"Picabo's Street",dur:170,gates:6,sec:'tech',diff:0.85},
+  {name:"Columbine Turn",dur:150,gates:4,sec:'final',diff:0.95},
+  {name:"FINISH \u2014 6,391'",dur:200,gates:0,sec:'finish',diff:0}
 ];
+var TF=0,TG=0;
+for(var i=0;i<COURSE.length;i++){TF+=COURSE[i].dur;TG+=COURSE[i].gates;}
 
-function initGame(){
-  canvas = document.getElementById('gameCanvas');
-  ctx = canvas.getContext('2d');
+var canvas,ctx,dpr,W,H,SKY;
+var running=false,started=false,finishing=false,finished=false;
+var skier,frame,speed,dt=1,lft=0;
+var gates,gHit,gMiss,gTotal;
+var si,sf,cs;
+var sLabel,sLabelT;
+var cd=3,cdT=0,finY=-999,finDelay=0;
+var elev=9465;
+var keys={},touchX=null;
+var TW=220;
+var trees=[],fences=[],startShack=null;
+var lastGateSide=1; /* track which side last gate was on */
 
-  // Hi-DPI scaling
-  dpr = window.devicePixelRatio || 1;
-  var W = 480, H = 720;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  ctx.scale(dpr, dpr);
-  canvas._w = W;
-  canvas._h = H;
+var SH_URL='https://script.google.com/macros/s/AKfycbw8QFaMXLWzY7XAzZOtvfvGTnzYloqn9Z2Nc38ef13S_tiHhNLQsSxIYoXQ1bO9Sy-vZg/exec';
+var lb=[],pName='',nInput=false,nBuf='',nSub=false;
+function fLb(){fetch(SH_URL).then(function(r){return r.json()}).then(function(d){
+  lb=d.sort(function(a,b){return b.score-a.score}).slice(0,10);
+}).catch(function(){});}
+function sLb(n,s){fetch(SH_URL,{method:'POST',body:JSON.stringify({name:n,score:s,game:'grizzly'}),headers:{'Content-Type':'text/plain'}}).then(function(){fLb()}).catch(function(){});}
 
-  fetchLeaderboard();
+/* Global gate schedule — evenly spaced across entire race */
+var globalGateFrames=[], globalGatesSpawned=0;
+function buildGateSchedule(){
+  globalGateFrames=[];globalGatesSpawned=0;
+  /* Find race frames (exclude start and finish sections) */
+  var raceStart=COURSE[0].dur;
+  var raceEnd=TF-COURSE[COURSE.length-1].dur;
+  var raceDur=raceEnd-raceStart;
+  var spacing=raceDur/(TG+1);
+  for(var g=0;g<TG;g++){
+    globalGateFrames.push(raceStart+spacing*(g+1));
+  }
+}
 
-  document.addEventListener('keydown', function(e){
-    if(nameInput){
-      e.preventDefault();
-      if(e.key==='Backspace'){ nameBuffer=nameBuffer.slice(0,-1); }
-      else if(e.key==='Enter' && nameBuffer.trim().length>0){
-        var finalScore=score*3;
-        submitScore(nameBuffer.trim(),finalScore);
-        scoreSubmitted=true;
-        nameInput=false;
-        playerName=nameBuffer.trim();
-      }
-      else if(e.key==='Escape'){
-        nameInput=false;
-      }
-      else if(e.key.length===1 && nameBuffer.length<20){ nameBuffer+=e.key; }
-      return;
-    }
-    keys[e.key]=true;
-    if(e.key===' '||e.key==='ArrowLeft'||e.key==='ArrowRight') e.preventDefault();
+/* Get difficulty at a given global frame */
+function diffAtFrame(f){
+  var acc=0;
+  for(var i=0;i<COURSE.length;i++){
+    if(f<acc+COURSE[i].dur) return COURSE[i].diff||0;
+    acc+=COURSE[i].dur;
+  }
+  return 0;
+}
+
+function init(){
+  canvas=document.getElementById('gc');ctx=canvas.getContext('2d');
+  dpr=window.devicePixelRatio||1;W=480;H=720;
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  ctx.scale(dpr,dpr);SKY=Math.round(H*0.55);
+  fLb();
+  document.addEventListener('keydown',function(e){
+    if(nInput){e.preventDefault();
+      if(e.key==='Backspace')nBuf=nBuf.slice(0,-1);
+      else if(e.key==='Enter'&&nBuf.trim().length>0){sLb(nBuf.trim(),gHit);nSub=true;nInput=false;pName=nBuf.trim();}
+      else if(e.key==='Escape')nInput=false;
+      else if(e.key.length===1&&nBuf.length<20)nBuf+=e.key;return;}
+    keys[e.key]=true;if(e.key===' '||e.key==='ArrowLeft'||e.key==='ArrowRight')e.preventDefault();
   });
-  document.addEventListener('keyup', function(e){ keys[e.key]=false; });
-
-  canvas.addEventListener('touchstart', function(e){
-    e.preventDefault();
-    var t=e.touches[0], r=canvas.getBoundingClientRect();
-    touchX = (t.clientX - r.left) * (canvas._w / r.width);
-    if(gameOver && nameInput){
-      // Mobile: use prompt for name entry
-      var n=prompt('Enter your name for the leaderboard:');
-      if(n && n.trim().length>0){
-        playerName=n.trim().substring(0,20);
-        submitScore(playerName,score*3);
-        scoreSubmitted=true;
-      }
-      nameInput=false;
-    } else if(gameOver && !nameInput) { resetGame(); }
-    else if(!gameStarted) gameStarted=true;
+  document.addEventListener('keyup',function(e){keys[e.key]=false;});
+  canvas.addEventListener('touchstart',function(e){e.preventDefault();
+    var t=e.touches[0],r=canvas.getBoundingClientRect();touchX=(t.clientX-r.left)*(W/r.width);
+    if(finished&&nInput){var n=prompt('Enter your name:');if(n&&n.trim().length>0){pName=n.trim().substring(0,20);sLb(pName,gHit);nSub=true;}nInput=false;}
+    else if(finished&&!nInput)reset();
+    else if(!started){started=true;cd=3;cdT=180;}
   },{passive:false});
-  canvas.addEventListener('touchmove', function(e){
-    e.preventDefault();
-    var t=e.touches[0], r=canvas.getBoundingClientRect();
-    touchX = (t.clientX - r.left) * (canvas._w / r.width);
-  },{passive:false});
-  canvas.addEventListener('touchend', function(){ touchX=null; });
-
-  resetGame();
-  if(!gameRunning){ gameRunning=true; gameLoop(); }
+  canvas.addEventListener('touchmove',function(e){e.preventDefault();var t=e.touches[0],r=canvas.getBoundingClientRect();touchX=(t.clientX-r.left)*(W/r.width);},{passive:false});
+  canvas.addEventListener('touchend',function(){touchX=null;});
+  reset();if(!running){running=true;requestAnimationFrame(loop);}
 }
 
-function resetGame(){
-  var W=canvas._w||480;
-  skier={x:W/2, y:170, width:24, height:34, vx:0};
-  obstacles=[];
-  greenCoats=[];
-  score=0; speed=2.8; frame=0;
-  gameOver=false; gameStarted=false;
-  tooCloseTimer=0;
-  crashCodeIndex = Math.floor(Math.random()*RESPONSIBILITY_CODE.length);
-  nameInput=false; nameBuffer=''; scoreSubmitted=false;
-  bearHollowDone=false;
-  lodgeSpawned=false;
-  familyZoneFences=[];
-  familyZoneLabel=null;
-  trailSigns=[];
-  trailSignIndex=0;
+function reset(){
+  skier={x:W/2,vx:0};frame=0;speed=4.0;
+  gates=[];gHit=0;gMiss=0;gTotal=0;lastGateSide=1;
+  si=0;sf=0;cs=COURSE[0];sLabel=cs.name;sLabelT=120;
+  buildGateSchedule();
+  finishing=false;finished=false;started=false;
+  cd=3;cdT=0;finY=-999;finDelay=0;lft=0;dt=1;elev=9465;
+  nInput=false;nBuf='';nSub=false;
+  trees=[];fences=[];
+  for(var t=0;t<35;t++)spawnTree(-Math.random()*H);
+  for(var f=0;f<Math.ceil(H/30);f++){
+    fences.push({y:f*30,side:'left',brand:f%5===0});
+    fences.push({y:f*30,side:'right',brand:f%5===0});
+  }
+  startShack={y:-40};
 }
 
-var bearHollowDone=false, lodgeSpawned=false;
-var trailSigns=[], trailSignIndex=0;
-
-var TRAIL_SIGN_SCHEDULE = [
-  { frame:400,  name:'Sweet Revenge',       type:'blue' },
-  { frame:800,  name:'City Hill',            type:'blue' },
-  { frame:1200, name:'Wildcat Bowl',         type:'blue' },
-  { frame:1700, name:'Wildflower Downhill',  type:'diamond' },
-  { frame:2200, name:'Grizzly Downhill',     type:'diamond' },
-  { frame:2700, name:'No Name',             type:'double' },
-  { frame:3200, name:'Lone Tree',           type:'double' }
-];
-var familyZoneFences=[], familyZoneLabel=null;
-
-function spawnObstacle(){
-  var W=canvas._w, H=canvas._h;
-  var type=Math.random(), w, h, kind;
-  
-  // Single lodge near start
-  if(!lodgeSpawned && frame>30 && frame<60){
-    lodgeSpawned=true;
-    obstacles.push({
-      x: W*0.75, y: H+20,
-      width:60, height:45, kind:'lodge', passed:false,
-      wobble:0, boarderAngle:0, mooseDir:0, mooseSpeed:0
-    });
-  }
-  
-  // Bear Hollow once, early in the run
-  if(!bearHollowDone && frame>200 && frame<210){
-    bearHollowDone=true;
-    spawnBearHollow();
-  }
-  
-  if(type<0.68){ kind='tree'; w=22+Math.random()*16; h=34+Math.random()*18; }
-  else if(type<0.80){ kind='rock'; w=24+Math.random()*18; h=16+Math.random()*12; }
-  else if(type<0.94){ kind='boarder'; w=20; h=30; }
-  else { kind='moose'; w=36; h=32; }
-  
-  var startY, startX;
-  if(kind==='boarder'){
-    startY = -40;
-    startX = 50+Math.random()*(W-100);
-  } else if(kind==='moose'){
-    startY = H * (0.3 + Math.random()*0.4);
-    startX = Math.random()<0.5 ? -40 : W+40;
-  } else {
-    startY = H+20;
-    startX = 30+Math.random()*(W-60);
-  }
-  
-  obstacles.push({
-    x: startX, y: startY,
-    width:w, height:h, kind:kind, passed:false,
-    wobble: kind==='boarder'?(Math.random()-0.5)*3:0,
-    boarderAngle: Math.random()*0.3-0.15,
-    mooseDir: kind==='moose' ? (startX<0 ? 1 : -1) : 0,
-    mooseSpeed: 2.5+Math.random()*2
-  });
+function spawnTree(y){
+  if(y===undefined)y=-20-Math.random()*40;
+  var side=Math.random()<0.5?-1:1;
+  var dist=TW/2+18+Math.random()*90;
+  trees.push({y:y,x:W/2+side*dist,w:16+Math.random()*14,h:28+Math.random()*20});
 }
 
-function spawnBearHollow(){
-  var W=canvas._w, H=canvas._h;
-  
-  var gateY = H+40;
-  var gateWidth = 130;
-  var centerX = W/2 + (Math.random()-0.5)*60;
-  var leftEdge = centerX - gateWidth/2;
-  var rightEdge = centerX + gateWidth/2;
-  
-  familyZoneLabel = { y: gateY+80, opacity:1 };
-  
-  // Single row of fencing with gate opening
-  familyZoneFences.push(
-    { x:leftEdge/2, y:gateY, width:leftEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:W-(W-rightEdge)/2, y:gateY, width:W-rightEdge-10, kind:'fence', passed:false, height:12, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:leftEdge, y:gateY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:rightEdge, y:gateY, width:6, kind:'gatepost', passed:false, height:24, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
-  );
-  // Signs
-  familyZoneFences.push(
-    { x:leftEdge-30, y:gateY+30, width:10, kind:'sign_family', passed:false, height:10, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 },
-    { x:rightEdge+30, y:gateY+30, width:10, kind:'sign_bear', passed:false, height:10, wobble:0,boarderAngle:0,mooseDir:0,mooseSpeed:0 }
-  );
-  // Slow-moving families after the gate
-  for(var f=0;f<3;f++){
-    familyZoneFences.push({
-      x: centerX + (Math.random()-0.5)*gateWidth*0.7,
-      y: gateY - 80 - f*100,
-      width:14, height:18, kind:'family',
-      passed:false, wobble:(Math.random()-0.5)*0.5,
-      boarderAngle:0, mooseDir:0, mooseSpeed:0
-    });
-  }
-}
+function spawnGate(globalFrame){
+  var diff=diffAtFrame(globalFrame);
+  var prog=globalFrame/TF;
 
-function spawnGreenCoat(){
-  var W=canvas._w, H=canvas._h;
-  var side = Math.random()<0.5 ? 18 : W-18;
-  greenCoats.push({ x:side, y:H+20, bubble:0 });
+  /* Always alternate sides */
+  lastGateSide*=-1;
+  var gateOff=lastGateSide*(40+Math.random()*diff*50); /* 40 min, up to 90 at hardest */
+
+  /* Narrow gates — precision matters */
+  var gw=65-diff*15; /* 65 at start, 51 at hardest */
+
+  gTotal++;
+  gates.push({y:-30,off:gateOff,w:gw,hit:false,miss:false,
+    col:gTotal%2===0?'#DF0024':'#0085C7',ph:38});
 }
 
 function update(){
-  if(!gameStarted||gameOver) return;
-  var W=canvas._w, H=canvas._h;
-  frame++;
-  speed = 2.8 + frame*0.0018;
+  if(!started||finished)return;
+  if(cdT>0){cdT-=dt;cd=Math.ceil(cdT/60);if(cd<0)cd=0;return;}
 
+  if(finishing){
+    finDelay+=dt;finY+=speed*dt*0.5;
+    speed=Math.max(1,speed-0.03*dt);
+    scrollAll();
+    /* Keep steering alive so last gates are hittable */
+    var fAccel=0;
+    if(keys['ArrowLeft']||keys['a'])fAccel=-0.50;
+    if(keys['ArrowRight']||keys['d'])fAccel=0.50;
+    if(touchX!==null){var fd=touchX-skier.x;fAccel=Math.max(-0.55,Math.min(0.55,fd*0.02));}
+    skier.vx+=fAccel*dt;skier.vx*=Math.pow(0.92,dt);skier.x+=skier.vx*dt;
+    var fle=W/2-TW/2+18,fre=W/2+TW/2-18;
+    if(skier.x<fle){skier.x=fle;skier.vx=0;}if(skier.x>fre){skier.x=fre;skier.vx=0;}
+    /* Keep checking gates */
+    for(var i=gates.length-1;i>=0;i--){
+      var g=gates[i];g.y+=speed*dt;
+      var hz=16+speed*0.8;
+      if(!g.hit&&!g.miss&&Math.abs(g.y-SKY)<hz){
+        var gc=W/2+g.off;
+        if(Math.abs(skier.x-gc)<g.w/2+10){g.hit=true;gHit++;}else{g.miss=true;gMiss++;}
+      }
+      if(g.y>H+60)gates.splice(i,1);
+    }
+    if(finDelay>150){finished=true;nInput=true;nBuf='';nSub=false;}
+    return;
+  }
+
+  frame+=dt;sf+=dt;
+
+  /* Global gate spawning — evenly spaced across entire race */
+  var totalElapsed=0;for(var i=0;i<si;i++)totalElapsed+=COURSE[i].dur;totalElapsed+=sf;
+  if(globalGatesSpawned<globalGateFrames.length&&totalElapsed>=globalGateFrames[globalGatesSpawned]){
+    spawnGate(globalGateFrames[globalGatesSpawned]);globalGatesSpawned++;}
+
+  if(si<COURSE.length&&sf>=cs.dur){
+    sf=0;si++;
+    if(si<COURSE.length){
+      cs=COURSE[si];sLabel=cs.name;sLabelT=120;
+      if(cs.sec==='finish'){finY=-60;finishing=true;finDelay=0;}
+    }
+    if(si>=COURSE.length&&!finishing){finishing=true;finDelay=0;}
+  }
+
+  var prog=0,fu=0;for(var i=0;i<si;i++)fu+=COURSE[i].dur;fu+=sf;prog=fu/TF;
+  /* Smooth quadratic ramp, capped at ~100 mph */
+  speed=Math.min(8.33, 5.0+prog*prog*8.0); /* 60 mph start → 100 mph cap */
+
+  elev=9465-Math.round(prog*3074);
+  if(sLabelT>0)sLabelT-=dt;
+
+  /* Player steering — responsive but controlled */
   var accel=0;
-  if(keys['ArrowLeft']||keys['a']) accel=-0.7;
-  if(keys['ArrowRight']||keys['d']) accel=0.7;
-  if(touchX!==null){
-    var diff=touchX-skier.x;
-    accel=Math.max(-0.9,Math.min(0.9,diff*0.03));
-  }
-  skier.vx+=accel; skier.vx*=0.91;
-  skier.x+=skier.vx;
-  skier.x=Math.max(18,Math.min(W-18,skier.x));
+  if(keys['ArrowLeft']||keys['a'])accel=-0.50;
+  if(keys['ArrowRight']||keys['d'])accel=0.50;
+  if(touchX!==null){var diff2=touchX-skier.x;accel=Math.max(-0.55,Math.min(0.55,diff2*0.02));}
+  skier.vx+=accel*dt;skier.vx*=Math.pow(0.92,dt);skier.x+=skier.vx*dt;
+  var le=W/2-TW/2+18,re=W/2+TW/2-18;
+  if(skier.x<le){skier.x=le;skier.vx=Math.max(0,skier.vx);}
+  if(skier.x>re){skier.x=re;skier.vx=Math.min(0,skier.vx);}
 
-  // Spawn obstacles (25% less dense)
-  if(frame%Math.max(14,35-Math.floor(frame/180))===0) spawnObstacle();
-  // Spawn green coats every ~400 frames
-  if(frame%400===200) spawnGreenCoat();
-
-  // Spawn trail signs at set frames
-  if(trailSignIndex < TRAIL_SIGN_SCHEDULE.length && frame >= TRAIL_SIGN_SCHEDULE[trailSignIndex].frame){
-    var ts = TRAIL_SIGN_SCHEDULE[trailSignIndex];
-    var W=canvas._w, H=canvas._h;
-    trailSigns.push({ x: W-45, y: H+20, name:ts.name, type:ts.type });
-    trailSignIndex++;
+  /* Gates */
+  for(var i=gates.length-1;i>=0;i--){
+    var g=gates[i];g.y+=speed*dt;
+    var hitZone=16+speed*0.8; /* wider window at higher speed */
+    if(!g.hit&&!g.miss&&Math.abs(g.y-SKY)<hitZone){
+      var gc=W/2+g.off;
+      if(Math.abs(skier.x-gc)<g.w/2+10){g.hit=true;gHit++;}
+      else{g.miss=true;gMiss++;}
+    }
+    if(g.y>H+60)gates.splice(i,1);
   }
 
-  // Update trail signs (scroll up, no collision)
-  for(var s=trailSigns.length-1;s>=0;s--){
-    trailSigns[s].y -= speed;
-    if(trailSigns[s].y < -60) trailSigns.splice(s,1);
-  }
-
-  tooCloseTimer=Math.max(0,tooCloseTimer-1);
-
-  // Update obstacles
-  for(var i=obstacles.length-1;i>=0;i--){
-    var o=obstacles[i];
-    
-    if(o.kind==='boarder'){
-      // Boarders come from behind, flying downhill PAST you
-      o.y += speed*0.6;
-      o.x += o.wobble*0.3 + Math.sin(frame*0.06+i)*1.2;
-      o.x = Math.max(20,Math.min(W-20,o.x));
-    } else if(o.kind==='moose'){
-      // Moose runs across the trail
-      o.x += o.mooseDir * o.mooseSpeed;
-      o.y -= speed; // also scrolls with terrain
-    } else {
-      // Trees, rocks, lodges scroll upward normally
-      o.y -= speed;
-    }
-
-    var dx=skier.x-o.x, dy=skier.y-o.y;
-    var hw=(skier.width+o.width)*0.4, hh=(skier.height+o.height)*0.4;
-
-    // Collision
-    if(Math.abs(dx)<hw && Math.abs(dy)<hh){
-      gameOver=true;
-      if(score>highScore) highScore=score;
-      nameInput=true; nameBuffer=''; scoreSubmitted=false;
-      return;
-    }
-
-    // Too close warning (not for moose — they're unpredictable)
-    if(o.kind!=='moose' && Math.abs(dx)<hw*2.0 && Math.abs(dy)<hh*2.0 && !o.passed){
-      tooCloseTimer=20;
-    }
-
-    // Passed (scored when obstacle is behind player)
-    if(!o.passed){
-      if(o.kind==='boarder'){
-        // Boarder passed when it's below player
-        if(o.y > skier.y + o.height) { o.passed=true; score+=3; }
-      } else if(o.kind==='moose'){
-        // Moose passed when off screen
-        if(o.x < -60 || o.x > W+60) { o.passed=true; score+=10; }
-      } else {
-        if(o.y < skier.y - o.height) { o.passed=true; score+=1; }
-      }
-    }
-
-    // Remove when off screen
-    if(o.y<-60 || o.y>H+80 || o.x<-80 || o.x>W+80) obstacles.splice(i,1);
-  }
-
-  // Update green coats
-  for(var j=greenCoats.length-1;j>=0;j--){
-    var g=greenCoats[j];
-    g.y-=speed;
-    // Bubble visible when near player
-    var gy=Math.abs(skier.y-g.y);
-    g.bubble = gy<200 ? Math.min(1, g.bubble+0.05) : Math.max(0, g.bubble-0.05);
-    if(g.y<-80) greenCoats.splice(j,1);
-  }
-  
-  // Update Bear Hollow fences
-  for(var f=familyZoneFences.length-1;f>=0;f--){
-    var fz=familyZoneFences[f];
-    if(fz.kind==='family'){
-      fz.y -= speed*0.4;
-      fz.x += fz.wobble;
-    } else {
-      fz.y -= speed;
-    }
-    if(fz.kind==='fence'||fz.kind==='gatepost'||fz.kind==='family'){
-      var fdx=skier.x-fz.x, fdy=skier.y-fz.y;
-      var fhw=(skier.width+fz.width)*0.4, fhh=(skier.height+fz.height)*0.4;
-      if(Math.abs(fdx)<fhw && Math.abs(fdy)<fhh){
-        gameOver=true; if(score>highScore) highScore=score;
-        nameInput=true; nameBuffer=''; scoreSubmitted=false; return;
-      }
-    }
-    if(!fz.passed && fz.y<skier.y-20){ fz.passed=true; if(fz.kind==='family') score+=2; }
-    if(fz.y<-100) familyZoneFences.splice(f,1);
-  }
-  if(familyZoneLabel){ familyZoneLabel.y-=speed; if(familyZoneLabel.y<-60) familyZoneLabel=null; }
+  scrollAll();
+  if(finY>-900)finY+=speed*dt;
+  if(startShack)startShack.y+=speed*dt;
+  if(frame%18<dt)spawnTree();
 }
 
+function scrollAll(){
+  for(var t=trees.length-1;t>=0;t--){trees[t].y+=speed*dt;if(trees[t].y>H+60){trees.splice(t,1);spawnTree();}}
+  for(var f=fences.length-1;f>=0;f--){fences[f].y+=speed*dt;if(fences[f].y>H+60){fences[f].y=-30;fences[f].brand=Math.random()<0.2;}}
+}
+
+/* ═══ DRAW ═══ */
 function draw(){
-  var W=canvas._w, H=canvas._h;
+  var tc=W/2,tl=tc-TW/2,tr2=tc+TW/2;
+  /* Sky */
+  var skyG=ctx.createLinearGradient(0,0,0,H*0.25);
+  skyG.addColorStop(0,'#1a5276');skyG.addColorStop(1,'#d0e4f0');
+  ctx.fillStyle=skyG;ctx.fillRect(0,0,W,H*0.25);
+  ctx.fillStyle='#e4eef5';ctx.fillRect(0,H*0.2,W,H*0.8);
 
-  // Snow background
-  var grad=ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0,'#dceef8'); grad.addColorStop(1,'#f0f7fb');
-  ctx.fillStyle=grad;
-  ctx.fillRect(0,0,W,H);
+  /* Trail */
+  ctx.fillStyle='#d4e2ee';ctx.fillRect(tl,0,TW,H);
 
-  // Snow particles
-  ctx.fillStyle='rgba(255,255,255,0.6)';
-  for(var i=0;i<60;i++){
-    var sx=(i*113+frame*0.4)%W;
-    var sy=(i*89-frame*speed*0.5)%H;
-    if(sy<0) sy+=H;
-    ctx.beginPath(); ctx.arc(sx,sy,1.2,0,Math.PI*2); ctx.fill();
-  }
+  /* Grooming */
+  ctx.strokeStyle='rgba(45,91,157,0.05)';ctx.lineWidth=1;
+  for(var ln=-4;ln<=4;ln++){var lx=tc+ln*(TW/9);ctx.beginPath();ctx.moveTo(lx,0);ctx.lineTo(lx,H);ctx.stroke();}
 
-  // Trail grooming lines
-  ctx.strokeStyle='rgba(45,91,157,0.04)';
-  ctx.lineWidth=1;
-  for(var t=0;t<8;t++){
-    var tx=W*0.1+t*(W*0.8/7);
-    ctx.beginPath(); ctx.moveTo(tx,0); ctx.lineTo(tx,H); ctx.stroke();
-  }
-
-  // Trail edges
-  ctx.strokeStyle='rgba(45,91,157,0.1)';
-  ctx.lineWidth=2.5;
-  ctx.setLineDash([10,10]);
-  ctx.beginPath(); ctx.moveTo(35,0); ctx.lineTo(35,H); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(W-35,0); ctx.lineTo(W-35,H); ctx.stroke();
+  /* Edge lines */
+  ctx.strokeStyle='rgba(223,0,36,0.4)';ctx.lineWidth=2;ctx.setLineDash([10,8]);
+  ctx.beginPath();ctx.moveTo(tl,0);ctx.lineTo(tl,H);ctx.stroke();
+  ctx.strokeStyle='rgba(0,133,199,0.4)';
+  ctx.beginPath();ctx.moveTo(tr2,0);ctx.lineTo(tr2,H);ctx.stroke();
   ctx.setLineDash([]);
 
-  // Trail signs (scenery, right side)
-  for(var s=0;s<trailSigns.length;s++){
-    drawTrailSign(trailSigns[s]);
-  }
+  /* Fencing */
+  drawFences(tc,tl,tr2);
 
-  // Bear Hollow Family Zone elements
-  for(var f=0;f<familyZoneFences.length;f++){
-    var fz=familyZoneFences[f];
-    if(fz.kind==='fence') drawFence(fz.x,fz.y,fz.width);
-    else if(fz.kind==='gatepost') drawGatePost(fz.x,fz.y);
-    else if(fz.kind==='sign_family') drawZoneSign(fz.x,fz.y,'FAMILY ZONE');
-    else if(fz.kind==='sign_bear') drawZoneSign(fz.x,fz.y,'BEAR HOLLOW');
-    else if(fz.kind==='family') drawFamilyGroup(fz.x,fz.y);
-  }
-  
-  // Bear Hollow zone label banner
-  if(familyZoneLabel && familyZoneLabel.y>0 && familyZoneLabel.y<H){
-    ctx.fillStyle='rgba(255,140,0,0.85)';
-    roundRect(ctx,W/2-90,familyZoneLabel.y-14,180,28,14); ctx.fill();
-    ctx.fillStyle='#fff';
-    ctx.font='bold 13px Source Sans Pro, sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText('⚠ ENTERING BEAR HOLLOW',W/2,familyZoneLabel.y+4);
-  }
+  /* Trees */
+  for(var t=0;t<trees.length;t++){var tr3=trees[t];if(tr3.y>-40&&tr3.y<H+40)drawTree(tr3.x,tr3.y,tr3.w,tr3.h);}
 
-  // Green Coats
-  for(var j=0;j<greenCoats.length;j++){
-    drawGreenCoat(greenCoats[j]);
-  }
+  /* Snow */
+  ctx.fillStyle='rgba(255,255,255,0.6)';
+  for(var i=0;i<30;i++){var sx=(i*113+frame*0.3)%W,sy=(i*89+frame*speed*0.3)%H;ctx.beginPath();ctx.arc(sx,sy,1,0,Math.PI*2);ctx.fill();}
 
-  // Obstacles
-  for(var i=0;i<obstacles.length;i++){
-    var o=obstacles[i];
-    if(o.kind==='tree') drawTree(o.x,o.y,o.width,o.height);
-    else if(o.kind==='rock') drawRock(o.x,o.y,o.width,o.height);
-    else if(o.kind==='boarder') drawBoarder(o.x,o.y,o);
-    else if(o.kind==='lodge') drawLodge(o.x,o.y,o.width,o.height);
-    else if(o.kind==='moose') drawMoose(o.x,o.y,o);
-  }
+  /* Start shack */
+  if(startShack&&startShack.y>-120&&startShack.y<H+120)drawStartShack(tc);
 
-  // Ski tracks
-  ctx.strokeStyle='rgba(45,91,157,0.1)';
-  ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(skier.x-7,skier.y+16); ctx.lineTo(skier.x-7-skier.vx*4,H); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(skier.x+7,skier.y+16); ctx.lineTo(skier.x+7-skier.vx*4,H); ctx.stroke();
+  /* Finish area */
+  if(finY>-120&&finY<H+200)drawFinishArea(tc,tl);
 
-  // Player
-  drawPlayer(skier.x,skier.y,skier.vx);
+  /* Gates */
+  for(var i=0;i<gates.length;i++)drawGate(gates[i]);
 
-  // Too close warning
-  if(tooCloseTimer>0){
-    var wa=Math.min(1,tooCloseTimer/10);
-    ctx.fillStyle='rgba(220,38,38,'+wa*0.15+')';
-    ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='rgba(220,38,38,'+wa+')';
-    ctx.font='bold 16px Source Sans Pro, sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText('⚠ TOO CLOSE!', W/2, skier.y-45);
-    ctx.font='11px Source Sans Pro, sans-serif';
-    ctx.fillStyle='rgba(220,38,38,'+wa*0.8+')';
-    ctx.fillText('Keep your distance!', W/2, skier.y-28);
-  }
+  /* Ski tracks */
+  ctx.strokeStyle='rgba(45,91,157,0.07)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(skier.x-5,SKY+14);ctx.lineTo(skier.x-5-skier.vx*3,H);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(skier.x+5,SKY+14);ctx.lineTo(skier.x+5-skier.vx*3,H);ctx.stroke();
 
-  // HUD
-  ctx.fillStyle='rgba(13,34,64,0.88)';
-  roundRect(ctx,12,12,140,50,10); ctx.fill();
-  ctx.fillStyle='#fff';
-  ctx.font='bold 11px Source Sans Pro, sans-serif';
-  ctx.textAlign='left';
-  ctx.fillText('DISTANCE',24,32);
-  ctx.font='bold 24px Source Sans Pro, sans-serif';
-  ctx.fillText(score*3+' ft',24,56);
+  drawRacer(skier.x,SKY,skier.vx);
 
-  ctx.fillStyle='rgba(13,34,64,0.88)';
-  roundRect(ctx,W-152,12,140,50,10); ctx.fill();
-  ctx.fillStyle='rgba(255,212,0,0.95)';
-  ctx.font='bold 11px Source Sans Pro, sans-serif';
-  ctx.textAlign='left';
-  ctx.fillText('BEST',W-140,32);
-  ctx.font='bold 24px Source Sans Pro, sans-serif';
-  ctx.fillText(highScore*3+' ft',W-140,56);
+  /* HUD */
+  ctx.fillStyle='rgba(10,22,40,0.85)';rr(ctx,8,8,W-16,52,10);ctx.fill();
+  ctx.fillStyle='#F4C300';ctx.font='bold 10px Source Sans Pro,sans-serif';ctx.textAlign='left';ctx.fillText('GATES',20,26);
+  ctx.fillStyle='#fff';ctx.font='bold 22px Source Sans Pro,sans-serif';ctx.fillText(gHit+' / '+TG,20,50);
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='bold 10px Source Sans Pro,sans-serif';ctx.textAlign='center';ctx.fillText('ELEVATION',W/2,26);
+  ctx.fillStyle='#fff';ctx.font='bold 18px Source Sans Pro,sans-serif';ctx.fillText(Math.max(6391,elev).toLocaleString()+"'",W/2,48);
+  var mph=Math.round(speed*12);
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='bold 10px Source Sans Pro,sans-serif';ctx.textAlign='right';ctx.fillText('SPEED',W-20,26);
+  ctx.fillStyle=mph>80?'#DF0024':'#fff';ctx.font='bold 18px Source Sans Pro,sans-serif';ctx.fillText(mph+' mph',W-20,48);
+  var sp=Math.min(1,(speed-5)/3.33);ctx.fillStyle='rgba(255,255,255,0.08)';rr(ctx,20,64,W-40,4,2);ctx.fill();
+  ctx.fillStyle=sp>0.7?'#DF0024':'#0085C7';rr(ctx,20,64,(W-40)*sp,4,2);ctx.fill();
 
-  // Speed bar
-  var speedPct=Math.min(1,(speed-2.8)/5.5);
-  ctx.fillStyle='rgba(13,34,64,0.5)';
-  ctx.font='10px Source Sans Pro, sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText('SPEED',W/2,26);
-  ctx.fillStyle='rgba(13,34,64,0.15)';
-  roundRect(ctx,W/2-35,32,70,7,3.5); ctx.fill();
-  ctx.fillStyle=speedPct>0.7?'#dc2626':'#2D5B9D';
-  roundRect(ctx,W/2-35,32,70*speedPct,7,3.5); ctx.fill();
+  /* Section label */
+  if(sLabelT>0&&sLabel){var la=Math.min(1,sLabelT/30);ctx.globalAlpha=la;ctx.fillStyle='rgba(10,22,40,0.8)';
+    ctx.font='bold 13px Source Sans Pro,sans-serif';var tw=ctx.measureText(sLabel).width+40;
+    rr(ctx,W/2-tw/2,H*0.18,tw,28,14);ctx.fill();ctx.fillStyle='#F4C300';ctx.textAlign='center';
+    ctx.fillText(sLabel,W/2,H*0.18+19);ctx.globalAlpha=1;}
 
-  // Start screen
-  if(!gameStarted && !gameOver){
-    ctx.fillStyle='rgba(13,34,64,0.75)';
-    ctx.fillRect(0,0,W,H);
+  drawRings(W/2,H*0.12,10,0.1);
 
-    ctx.fillStyle='#fff';
-    ctx.font='bold 30px Playfair Display, serif';
-    ctx.textAlign='center';
-    ctx.fillText('Snowbasin Safety Run',W/2,H/2-60);
+  /* Countdown */
+  if(started&&cdT>0&&!finishing&&!finished){
+    ctx.fillStyle='rgba(10,22,40,0.7)';ctx.fillRect(0,0,W,H);ctx.textAlign='center';
+    if(cd>0){ctx.fillStyle='#fff';ctx.font='bold 120px Playfair Display,serif';ctx.fillText(cd,W/2,H/2+30);
+      ctx.font='bold 16px Source Sans Pro,sans-serif';ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fillText('GET READY',W/2,H/2-50);
+    }else{ctx.fillStyle='#F4C300';ctx.font='bold 80px Playfair Display,serif';ctx.fillText('GO!',W/2,H/2+25);}}
 
-    ctx.font='15px Source Sans Pro, sans-serif';
-    ctx.fillStyle='rgba(255,255,255,0.7)';
-    ctx.fillText('Dodge trees, rocks & out-of-control boarders',W/2,H/2-28);
+  /* Start screen */
+  if(!started&&!finished){
+    ctx.fillStyle='rgba(10,22,40,0.88)';ctx.fillRect(0,0,W,H);
+    drawRings(W/2,H*0.22,18,0.6);
+    ctx.fillStyle='#fff';ctx.font='bold 32px Playfair Display,serif';ctx.textAlign='center';ctx.fillText('Grizzly Downhill',W/2,H*0.35);
+    ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='14px Source Sans Pro,sans-serif';
+    ctx.fillText("Allen's Peak (9,465') to Finish (6,391')",W/2,H*0.40);
+    ctx.fillText('3,074 vertical feet \u2022 '+TG+' gates',W/2,H*0.44);
+    ctx.fillStyle='rgba(255,255,255,0.25)';ctx.font='12px Source Sans Pro,sans-serif';ctx.fillText('Steer through the gates to score',W/2,H*0.50);
+    drawRacer(W/2,H*0.60,0);
+    ctx.fillStyle='#F4C300';ctx.font='bold 17px Source Sans Pro,sans-serif';ctx.fillText('PRESS SPACE or TAP to race',W/2,H*0.72);
+    ctx.font='12px Source Sans Pro,sans-serif';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.fillText('\u2190 \u2192 Arrow Keys or Touch to steer',W/2,H*0.76);
+    ctx.fillStyle='rgba(212,175,55,0.4)';ctx.font='11px Source Sans Pro,sans-serif';
+    ctx.fillText('Snowbasin Resort \u2022 Home of the 2002 & 2034 Winter Olympics',W/2,H*0.92);}
 
-    ctx.fillStyle='rgba(255,212,0,0.5)';
-    ctx.font='12px Source Sans Pro, sans-serif';
-    ctx.fillText('Stay in control — watch for wildlife!',W/2,H/2-6);
+  if(finished)drawResults();
+}
 
-    // Mini skier preview
-    drawPlayer(W/2, H/2+40, 0);
-
-    ctx.fillStyle='#FFD400';
-    ctx.font='bold 17px Source Sans Pro, sans-serif';
-    ctx.fillText('PRESS SPACE or TAP to start',W/2,H/2+90);
-    ctx.font='12px Source Sans Pro, sans-serif';
-    ctx.fillStyle='rgba(255,255,255,0.4)';
-    ctx.fillText('← → Arrow Keys or Touch to steer',W/2,H/2+115);
-  }
-
-  // Game over screen
-  if(gameOver){
-    ctx.fillStyle='rgba(13,34,64,0.90)';
-    ctx.fillRect(0,0,W,H);
-
-    // Score
-    ctx.fillStyle='#dc2626';
-    ctx.font='bold 20px Source Sans Pro, sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText('COLLISION!',W/2,H*0.08);
-
-    ctx.fillStyle='#fff';
-    ctx.font='bold 48px Source Sans Pro, sans-serif';
-    ctx.fillText(score*3+' ft',W/2,H*0.15);
-
-    ctx.font='13px Source Sans Pro, sans-serif';
-    ctx.fillStyle='rgba(255,255,255,0.4)';
-    ctx.fillText('PERSONAL BEST: '+highScore*3+' ft',W/2,H*0.19);
-
-    // Name input or submitted state
-    var nameY=H*0.25;
-    if(nameInput){
-      ctx.fillStyle='#FFD400';
-      ctx.font='bold 12px Source Sans Pro, sans-serif';
-      ctx.fillText('ENTER YOUR NAME FOR THE LEADERBOARD',W/2,nameY);
-      // Input box
-      ctx.fillStyle='rgba(255,255,255,0.1)';
-      roundRect(ctx,W/2-100,nameY+8,200,32,6); ctx.fill();
-      ctx.strokeStyle='#FFD400';
-      ctx.lineWidth=2;
-      roundRect(ctx,W/2-100,nameY+8,200,32,6); ctx.stroke();
-      ctx.fillStyle='#fff';
-      ctx.font='18px Source Sans Pro, sans-serif';
-      // Blinking cursor
-      var cursorBlink = Math.floor(Date.now()/500)%2===0 ? '|':'';
-      ctx.fillText(nameBuffer+cursorBlink,W/2,nameY+30);
-      ctx.fillStyle='rgba(255,255,255,0.3)';
-      ctx.font='11px Source Sans Pro, sans-serif';
-      ctx.fillText('Press ENTER to submit  •  ESC to skip',W/2,nameY+54);
-    } else if(scoreSubmitted){
-      ctx.fillStyle='#16a34a';
-      ctx.font='bold 13px Source Sans Pro, sans-serif';
-      ctx.fillText('✓ Score submitted as '+playerName,W/2,nameY);
-    } else {
-      ctx.fillStyle='rgba(255,255,255,0.3)';
-      ctx.font='12px Source Sans Pro, sans-serif';
-      ctx.fillText('Score not submitted',W/2,nameY);
-    }
-
-    // Leaderboard
-    var lbY=H*0.37;
-    ctx.fillStyle='#FFD400';
-    ctx.font='bold 14px Source Sans Pro, sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText('🏆  LEADERBOARD',W/2,lbY);
-
-    var top3=leaderboard.slice(0,3);
-    if(top3.length>0){
-      for(var lb=0;lb<top3.length;lb++){
-        var row=top3[lb];
-        var rowY=lbY+24+lb*28;
-        var medal=['🥇','🥈','🥉'][lb];
-        // Row background
-        ctx.fillStyle=lb===0?'rgba(255,212,0,0.1)':lb===1?'rgba(192,192,192,0.08)':'rgba(205,127,50,0.06)';
-        roundRect(ctx,W/2-140,rowY-12,280,24,6); ctx.fill();
-        // Medal + name
-        ctx.fillStyle='#fff';
-        ctx.font=lb===0?'bold 14px Source Sans Pro, sans-serif':'13px Source Sans Pro, sans-serif';
-        ctx.textAlign='left';
-        ctx.fillText(medal+'  '+row.name,W/2-130,rowY+4);
-        // Score
-        ctx.textAlign='right';
-        ctx.fillStyle=lb===0?'#FFD400':'rgba(255,255,255,0.7)';
-        ctx.font='bold 14px Source Sans Pro, sans-serif';
-        ctx.fillText(row.score+' ft',W/2+130,rowY+4);
+function drawFences(tc,tl,tr2){
+  for(var f=0;f<fences.length;f++){
+    var fp=fences[f];if(fp.y<-30||fp.y>H+30)continue;
+    var px=fp.side==='left'?tl-5:tr2+5;
+    ctx.fillStyle='#666';ctx.fillRect(px-1,fp.y-14,2,28);
+    for(var n=f+1;n<fences.length;n++){
+      if(fences[n].side===fp.side&&Math.abs(fences[n].y-fp.y)<50){
+        var npx=px;
+        ctx.strokeStyle=fp.side==='left'?'rgba(223,0,36,0.3)':'rgba(0,133,199,0.3)';ctx.lineWidth=1;
+        for(var nl=0;nl<3;nl++){ctx.beginPath();ctx.moveTo(px,fp.y-10+nl*7);ctx.lineTo(npx,fences[n].y-10+nl*7);ctx.stroke();}
+        break;
       }
-    } else {
-      ctx.fillStyle='rgba(255,255,255,0.3)';
-      ctx.font='12px Source Sans Pro, sans-serif';
-      ctx.textAlign='center';
-      ctx.fillText('Loading...',W/2,lbY+30);
     }
-
-    // Responsibility Code (compact — one highlighted rule)
-    var codeY=H*0.60;
-    ctx.textAlign='center';
-    ctx.fillStyle='rgba(255,212,0,0.6)';
-    ctx.font='bold 10px Source Sans Pro, sans-serif';
-    ctx.fillText('YOUR RESPONSIBILITY CODE',W/2,codeY);
-
-    ctx.fillStyle='rgba(255,255,255,0.5)';
-    ctx.font='11px Source Sans Pro, sans-serif';
-    wrapText(ctx,RESPONSIBILITY_CODE[crashCodeIndex],W/2,codeY+18,W-60,14);
-
-    // All 10 codes smaller below
-    ctx.textAlign='left';
-    ctx.font='9.5px Source Sans Pro, sans-serif';
-    var allY=codeY+60;
-    for(var c=0;c<RESPONSIBILITY_CODE.length;c++){
-      if(c===crashCodeIndex){
-        ctx.fillStyle='#FFD400';
-        ctx.font='bold 9.5px Source Sans Pro, sans-serif';
-      } else {
-        ctx.fillStyle='rgba(255,255,255,0.3)';
-        ctx.font='9.5px Source Sans Pro, sans-serif';
-      }
-      var lines=wrapTextReturn(ctx,RESPONSIBILITY_CODE[c],32,W-44,12);
-      for(var l=0;l<lines.length;l++){
-        ctx.fillText(lines[l],32,allY);
-        allY+=12;
-      }
-      allY+=2;
-    }
-
-    // Try again
-    ctx.textAlign='center';
-    if(!nameInput){
-      ctx.fillStyle='#FFD400';
-      ctx.font='bold 15px Source Sans Pro, sans-serif';
-      ctx.fillText('SPACE or TAP to try again',W/2,H*0.96);
+    if(fp.brand){
+      var sign=fp.side==='left'?-1:1;
+      ctx.fillStyle=fp.side==='left'?'rgba(223,0,36,0.5)':'rgba(0,133,199,0.5)';
+      rr(ctx,px+sign*2-7,fp.y-8,14,24,2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='bold 6px Source Sans Pro,sans-serif';ctx.textAlign='center';
+      ctx.save();ctx.translate(px+sign*2,fp.y+4);ctx.rotate(-Math.PI/2);ctx.fillText('SNOWBASIN',0,0);ctx.restore();
     }
   }
+}
+
+function drawStartShack(cx){
+  var s=startShack;
+  ctx.fillStyle='#5c3a1e';ctx.fillRect(cx-50,s.y+10,100,12);
+  ctx.fillStyle='#6b4422';ctx.fillRect(cx-44,s.y-55,88,65);
+  ctx.fillStyle='#5a3618';for(var p=0;p<5;p++)ctx.fillRect(cx-44,s.y-55+p*13,88,2);
+  ctx.fillStyle='#4a2e12';ctx.beginPath();ctx.moveTo(cx,s.y-85);ctx.lineTo(cx-56,s.y-50);ctx.lineTo(cx+56,s.y-50);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.7)';ctx.beginPath();
+  ctx.moveTo(cx,s.y-88);ctx.lineTo(cx-52,s.y-54);ctx.lineTo(cx-44,s.y-54);ctx.lineTo(cx,s.y-76);ctx.lineTo(cx+44,s.y-54);ctx.lineTo(cx+52,s.y-54);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#4a2a10';ctx.fillRect(cx-44,s.y-55,5,65);ctx.fillRect(cx+39,s.y-55,5,65);
+  ctx.fillStyle='#2a1808';rr(ctx,cx-14,s.y-42,28,52,3);ctx.fill();
+  ctx.fillStyle='#3a5a7a';ctx.globalAlpha=0.6;ctx.fillRect(cx-38,s.y-42,14,12);ctx.fillRect(cx+24,s.y-42,14,12);ctx.globalAlpha=1;
+  ctx.strokeStyle='#4a2a10';ctx.lineWidth=1.5;ctx.strokeRect(cx-38,s.y-42,14,12);ctx.strokeRect(cx+24,s.y-42,14,12);
+  ctx.beginPath();ctx.moveTo(cx-31,s.y-42);ctx.lineTo(cx-31,s.y-30);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx+31,s.y-42);ctx.lineTo(cx+31,s.y-30);ctx.stroke();
+  ctx.fillStyle='rgba(223,0,36,0.85)';rr(ctx,cx-35,s.y-22,70,16,3);ctx.fill();
+  ctx.fillStyle='#fff';ctx.font='bold 10px Source Sans Pro,sans-serif';ctx.textAlign='center';ctx.fillText('START',cx,s.y-11);
+  ctx.fillStyle='#FFD400';ctx.fillRect(cx-52,s.y-10,3,22);ctx.fillRect(cx+49,s.y-10,3,22);ctx.fillRect(cx-52,s.y-10,104,3);
+  ctx.fillStyle='#8a7a6a';ctx.beginPath();ctx.moveTo(cx-80,s.y+16);ctx.lineTo(cx-70,s.y-10);ctx.lineTo(cx-60,s.y+16);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx+65,s.y+16);ctx.lineTo(cx+78,s.y-5);ctx.lineTo(cx+85,s.y+16);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.6)';
+  ctx.beginPath();ctx.moveTo(cx-70,s.y-10);ctx.lineTo(cx-74,s.y-4);ctx.lineTo(cx-66,s.y-4);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(cx+78,s.y-5);ctx.lineTo(cx+74,s.y);ctx.lineTo(cx+82,s.y);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.beginPath();ctx.ellipse(cx-60,s.y+20,18,5,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(cx+62,s.y+22,16,4,0,0,Math.PI*2);ctx.fill();
+}
+
+function drawFinishArea(tc,fl){
+  var sq=10,cols=Math.ceil(TW/sq);
+  for(var c=0;c<cols;c++)for(var r=0;r<3;r++){ctx.fillStyle=((c+r)%2===0)?'#111':'#fff';ctx.fillRect(fl+c*sq,finY-r*sq-sq,sq,sq);}
+  ctx.fillStyle='rgba(10,22,40,0.85)';rr(ctx,tc-70,finY-58,140,22,6);ctx.fill();
+  ctx.fillStyle='#F4C300';ctx.font='bold 12px Source Sans Pro,sans-serif';ctx.textAlign='center';ctx.fillText('FINISH',tc,finY-42);
+  /* Stadium */
+  var sw=TW+120,sh=110,sy=finY-50-sh;
+  ctx.fillStyle='#3a506b';ctx.fillRect(tc-sw/2,sy,sw,sh);
+  for(var row=0;row<6;row++){var ry=sy+8+row*17;
+    ctx.fillStyle=row%2===0?'#4a6380':'#3d5570';ctx.fillRect(tc-sw/2+6,ry,sw-12,15);
+    for(var sp=0;sp<Math.floor(sw/7);sp++){
+      var sx2=tc-sw/2+10+sp*7+Math.sin(sp*5+frame*0.06)*1;
+      var scols=['#e84','#4a8','#48e','#ea4','#e4a','#fff','#fc4'];
+      ctx.fillStyle=scols[sp%scols.length];ctx.globalAlpha=0.7;ctx.beginPath();ctx.arc(sx2,ry+8,2.5,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+    }
+  }
+  ctx.fillStyle='#fff';ctx.fillRect(tc-45,sy-22,90,20);drawRings(tc,sy-12,5,0.9);
+  ctx.fillStyle='#0085C7';ctx.fillRect(tc-sw/2,finY-30,sw,22);
+  ctx.fillStyle='#fff';ctx.font='bold 9px Source Sans Pro,sans-serif';ctx.textAlign='center';
+  ctx.fillText('SALT LAKE 2002    \u2022    SNOWBASIN    \u2022    SALT LAKE 2034',tc,finY-16);
+  ctx.fillStyle='#111';rr(ctx,tc+sw/2-56,sy+4,52,38,3);ctx.fill();
+  ctx.fillStyle='#0f0';ctx.font='bold 7px monospace';ctx.textAlign='left';
+  ctx.fillText('GATES '+gHit+'/'+TG,tc+sw/2-52,sy+16);ctx.fillText('SPD '+Math.round(speed*12),tc+sw/2-52,sy+28);ctx.fillText('MPH',tc+sw/2-28,sy+36);
+  ctx.fillStyle='#DF0024';ctx.beginPath();ctx.moveTo(tc-sw/2+3,sy-18);ctx.lineTo(tc-sw/2+18,sy-14);ctx.lineTo(tc-sw/2+3,sy-10);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#0085C7';ctx.beginPath();ctx.moveTo(tc+sw/2-3,sy-18);ctx.lineTo(tc+sw/2-18,sy-14);ctx.lineTo(tc+sw/2-3,sy-10);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#666';ctx.fillRect(tc-sw/2+1,sy-20,2,22);ctx.fillRect(tc+sw/2-3,sy-20,2,22);
 }
 
 function drawTree(x,y,w,h){
-  // Shadow
-  ctx.fillStyle='rgba(0,0,0,0.08)';
-  ctx.beginPath(); ctx.ellipse(x+3,y+h*0.4,w*0.5,h*0.18,0,0,Math.PI*2); ctx.fill();
-  // Trunk
-  ctx.fillStyle='#5c3a1e';
-  ctx.fillRect(x-3,y-2,6,h*0.32);
-  // Canopy
-  var cols=['#16623a','#1d7642','#258a4c'];
-  for(var i=0;i<3;i++){
-    ctx.fillStyle=cols[i];
-    ctx.beginPath();
-    var ty=y-h*0.12-i*h*0.24;
-    var tw=w*(0.58-i*0.12);
-    ctx.moveTo(x,ty-h*0.28);
-    ctx.lineTo(x-tw,ty+5);
-    ctx.lineTo(x+tw,ty+5);
-    ctx.closePath(); ctx.fill();
-  }
-  // Snow
-  ctx.fillStyle='rgba(255,255,255,0.75)';
-  for(var i=0;i<3;i++){
-    var ty=y-h*0.12-i*h*0.24-h*0.28;
-    ctx.beginPath();
-    ctx.moveTo(x,ty);
-    ctx.lineTo(x-w*0.18,ty+5);
-    ctx.lineTo(x+w*0.18,ty+5);
-    ctx.closePath(); ctx.fill();
-  }
+  ctx.fillStyle='rgba(0,0,0,0.06)';ctx.beginPath();ctx.ellipse(x+2,y+h*0.3,w*0.4,h*0.12,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#4a2e12';ctx.fillRect(x-2,y,4,h*0.3);
+  var cols=['#14572e','#1a6b3a','#208044'];
+  for(var i=0;i<3;i++){ctx.fillStyle=cols[i];ctx.beginPath();var ty=y-h*0.05-i*h*0.25,tw=w*(0.55-i*0.12);
+    ctx.moveTo(x,ty-h*0.28);ctx.lineTo(x-tw,ty+4);ctx.lineTo(x+tw,ty+4);ctx.closePath();ctx.fill();}
+  ctx.fillStyle='rgba(255,255,255,0.65)';
+  for(var i=0;i<3;i++){var ty=y-h*0.05-i*h*0.25-h*0.28;ctx.beginPath();ctx.moveTo(x,ty);ctx.lineTo(x-w*0.16,ty+4);ctx.lineTo(x+w*0.16,ty+4);ctx.closePath();ctx.fill();}
 }
 
-function drawRock(x,y,w,h){
-  ctx.fillStyle='rgba(0,0,0,0.06)';
-  ctx.beginPath(); ctx.ellipse(x+2,y+h*0.45,w*0.5,h*0.22,0,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#7a7a7a';
-  ctx.beginPath();
-  ctx.moveTo(x-w*0.42,y+h*0.22);
-  ctx.lineTo(x-w*0.2,y-h*0.38);
-  ctx.lineTo(x+w*0.18,y-h*0.42);
-  ctx.lineTo(x+w*0.42,y-h*0.1);
-  ctx.lineTo(x+w*0.38,y+h*0.22);
-  ctx.closePath(); ctx.fill();
-  ctx.fillStyle='#8e8e8e';
-  ctx.beginPath();
-  ctx.moveTo(x-w*0.08,y-h*0.36);
-  ctx.lineTo(x+w*0.18,y-h*0.42);
-  ctx.lineTo(x+w*0.42,y-h*0.1);
-  ctx.lineTo(x+w*0.05,y-h*0.05);
-  ctx.closePath(); ctx.fill();
-  // Snow dusting
-  ctx.fillStyle='rgba(255,255,255,0.3)';
-  ctx.beginPath();
-  ctx.moveTo(x-w*0.15,y-h*0.35);
-  ctx.lineTo(x+w*0.12,y-h*0.4);
-  ctx.lineTo(x+w*0.05,y-h*0.28);
-  ctx.closePath(); ctx.fill();
+function drawGate(g){
+  var gc=W/2+g.off,lp=gc-g.w/2,rp2=gc+g.w/2;
+  var col=g.hit?'#16a34a':g.miss?'rgba(150,150,150,0.4)':g.col;
+  var pc=g.hit?'rgba(22,163,74,0.7)':g.miss?'rgba(150,150,150,0.3)':g.col;
+  ctx.save();ctx.translate(lp,g.y);ctx.rotate(-0.12);ctx.fillStyle=col;ctx.fillRect(-2,-g.ph,4,g.ph);ctx.fillStyle=pc;ctx.fillRect(-2,-g.ph,18,13);ctx.restore();
+  ctx.save();ctx.translate(rp2,g.y);ctx.rotate(0.12);ctx.fillStyle=col;ctx.fillRect(-2,-g.ph,4,g.ph);ctx.fillStyle=pc;ctx.fillRect(-16,-g.ph,18,13);ctx.restore();
+  ctx.textAlign='center';ctx.font='bold 14px sans-serif';
+  if(g.hit){ctx.fillStyle='#16a34a';ctx.fillText('\u2713',gc,g.y-g.ph-8);}
+  if(g.miss){ctx.fillStyle='rgba(220,38,38,0.6)';ctx.fillText('\u2717',gc,g.y-g.ph-8);}
 }
 
-function drawBoarder(x,y,o){
-  ctx.save();
-  ctx.translate(x,y);
-  ctx.rotate(o.boarderAngle + Math.sin(frame*0.08)*0.1);
-  // Head (red helmet = out of control)
-  ctx.fillStyle='#dc2626';
-  ctx.beginPath(); ctx.arc(0,-16,7,0,Math.PI*2); ctx.fill();
-  // Goggles
-  ctx.fillStyle='#222';
-  ctx.fillRect(-6,-18,12,4);
-  // Body
-  ctx.fillStyle='#1a1a1a';
-  ctx.fillRect(-7,-9,14,20);
-  // Board (sideways)
-  ctx.fillStyle='#dc2626';
-  ctx.save();
-  ctx.rotate(0.3+Math.sin(frame*0.1)*0.15);
-  roundRect(ctx,-16,10,32,6,3);
-  ctx.fill();
-  ctx.restore();
-  ctx.restore();
-  // Warning icon
-  ctx.fillStyle='rgba(220,38,38,0.5)';
-  ctx.font='bold 14px sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText('⚠',x,y-30);
+function drawRacer(x,y,vx){
+  ctx.save();ctx.fillStyle='#0085C7';ctx.beginPath();ctx.arc(x,y-16,7,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#222';ctx.fillRect(x-5,y-18,10,3);
+  ctx.fillStyle='#DF0024';ctx.save();ctx.translate(x,y);ctx.rotate(vx*0.06);
+  ctx.fillRect(-7,-9,14,16);ctx.fillStyle='#fff';ctx.font='bold 9px Source Sans Pro,sans-serif';ctx.textAlign='center';ctx.fillText('26',0,2);
+  drawRings(0,-5,2,0.8);
+  ctx.strokeStyle='#0085C7';ctx.lineWidth=3;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(-7,-4);ctx.lineTo(-12,2);ctx.stroke();ctx.beginPath();ctx.moveTo(7,-4);ctx.lineTo(12,2);ctx.stroke();
+  ctx.fillStyle='#0066a0';ctx.fillRect(-6,7,5,12);ctx.fillRect(1,7,5,12);ctx.restore();
+  ctx.strokeStyle='#F4C300';ctx.lineWidth=2.5;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(x-7,y+12);ctx.lineTo(x-7-vx*0.8,y+24);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x+7,y+12);ctx.lineTo(x+7-vx*0.8,y+24);ctx.stroke();
+  ctx.strokeStyle='rgba(80,80,80,0.4)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(x-12,y);ctx.lineTo(x-18,y+14);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x+12,y);ctx.lineTo(x+18,y+14);ctx.stroke();ctx.restore();
 }
 
-function drawLodge(x,y,w,h){
-  // Shadow
-  ctx.fillStyle='rgba(0,0,0,0.08)';
-  ctx.beginPath(); ctx.ellipse(x,y+h*0.45,w*0.55,h*0.2,0,0,Math.PI*2); ctx.fill();
-  // Main structure - wood base
-  ctx.fillStyle='#8B6914';
-  ctx.fillRect(x-w*0.45,y-h*0.1,w*0.9,h*0.55);
-  // Darker wood planks
-  ctx.fillStyle='#7A5C12';
-  for(var p=0;p<3;p++){
-    ctx.fillRect(x-w*0.45,y-h*0.1+p*h*0.18,w*0.9,2);
-  }
-  // Roof (A-frame, classic Snowbasin lodge style)
-  ctx.fillStyle='#5a3a0a';
-  ctx.beginPath();
-  ctx.moveTo(x,y-h*0.65);
-  ctx.lineTo(x-w*0.55,y-h*0.08);
-  ctx.lineTo(x+w*0.55,y-h*0.08);
-  ctx.closePath(); ctx.fill();
-  // Snow on roof
-  ctx.fillStyle='rgba(255,255,255,0.7)';
-  ctx.beginPath();
-  ctx.moveTo(x,y-h*0.68);
-  ctx.lineTo(x-w*0.5,y-h*0.12);
-  ctx.lineTo(x-w*0.42,y-h*0.12);
-  ctx.lineTo(x,y-h*0.55);
-  ctx.lineTo(x+w*0.42,y-h*0.12);
-  ctx.lineTo(x+w*0.5,y-h*0.12);
-  ctx.closePath(); ctx.fill();
-  // Door
-  ctx.fillStyle='#4a2a06';
-  roundRect(ctx,x-5,y+h*0.05,10,h*0.35,2); ctx.fill();
-  // Windows (warm glow)
-  ctx.fillStyle='#FFD400';
-  ctx.globalAlpha=0.7;
-  ctx.fillRect(x-w*0.3,y-h*0.02,8,7);
-  ctx.fillRect(x+w*0.15,y-h*0.02,8,7);
-  ctx.globalAlpha=1;
-  // Window panes
-  ctx.strokeStyle='#5a3a0a';
-  ctx.lineWidth=1;
-  ctx.strokeRect(x-w*0.3,y-h*0.02,8,7);
-  ctx.strokeRect(x+w*0.15,y-h*0.02,8,7);
-  // Chimney
-  ctx.fillStyle='#666';
-  ctx.fillRect(x+w*0.2,y-h*0.6,6,h*0.2);
-  // Smoke
-  ctx.fillStyle='rgba(200,200,200,0.3)';
-  var smokeOff=Math.sin(frame*0.03)*3;
-  ctx.beginPath(); ctx.arc(x+w*0.22+smokeOff,y-h*0.65,4,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x+w*0.2+smokeOff*1.5,y-h*0.75,5,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x+w*0.25+smokeOff*2,y-h*0.86,6,0,Math.PI*2); ctx.fill();
+function drawRings(cx,cy,r,a){ctx.globalAlpha=a;ctx.lineWidth=r>5?2.5:1.5;
+  var g=r*2.4,c=['#0085C7','#222','#DF0024','#F4C300','#009F3D'],o=[-g*2,-g,0,g,g*2],yo=[0,r*0.6,0,r*0.6,0];
+  for(var i=0;i<5;i++){ctx.strokeStyle=c[i];ctx.beginPath();ctx.arc(cx+o[i],cy+yo[i],r,0,Math.PI*2);ctx.stroke();}ctx.globalAlpha=1;}
+
+function drawResults(){
+  ctx.fillStyle='rgba(10,22,40,0.92)';ctx.fillRect(0,0,W,H);
+  drawRings(W/2,H*0.08,14,0.5);
+  ctx.fillStyle='#F4C300';ctx.font='bold 12px Source Sans Pro,sans-serif';ctx.textAlign='center';ctx.fillText('SALT LAKE 2002 \u2022 SNOWBASIN',W/2,H*0.15);
+  ctx.fillStyle='#fff';ctx.font='bold 36px Playfair Display,serif';ctx.fillText('RACE COMPLETE',W/2,H*0.22);
+  ctx.fillStyle='rgba(255,255,255,0.08)';rr(ctx,W/2-140,H*0.27,280,100,12);ctx.fill();
+  ctx.fillStyle='#F4C300';ctx.font='bold 56px Source Sans Pro,sans-serif';ctx.fillText(gHit+' / '+TG,W/2,H*0.34);
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font='14px Source Sans Pro,sans-serif';ctx.fillText('GATES CLEARED',W/2,H*0.39);
+  var pct=TG>0?Math.round(gHit/TG*100):0;
+  ctx.fillStyle=pct>=90?'#16a34a':pct>=70?'#F4C300':'#DF0024';ctx.font='bold 18px Source Sans Pro,sans-serif';ctx.fillText(pct+'% ACCURACY',W/2,H*0.44);
+  var medal='';if(pct>=95)medal='\uD83E\uDD47 GOLD';else if(pct>=85)medal='\uD83E\uDD48 SILVER';
+  else if(pct>=70)medal='\uD83E\uDD49 BRONZE';else medal='NO MEDAL';
+  ctx.fillStyle=pct>=95?'#F4C300':pct>=85?'#C0C0C0':pct>=70?'#CD7F32':'rgba(255,255,255,0.3)';
+  ctx.font='bold 20px Source Sans Pro,sans-serif';ctx.fillText(medal,W/2,H*0.50);
+  var ny=H*0.56;
+  if(nInput){ctx.fillStyle='#F4C300';ctx.font='bold 11px Source Sans Pro,sans-serif';ctx.fillText('ENTER YOUR NAME',W/2,ny);
+    ctx.fillStyle='rgba(255,255,255,0.1)';rr(ctx,W/2-100,ny+8,200,30,6);ctx.fill();
+    ctx.strokeStyle='#F4C300';ctx.lineWidth=2;rr(ctx,W/2-100,ny+8,200,30,6);ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='16px Source Sans Pro,sans-serif';ctx.fillText(nBuf+(Math.floor(Date.now()/500)%2===0?'|':''),W/2,ny+28);
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px Source Sans Pro,sans-serif';ctx.fillText('ENTER to submit \u2022 ESC to skip',W/2,ny+50);
+  }else if(nSub){ctx.fillStyle='#16a34a';ctx.font='bold 12px Source Sans Pro,sans-serif';ctx.fillText('\u2713 Submitted as '+pName,W/2,ny);}
+  var lbY=H*0.70;ctx.fillStyle='#F4C300';ctx.font='bold 13px Source Sans Pro,sans-serif';ctx.fillText('\uD83C\uDFC6  LEADERBOARD',W/2,lbY);
+  var t3=lb.slice(0,3);if(t3.length>0){for(var i=0;i<t3.length;i++){var row=t3[i],ry=lbY+22+i*26;
+    var m=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'][i];
+    ctx.fillStyle=i===0?'rgba(244,195,0,0.1)':'rgba(255,255,255,0.04)';rr(ctx,W/2-130,ry-10,260,22,5);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='13px Source Sans Pro,sans-serif';ctx.textAlign='left';ctx.fillText(m+'  '+row.name,W/2-120,ry+5);
+    ctx.textAlign='right';ctx.fillStyle=i===0?'#F4C300':'rgba(255,255,255,0.6)';ctx.font='bold 13px Source Sans Pro,sans-serif';ctx.fillText(row.score+' gates',W/2+120,ry+5);}}
+  ctx.textAlign='center';if(!nInput){ctx.fillStyle='#F4C300';ctx.font='bold 14px Source Sans Pro,sans-serif';ctx.fillText('SPACE or TAP to race again',W/2,H*0.95);}
 }
 
-function drawMoose(x,y,o){
-  ctx.save();
-  ctx.translate(x,y);
-  if(o.mooseDir<0) { ctx.scale(-1,1); }
-  // Body
-  ctx.fillStyle='#5c3d1e';
-  ctx.beginPath();
-  ctx.ellipse(0,0,18,11,0,0,Math.PI*2);
-  ctx.fill();
-  // Legs (animated trot)
-  ctx.fillStyle='#4a3016';
-  var legOff=Math.sin(frame*0.15)*4;
-  ctx.fillRect(-12,8,4,12+legOff);
-  ctx.fillRect(-4,8,4,12-legOff);
-  ctx.fillRect(5,8,4,12+legOff);
-  ctx.fillRect(12,8,4,12-legOff);
-  // Hooves
-  ctx.fillStyle='#333';
-  ctx.fillRect(-13,19+legOff,6,3);
-  ctx.fillRect(-5,19-legOff,6,3);
-  ctx.fillRect(4,19+legOff,6,3);
-  ctx.fillRect(11,19-legOff,6,3);
-  // Neck + Head
-  ctx.fillStyle='#5c3d1e';
-  ctx.beginPath();
-  ctx.moveTo(16,-4);
-  ctx.lineTo(26,-14);
-  ctx.lineTo(32,-14);
-  ctx.lineTo(32,-8);
-  ctx.lineTo(22,-2);
-  ctx.closePath(); ctx.fill();
-  // Head
-  ctx.fillStyle='#6b4a28';
-  ctx.beginPath();
-  ctx.ellipse(32,-12,8,6,0.2,0,Math.PI*2);
-  ctx.fill();
-  // Snout
-  ctx.fillStyle='#7a5830';
-  ctx.beginPath();
-  ctx.ellipse(38,-10,5,4,0.1,0,Math.PI*2);
-  ctx.fill();
-  // Eye
-  ctx.fillStyle='#111';
-  ctx.beginPath(); ctx.arc(30,-14,1.5,0,Math.PI*2); ctx.fill();
-  // Antlers
-  ctx.strokeStyle='#8a6e3e';
-  ctx.lineWidth=2.5;
-  ctx.lineCap='round';
-  // Left antler
-  ctx.beginPath(); ctx.moveTo(28,-17); ctx.lineTo(22,-26); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(24,-22); ctx.lineTo(18,-23); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(25,-24); ctx.lineTo(22,-28); ctx.stroke();
-  // Right antler
-  ctx.beginPath(); ctx.moveTo(32,-17); ctx.lineTo(38,-26); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(36,-22); ctx.lineTo(42,-23); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(35,-24); ctx.lineTo(38,-28); ctx.stroke();
-  // Tail
-  ctx.fillStyle='#4a3016';
-  ctx.beginPath(); ctx.ellipse(-18,-2,4,3,0.3,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-  // Label
-  ctx.fillStyle='rgba(92,61,30,0.7)';
-  ctx.font='bold 10px Source Sans Pro, sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText('🫎 MOOSE!',x,y-28);
-}
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arcTo(x+w,y,x+w,y+r,r);c.lineTo(x+w,y+h-r);c.arcTo(x+w,y+h,x+w-r,y+h,r);c.lineTo(x+r,y+h);c.arcTo(x,y+h,x,y+h-r,r);c.lineTo(x,y+r);c.arcTo(x,y,x+r,y,r);c.closePath();}
 
-function drawTrailSign(s){
-  var x=s.x, y=s.y;
-  // Post
-  ctx.fillStyle='#654321';
-  ctx.fillRect(x-2,y-6,4,28);
-  // Sign board
-  ctx.fillStyle='#f5f0e0';
-  ctx.strokeStyle='#8B7355';
-  ctx.lineWidth=1.5;
-  roundRect(ctx,x-55,y-24,58,22,3); ctx.fill();
-  roundRect(ctx,x-55,y-24,58,22,3); ctx.stroke();
-  // Difficulty symbol
-  var symX=x-50, symY=y-13;
-  if(s.type==='blue'){
-    // Blue square
-    ctx.fillStyle='#2D5B9D';
-    ctx.fillRect(symX-5,symY-5,10,10);
-  } else if(s.type==='diamond'){
-    // Black diamond
-    ctx.fillStyle='#111';
-    ctx.beginPath();
-    ctx.moveTo(symX,symY-6);
-    ctx.lineTo(symX+6,symY);
-    ctx.lineTo(symX,symY+6);
-    ctx.lineTo(symX-6,symY);
-    ctx.closePath(); ctx.fill();
-  } else if(s.type==='double'){
-    // Double black diamond
-    ctx.fillStyle='#111';
-    ctx.beginPath();
-    ctx.moveTo(symX-3,symY-6);
-    ctx.lineTo(symX+3,symY);
-    ctx.lineTo(symX-3,symY+6);
-    ctx.lineTo(symX-9,symY);
-    ctx.closePath(); ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(symX+4,symY-6);
-    ctx.lineTo(symX+10,symY);
-    ctx.lineTo(symX+4,symY+6);
-    ctx.lineTo(symX-2,symY);
-    ctx.closePath(); ctx.fill();
-  }
-  // Trail name
-  ctx.fillStyle='#333';
-  ctx.font='bold 9px Source Sans Pro, sans-serif';
-  ctx.textAlign='left';
-  ctx.fillText(s.name,symX+9,symY+3);
+function loop(ts){
+  if(!running)return;if(!ts)ts=performance.now();
+  if(lft>0){var el=ts-lft;dt=el/16.667;if(dt>3)dt=3;}lft=ts;
+  if(!nInput&&(keys[' ']||keys['Space'])){
+    if(finished)reset();else if(!started){started=true;cd=3;cdT=180;}keys[' ']=false;keys['Space']=false;}
+  update();draw();requestAnimationFrame(loop);
 }
+/* Game initialized on first open via openGame() */
 
-function drawFence(x,y,w){
-  // Orange ski fence barrier
-  ctx.fillStyle='#ff6600';
-  var hw=w/2;
-  ctx.fillRect(x-hw,y-4,w,8);
-  // Fence poles
-  ctx.fillStyle='#333';
-  var poles=Math.max(2,Math.floor(w/20));
-  for(var p=0;p<poles;p++){
-    var px=x-hw+p*(w/(poles-1));
-    ctx.fillRect(px-1.5,y-14,3,22);
-  }
-  // Orange netting between poles
-  ctx.strokeStyle='rgba(255,102,0,0.6)';
-  ctx.lineWidth=1;
-  for(var n=0;n<poles-1;n++){
-    var nx1=x-hw+n*(w/(poles-1));
-    var nx2=x-hw+(n+1)*(w/(poles-1));
-    for(var r=0;r<3;r++){
-      var ry=y-12+r*5;
-      ctx.beginPath(); ctx.moveTo(nx1,ry); ctx.lineTo(nx2,ry); ctx.stroke();
-    }
-  }
-}
-
-function drawGatePost(x,y){
-  // Tall gate post with flag
-  ctx.fillStyle='#555';
-  ctx.fillRect(x-2,y-20,4,36);
-  // Orange flag
-  ctx.fillStyle='#ff6600';
-  ctx.beginPath();
-  ctx.moveTo(x+2,y-20);
-  ctx.lineTo(x+16,y-16);
-  ctx.lineTo(x+2,y-12);
-  ctx.closePath(); ctx.fill();
-  // Base
-  ctx.fillStyle='#444';
-  ctx.beginPath(); ctx.ellipse(x,y+16,6,3,0,0,Math.PI*2); ctx.fill();
-}
-
-function drawZoneSign(x,y,text){
-  // Sign post
-  ctx.fillStyle='#654321';
-  ctx.fillRect(x-2,y-8,4,24);
-  // Sign board
-  ctx.fillStyle='#3a2510';
-  roundRect(ctx,x-40,y-22,80,18,4); ctx.fill();
-  // Wood grain border
-  ctx.strokeStyle='#5a3a15';
-  ctx.lineWidth=1;
-  ctx.strokeRect(x-39,y-21,78,16);
-  // Text
-  ctx.fillStyle='#FFD400';
-  ctx.font='bold 9px Source Sans Pro, sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText(text,x,y-10);
-}
-
-function drawFamilyGroup(x,y){
-  // Small family group — adult + child, slow-moving
-  // Adult
-  ctx.fillStyle='#4488cc';
-  ctx.beginPath(); ctx.arc(x-5,y-10,5,0,Math.PI*2); ctx.fill();
-  ctx.fillRect(x-9,y-5,8,13);
-  // Adult skis
-  ctx.strokeStyle='#666';
-  ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(x-10,y+8); ctx.lineTo(x-10,y+16); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x-2,y+8); ctx.lineTo(x-2,y+16); ctx.stroke();
-  // Child
-  ctx.fillStyle='#ee5599';
-  ctx.beginPath(); ctx.arc(x+7,y-6,4,0,Math.PI*2); ctx.fill();
-  ctx.fillRect(x+4,y-2,6,9);
-  // Child skis
-  ctx.strokeStyle='#666';
-  ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(x+4,y+7); ctx.lineTo(x+4,y+13); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+10,y+7); ctx.lineTo(x+10,y+13); ctx.stroke();
-  // Slow indicator
-  ctx.fillStyle='rgba(68,136,204,0.5)';
-  ctx.font='8px Source Sans Pro, sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText('👨‍👧 SLOW',x,y-18);
-}
-
-function drawGreenCoat(g){
-  var x=g.x, y=g.y;
-  // Person in green jacket
-  // Head
-  ctx.fillStyle='#f0c8a0';
-  ctx.beginPath(); ctx.arc(x,y-16,7,0,Math.PI*2); ctx.fill();
-  // Helmet
-  ctx.fillStyle='#222';
-  ctx.beginPath(); ctx.arc(x,y-18,7,0,Math.PI,true); ctx.fill();
-  // Green jacket
-  ctx.fillStyle='#2d8a4e';
-  ctx.fillRect(x-8,y-9,16,22);
-  // Arms out
-  ctx.strokeStyle='#2d8a4e';
-  ctx.lineWidth=4;
-  ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(x-8,y-4); ctx.lineTo(x-16,y+2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+8,y-4); ctx.lineTo(x+16,y+2); ctx.stroke();
-  // Hands
-  ctx.fillStyle='#f0c8a0';
-  ctx.beginPath(); ctx.arc(x-16,y+2,3,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x+16,y+2,3,0,Math.PI*2); ctx.fill();
-  // Pants
-  ctx.fillStyle='#333';
-  ctx.fillRect(x-7,y+13,6,12);
-  ctx.fillRect(x+1,y+13,6,12);
-  // Skis (standing)
-  ctx.strokeStyle='#FFD400';
-  ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(x-6,y+25); ctx.lineTo(x-6,y+32); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+6,y+25); ctx.lineTo(x+6,y+32); ctx.stroke();
-
-  // Speech bubble
-  if(g.bubble>0.05){
-    var bx = x < 100 ? x+30 : x-30;
-    var by = y-38;
-    ctx.globalAlpha=g.bubble;
-    // Bubble bg
-    ctx.fillStyle='#fff';
-    roundRect(ctx,bx-52,by-14,104,24,12);
-    ctx.fill();
-    // Bubble tail
-    ctx.beginPath();
-    var tailX = x<100 ? bx-40 : bx+40;
-    ctx.moveTo(tailX-4,by+10);
-    ctx.lineTo(x<100?x+12:x-12,y-22);
-    ctx.lineTo(tailX+4,by+10);
-    ctx.closePath(); ctx.fill();
-    // Text
-    ctx.fillStyle='#dc2626';
-    ctx.font='bold 13px Source Sans Pro, sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText('🛑 SLOW DOWN!',bx,by+2);
-    ctx.globalAlpha=1;
-  }
-}
-
-function drawPlayer(x,y,vx){
-  ctx.save();
-  // Head (blue helmet)
-  ctx.fillStyle='#2D5B9D';
-  ctx.beginPath(); ctx.arc(x,y-14,8,0,Math.PI*2); ctx.fill();
-  // Goggles
-  ctx.fillStyle='#FFD400';
-  ctx.fillRect(x-6,y-16,12,4);
-  // Body
-  ctx.fillStyle='#2D5B9D';
-  ctx.save();
-  ctx.translate(x,y);
-  ctx.rotate(vx*0.07);
-  ctx.fillRect(-7,-7,14,20);
-  // Arms
-  ctx.strokeStyle='#2D5B9D';
-  ctx.lineWidth=3;
-  ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(-7,-2); ctx.lineTo(-14,6); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(7,-2); ctx.lineTo(14,6); ctx.stroke();
-  ctx.restore();
-  // Skis
-  ctx.strokeStyle='#FFD400';
-  ctx.lineWidth=3;
-  ctx.lineCap='round';
-  ctx.beginPath(); ctx.moveTo(x-8,y+12); ctx.lineTo(x-8-vx*0.9,y+24); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+8,y+12); ctx.lineTo(x+8-vx*0.9,y+24); ctx.stroke();
-  // Poles
-  ctx.strokeStyle='rgba(80,80,80,0.5)';
-  ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(x-14,y+4); ctx.lineTo(x-20,y+18); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x+14,y+4); ctx.lineTo(x+20,y+18); ctx.stroke();
-  // Pole baskets
-  ctx.fillStyle='rgba(80,80,80,0.4)';
-  ctx.beginPath(); ctx.arc(x-20,y+18,2,0,Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(x+20,y+18,2,0,Math.PI*2); ctx.fill();
-  ctx.restore();
-}
-
-function roundRect(ctx,x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
-  ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h-r);
-  ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.lineTo(x+r,y+h);
-  ctx.arcTo(x,y+h,x,y+h-r,r); ctx.lineTo(x,y+r);
-  ctx.arcTo(x,y,x+r,y,r);
-  ctx.closePath();
-}
-
-function wrapText(ctx,text,x,y,maxW,lineH){
-  var words=text.split(' '), line='';
-  for(var i=0;i<words.length;i++){
-    var test=line+words[i]+' ';
-    if(ctx.measureText(test).width>maxW&&i>0){
-      ctx.fillText(line.trim(),x,y); line=words[i]+' '; y+=lineH;
-    } else { line=test; }
-  }
-  ctx.fillText(line.trim(),x,y);
-}
-
-function wrapTextReturn(ctx,text,startX,maxW,lineH){
-  var words=text.split(' '), line='', lines=[];
-  for(var i=0;i<words.length;i++){
-    var test=line+words[i]+' ';
-    if(ctx.measureText(test).width>maxW&&i>0){
-      lines.push(line.trim()); line=words[i]+' ';
-    } else { line=test; }
-  }
-  lines.push(line.trim());
-  return lines;
-}
-
-function gameLoop(){
-  if(!gameRunning) return;
-  if(!nameInput && (keys[' ']||keys['Space'])){
-    if(gameOver) resetGame();
-    else if(!gameStarted) gameStarted=true;
-    keys[' ']=false; keys['Space']=false;
-  }
-  update(); draw();
-  requestAnimationFrame(gameLoop);
-}
 </script>
 
 </body>
