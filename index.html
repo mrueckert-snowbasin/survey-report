@@ -1244,7 +1244,7 @@ var LF_GCOLS=['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e
 var LF_SH_URL='https://script.google.com/macros/s/AKfycbzEHZYNsYBn80rTk_bJdPcomo7tn1mGu9jAlWRWPZV4MmONHSixgDyJWSHwAd8iwQQ5JA/exec';
 var lfLb=[],lfPName='',lfNInput=false,lfNBuf='',lfNSub=false;
 function lfFetchLb(){fetch(LF_SH_URL).then(function(r){return r.json()}).then(function(d){lfLb=d.sort(function(a,b){return b.score-a.score}).slice(0,10);}).catch(function(){});}
-function lfSubmitLb(n,pct,riders){fetch(LF_SH_URL,{method:'POST',body:JSON.stringify({name:n,score:pct,riders:riders,game:'liftie'}),headers:{'Content-Type':'text/plain'}}).then(function(){lfFetchLb()}).catch(function(){});}
+function lfSubmitLb(n,pct,riders){fetch(LF_SH_URL,{method:'POST',body:JSON.stringify({name:n,score:riders,game:'liftie'}),headers:{'Content-Type':'text/plain'}}).then(function(){lfFetchLb()}).catch(function(){});}
 
 function initLF(){
   lfCanvas=document.getElementById('gc2');lfCtx=lfCanvas.getContext('2d');
@@ -1394,7 +1394,7 @@ function lfDraw(){
     var ny=H*0.50;if(lfNInput){c.fillStyle='#FFD400';c.font='bold 11px Source Sans Pro,sans-serif';c.fillText('ENTER YOUR NAME',W/2,ny);c.fillStyle='rgba(255,255,255,0.1)';lfRR(c,W/2-100,ny+8,200,30,6);c.fill();c.strokeStyle='#FFD400';c.lineWidth=2;lfRR(c,W/2-100,ny+8,200,30,6);c.stroke();c.fillStyle='#fff';c.font='16px Source Sans Pro,sans-serif';c.fillText(lfNBuf+(Math.floor(Date.now()/500)%2===0?'|':''),W/2,ny+28);c.fillStyle='rgba(255,255,255,0.3)';c.font='10px Source Sans Pro,sans-serif';c.fillText('ENTER to submit \u2022 ESC to skip',W/2,ny+50);}
     else if(lfNSub){c.fillStyle='#2ecc71';c.font='bold 12px Source Sans Pro,sans-serif';c.fillText('\u2713 Submitted as '+lfPName,W/2,ny);}
     var lbY=H*0.64;c.fillStyle='#FFD400';c.font='bold 13px Source Sans Pro,sans-serif';c.fillText('\uD83C\uDFC6  LEADERBOARD',W/2,lbY);
-    if(lfLb.length>0){for(var i=0;i<Math.min(lfLb.length,3);i++){var row=lfLb[i],ry=lbY+22+i*26;var m=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'][i];c.fillStyle=i===0?'rgba(255,212,0,0.1)':'rgba(255,255,255,0.04)';lfRR(c,W/2-130,ry-10,260,22,5);c.fill();c.fillStyle='#fff';c.font='13px Source Sans Pro,sans-serif';c.textAlign='left';c.fillText(m+'  '+row.name,W/2-120,ry+5);c.textAlign='right';c.fillStyle=i===0?'#FFD400':'rgba(255,255,255,0.6)';c.font='bold 13px Source Sans Pro,sans-serif';var lbTxt=row.score+'%';if(row.riders)lbTxt+='\u2009\u2022\u2009'+row.riders;c.fillText(lbTxt,W/2+120,ry+5);}}
+    if(lfLb.length>0){for(var i=0;i<Math.min(lfLb.length,3);i++){var row=lfLb[i],ry=lbY+22+i*26;var m=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'][i];c.fillStyle=i===0?'rgba(255,212,0,0.1)':'rgba(255,255,255,0.04)';lfRR(c,W/2-130,ry-10,260,22,5);c.fill();c.fillStyle='#fff';c.font='13px Source Sans Pro,sans-serif';c.textAlign='left';c.fillText(m+'  '+row.name,W/2-120,ry+5);c.textAlign='right';c.fillStyle=i===0?'#FFD400':'rgba(255,255,255,0.6)';c.font='bold 13px Source Sans Pro,sans-serif';var lbTxt=row.score+' riders';c.fillText(lbTxt,W/2+120,ry+5);}}
     c.textAlign='center';if(!lfNInput){c.fillStyle='#FFD400';c.font='bold 14px Source Sans Pro,sans-serif';c.fillText('TAP or SPACE to play again',W/2,H*0.95);}
   }
 }
